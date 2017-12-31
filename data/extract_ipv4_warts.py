@@ -56,7 +56,7 @@ for k in range(totalNum):
                     # second type
                     for i in range(13,len(parts)): 
                         respondIP = parts[i]
-                        record2 = sourceIP +' '+ respondIP
+                        record2 = sourceIP +' '+ respondIP+' '+'1' #as default
                         dataset2.append(record2)
     #except IOError, error:
     except:
