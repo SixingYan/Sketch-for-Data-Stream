@@ -4,7 +4,6 @@ import pickle
 from math import sqrt
 
 
-
 def get_Prime(N):
     # larger than N, the number index of nodes; Ensure N > 2 and N is an integer
     prime = N
