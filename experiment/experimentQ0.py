@@ -41,14 +41,14 @@ import sys; sys.path.append("..")
 from copy import deepcopy
 import random
 import numpy as np
+import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
 # DIY
 import diyTool
 #===================  <- Import
 
 #===================  path area ->
-homePath = '../'# use '/' as ending
+homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/'# use '/' as ending
 sourcePath = 'D:/点击这里/Nanyang/dataIPv4/t1_warts/' 
-destinationPath = ''
 
 Q0result_Sketch_CS_Path = homePath+'experiment/data/sketchResultData1'
 Q0result_Dataset_CS_Path = homePath+'experiment/data/datasetResultData1'
@@ -58,12 +58,12 @@ Q0result_Dataset_GM_Path = homePath+'experiment/data/datasetResultData2'
 
 #================  parameter ->
 wSet = [10,15]
-hSet = [300,500,1000,2000]
+hSet = [300,500,1000]
 Epsilon = [i+1 for i in range(10)]
-dataset = [  #存文件名
-    ['',''],
-    []
-    ]
+dataset = [  #存文件名, 最大值, item数量, 数据集名称
+    #['D:/google desk PC/graph_freq_comp18.txt',66666666,2,'comp18']
+    ['D:/google desk PC/ip_graph_refined',4213084,2,'ip']
+]
 repeatNumber = 10 # repeat times
 #================ <- parameter
 
@@ -125,8 +125,14 @@ datasetResultData2 = []
 
 # change sigma
 for w in wSet:
+    print('==now w is: '+str(w))
+    print()
     for h in hSet:
+        print('====now h is: '+str(h))
+        print()
         for ds in dataset: # 'ds' is the list [file name, N, itemNum, datasetName] of one data set
+            print('========now ds is: '+ds[3])
+            print()
             ratioListDict1 = []
             datasetDict1 = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'SKETCHmean':0,'SKETCHstd':0}
             sketchDict1 = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'MEANratio':[],'STDratio':[]}
@@ -140,20 +146,25 @@ for w in wSet:
             meanSketchList2 = []
 
             for repeat in range(repeatNumber):
+                print('============repeat: '+str(repeat))
                 # setup sketch
-                sketch = [[0 for _ in range(h**len(ds[2]))] for _ in range(w)]
+                sketch = [[0 for _ in range(h**ds[2])] for _ in range(w)]
                 cSketch = deepcopy(sketch)
                 gMatrix = deepcopy(sketch)
-                cN = int(str(ds[1]) * len(ds[2]))
+                cN = int(str(ds[1]) * ds[2])
                 gN = ds[1]
                 mask_c = [diyTool.getTwoRandomNum(cN) for _ in range(w)]
                 mask_g = [diyTool.getTwoRandomNum(gN) for _ in range(w)]
-
+                print('============start stream')
                 # make a stream
+                countNum = 0
                 with open(ds[0], 'r') as f:
-                    if random.randint(0,100)>80: # random select
-                        continue
                     for line in f:
+                        if random.randint(0,100)>70: # random select
+                            continue
+                        countNum += 1
+                        if countNum % 1000000 == 0:
+                            print('================now is'+str(countNum))
                         parts = line.strip().split(' ')
                         edge = parts[:len(parts)-1]
                         for num in range(len(edge)):
@@ -163,7 +174,7 @@ for w in wSet:
                         # random select to put in
                         updateSketch(cSketch,csHash,edge,cN,freq,w,mask_c)
                         updateSketch(gMatrix,gmHash,edge,gN,freq,w,mask_g)
-                
+                print('============start checking cSketch')
                 # cSketch ============================
                 meanSketch = np.mean(cSketch[0])
                 totalSTD = 0
@@ -179,14 +190,14 @@ for w in wSet:
                     tNum = 0
                     for k in range(w):
                         totalNum = 0
-                        for j in range(h**len(ds[2])):
+                        for j in range(h**ds[2]):
                             if (cSketch[k][j]-meanSketch) < (stdSketch * e):
                                 totalNum += 1
                         tNum += totalNum
 
                     ratioList.append(tNum/w/h**len(ds[2]))
                 ratioListDict1.append(ratioList)
-
+                print('============start checking gMatrix')
                 # gMatrix ============================
                 meanSketch = np.mean(gMatrix[0])
                 totalSTD = 0
@@ -202,17 +213,18 @@ for w in wSet:
                     tNum = 0
                     for k in range(w):
                         totalNum = 0
-                        for j in range(h**len(ds[2])):
+                        for j in range(h**ds[2]):
                             if (gMatrix[k][j]-meanSketch) < (stdSketch * e):
                                 totalNum += 1
                         tNum += totalNum
 
                     ratioList.append(tNum/w/h**len(ds[2]))
                 ratioListDict2.append(ratioList)
-
+            
+            print('========get STD cSketch')
             # cSketch ============================
-            datasetDict1['SKETCHstd'] = sum(stdSketchList1)/repeatNumber
-            datasetDict1['SKETCHmean'] = sum(meanSketchList1)/repeatNumber
+            datasetDict1['SKETCHstd'] = sum(stdSketchList1)/(repeatNumber*w)
+            datasetDict1['SKETCHmean'] = sum(meanSketchList1)/(repeatNumber*w)
 
             meanList = []
             stdList = []
@@ -229,9 +241,10 @@ for w in wSet:
             datasetResultData1.append(datasetDict1)
             sketchResultData1.append(sketchDict1)
 
+            print('========get STD gMatrix')
             # gMatrix ============================
-            datasetDict2['SKETCHstd'] = sum(stdSketchList2)/repeatNumber
-            datasetDict2['SKETCHmean'] = sum(meanSketchList2)/repeatNumber
+            datasetDict2['SKETCHstd'] = sum(stdSketchList2)/(repeatNumber*w)
+            datasetDict2['SKETCHmean'] = sum(meanSketchList2)/(repeatNumber*w)
 
             meanList = []
             stdList = []
@@ -248,16 +261,15 @@ for w in wSet:
             datasetResultData2.append(datasetDict2)
             sketchResultData2.append(sketchDict2)
 
-
+            print('========saving')
             # saving .......
             diyTool.savePickle(Q0result_Dataset_CS_Path,datasetResultData1)
             diyTool.savePickle(Q0result_Sketch_CS_Path,sketchDict1)
             diyTool.savePickle(Q0result_Dataset_GM_Path,datasetResultData2)
             diyTool.savePickle(Q0result_Sketch_GM_Path,sketchDict2)
             
-            break
-        break
-    break
+            del sketch; del gMatrix; del cSketch;
+
 
 
 
