@@ -33,7 +33,7 @@ print('start extracting...')
 for k in range(totalNum):
     fileName = onlyfiles[k]
 
-    if k/total> percent:
+    if k/totalNum> percent:
         print('now is '+str(int(100*percent))+'%')
         percent += 0.1
 

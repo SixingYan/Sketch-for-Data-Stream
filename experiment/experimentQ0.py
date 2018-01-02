@@ -33,7 +33,7 @@ sketch={
      'sketch':,
      'MEANratio':,
      'STDratio':.
-    }                                   
+    }
 """
 #===================  Import ->
 # system
@@ -48,12 +48,11 @@ import diyTool
 
 #===================  path area ->
 homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/'# use '/' as ending
-sourcePath = 'D:/点击这里/Nanyang/dataIPv4/t1_warts/' 
 
-Q0result_Sketch_CS_Path = homePath+'experiment/data/sketchResultData1'
-Q0result_Dataset_CS_Path = homePath+'experiment/data/datasetResultData1'
-Q0result_Sketch_GM_Path = homePath+'experiment/data/sketchResultData2'
-Q0result_Dataset_GM_Path = homePath+'experiment/data/datasetResultData2'
+Q0result_Sketch_CS_Path = homePath+'experiment/result/Q0_sketchResultData1'
+Q0result_Dataset_CS_Path = homePath+'experiment/result/Q0_datasetResultData1'
+Q0result_Sketch_GM_Path = homePath+'experiment/result/Q0_sketchResultData2'
+Q0result_Dataset_GM_Path = homePath+'experiment/result/Q0_datasetResultData2'
 #===================  <- path area
 
 #================  parameter ->
@@ -62,7 +61,9 @@ hSet = [300,500,1000]
 Epsilon = [i+1 for i in range(10)]
 dataset = [  #存文件名, 最大值, item数量, 数据集名称
     #['D:/google desk PC/graph_freq_comp18.txt',66666666,2,'comp18']
-    ['D:/google desk PC/ip_graph_refined',4213084,2,'ip']
+    ['D:/google desk PC/ip_graph_refined',4213084,2,'ip'],
+    ['D:/google desk PC/graph_freq_comp18.txt',338239,2,'comp18'],
+    ['D:/google desk PC/graph_freq_comp14.txt',7904564,2,'comp14']
 ]
 repeatNumber = 10 # repeat times
 #================ <- parameter
@@ -71,8 +72,6 @@ repeatNumber = 10 # repeat times
 '''
 直接random放入，别受极值影响
 '''
-
-#================  parameter ->
 
 def combine(edge, N):
     combinedValue = ''
@@ -85,7 +84,6 @@ def combine(edge, N):
             combinedValue += str(item)
 
     return int(combinedValue)
-
 
 def csHash(edge, P, h, w, mask):
     # combine
@@ -108,7 +106,6 @@ def gmHash(edge, P, h, w, mask):
             totalI += ((a*edge[i]+b)%P%h)*(h**(len(edge)-1-i))
         hvList.append(totalI)
     return hvList
-
 
 def updateSketch(sketch, hashF, edge, P, freq, w, mask):
     #
@@ -160,11 +157,14 @@ for w in wSet:
                 countNum = 0
                 with open(ds[0], 'r') as f:
                     for line in f:
+                        if not len(line) > 0:
+                            continue
                         if random.randint(0,100)>70: # random select
                             continue
+                        
                         countNum += 1
                         if countNum % 1000000 == 0:
-                            print('================now is'+str(countNum))
+                            print('================now is '+str(countNum))
                         parts = line.strip().split(' ')
                         edge = parts[:len(parts)-1]
                         for num in range(len(edge)):
@@ -195,7 +195,7 @@ for w in wSet:
                                 totalNum += 1
                         tNum += totalNum
 
-                    ratioList.append(tNum/w/h**len(ds[2]))
+                    ratioList.append(tNum/w/h**ds[2])
                 ratioListDict1.append(ratioList)
                 print('============start checking gMatrix')
                 # gMatrix ============================
@@ -218,13 +218,14 @@ for w in wSet:
                                 totalNum += 1
                         tNum += totalNum
 
-                    ratioList.append(tNum/w/h**len(ds[2]))
+                    ratioList.append(tNum/w/h**ds[2])
                 ratioListDict2.append(ratioList)
-            
+                del sketch; del gMatrix; del cSketch;
+
             print('========get STD cSketch')
             # cSketch ============================
-            datasetDict1['SKETCHstd'] = sum(stdSketchList1)/(repeatNumber*w)
-            datasetDict1['SKETCHmean'] = sum(meanSketchList1)/(repeatNumber*w)
+            datasetDict1['SKETCHstd'] = sum(stdSketchList1)/(repeatNumber*w)  #ERROR!!!!!!!! sum(stdSketchList1)/(repeatNumber)
+            datasetDict1['SKETCHmean'] = sum(meanSketchList1)/(repeatNumber*w) #ERROR!!!!!!!! sum(stdSketchList1)/(repeatNumber)
 
             meanList = []
             stdList = []
@@ -243,8 +244,8 @@ for w in wSet:
 
             print('========get STD gMatrix')
             # gMatrix ============================
-            datasetDict2['SKETCHstd'] = sum(stdSketchList2)/(repeatNumber*w)
-            datasetDict2['SKETCHmean'] = sum(meanSketchList2)/(repeatNumber*w)
+            datasetDict2['SKETCHstd'] = sum(stdSketchList2)/(repeatNumber*w) #ERROR!!!!!!!! sum(stdSketchList1)/(repeatNumber)
+            datasetDict2['SKETCHmean'] = sum(meanSketchList2)/(repeatNumber*w) #ERROR!!!!!!!! sum(stdSketchList1)/(repeatNumber)
 
             meanList = []
             stdList = []
@@ -268,8 +269,19 @@ for w in wSet:
             diyTool.savePickle(Q0result_Dataset_GM_Path,datasetResultData2)
             diyTool.savePickle(Q0result_Sketch_GM_Path,sketchDict2)
             
-            del sketch; del gMatrix; del cSketch;
-
+            print('^^^^^^^^^^^datasetDict1^^^^^^^^^^^')
+            print(datasetDict1)
+            print()
+            print('^^^^^^^^^^^sketchDict1^^^^^^^^^^^')
+            print(sketchDict1)
+            print()
+            print('^^^^^^^^^^^datasetDict2^^^^^^^^^^^')
+            print(datasetDict2)
+            print()
+            print('^^^^^^^^^^^sketchDict2^^^^^^^^^^^')
+            print(sketchDict2)
+            print()
+            print()
 
 
 
