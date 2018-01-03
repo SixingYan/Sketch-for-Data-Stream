@@ -4,10 +4,19 @@
 
 
 import hSketch
+#===================  Import ->
+# system
+import sys; sys.path.append("..")
+import copy
+import random
+import numpy as np
+import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
+# DIY
+import diyTool
+#===================  <- Import
 
-
-
-wSet = [10,15]
+#================  parameter ->
+w = 10
 num1 = 0
 num2 = 100
 increase = 100
@@ -22,7 +31,12 @@ dataset = [
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',338239,2,'comp18', 90],
     ['C:/Users/alfonso.yan/Documents/graph_freq_comp10.txt',1372146644,2,'comp1', 0.03]
 ]
+repeatNumber = 10 # repeat times
+#================ <- parameter
 
+
+def getMedium(valueList):
+    return (valueList[int(len(valueList)/2)] + valueList[~int(len(valueList)/2)])/ 2
 def getH1H2(num1,num2,h):
     h1h2List = []
     for i in range(num1,num2):
@@ -40,23 +54,23 @@ def getValue(twoDlist):
         result.append(sum(valueList)/repeatNumber)
     return result
 
-def getRadList(num):
+def getRadList(num,radPool):
     radList = [[] for i in range(5)]
     for i in range(len(radList)):
         while len(radList[i]) < num:
-            tem = choice(radPool)
+            tem = random.choice(radPool)
             if tem not in radList[i]:
                 radList[i].append(tem)
     return radList
 
 def evaluate_top_medium(sketch,topList):
     #
-    totalLoss1 = 0;totalFreq1 = 0
+    valueList = []
     for parts in topList:
         s=parts[0]; t=parts[1];freq = parts[2]
         estiValue = sketch.edge_frequency_query((s,t))
-        totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
-    ObservedError = totalLoss1/totalFreq1
+        valueList.append(abs(estiValue-freq)/freq)
+    ObservedError = np.mean(valueList)
     print('ObservedError is '+str(ObservedError))
     return ObservedError
 
@@ -126,13 +140,13 @@ for ds in dataset:
     oeListTop500Dict=[];oeListRad500Dict=[]
     oeListTop1000Dict=[];oeListRad1000Dict=[]
     for repeat in range(repeatNumber):
-
+        countNum = 0
         h1h2List = getH1H2(num1,num2,h)#h=500
         sketchList = []
         for i in range(len(h1h2List)):
             h1,h2 = h1h2List[i]
             print('for %d, h1 is %d   h2 is %d'%(i,h1,h2))
-            hS = deepcopy(hSketch.sketch(w,h1,h2,maxNodeID))
+            hS = copy.deepcopy(hSketch.sketch(w,h1,h2,ds[1]))
             sketchList.append(hS)
 
         radPool = []
@@ -144,19 +158,16 @@ for ds in dataset:
             if not len(line)>0:
                 continue
             countNum += 1
-
             parts = line.split(' ')
-            edge = parts[:len(parts)-1]
-            for num in range(len(edge)):
-                edge[num] = int(edge[num])
-            freq = int(float(parts[len(parts)-1]))
+            s = int(parts[0])
+            t = int(parts[1])
+            freq = int(float(parts[2]))
 
-            if randint(0,1000)>1000* ds[5]:
+            if random.randint(0,10000)>10000 * ds[5]:
                 continue
 
             # get rad and top
-
-            if randint(0,10000)<10000* ds[5] * 0.1:
+            if random.randint(0,10000)<10000* ds[5] * 0.1:
                 radPool.append([s,t,freq])
                 
             if len(top1000List)>1000:
@@ -166,6 +177,9 @@ for ds in dataset:
             else:
                 top1000List.append([s,t,freq])
 
+            # update 
+            for i in range(len(sketchList)):
+                sketchList[i].update((s,t),freq)
 
         top1000List.sort(reverse = False)
         top100List = top1000List[:100]
@@ -185,7 +199,6 @@ for ds in dataset:
             ObservedError = evaluate_top_mean(sketchList[i],top1000List);oeListTop1000.append(ObservedError)
             print()
         
-
         # evaluation
 
         oeListTop100Dict.append(oeListTop100)

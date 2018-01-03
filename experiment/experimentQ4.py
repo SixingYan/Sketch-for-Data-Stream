@@ -89,14 +89,19 @@ for ds in dataset:
     for repeat in range(repeatNumber):
         dictKeyList = set([])
         nodeDict = {} #{}
-        with open(,) as f:
+        with open(ds[0],'r') as f:
             # out degree
-            if s in dictKeyList:
-                nodeDict[s][1] += freq
-            else:
-                nodeDict[s] = [0,0]
-                nodeDict[s][1] += freq
-                dictKeyList.add(s)
+            for line in f:
+                line = line.strip()
+                if not len(line) > 0:
+                    continue
+                
+                if s in dictKeyList:
+                    nodeDict[s][1] += freq
+                else:
+                    nodeDict[s] = [0,0]
+                    nodeDict[s][1] += freq
+                    dictKeyList.add(s)
             # in degree
             if t in dictKeyList:
                 nodeDict[t][0] += freq
@@ -168,19 +173,6 @@ repeat
 def function():
     pass
 
-def function():
-    pass
-
-def  ():
-    # change sigma
-
-    pass
-
-
-
-def ():
-
-    #repeat 20 time
 
 
 
