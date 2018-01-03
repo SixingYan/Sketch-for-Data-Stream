@@ -43,7 +43,7 @@ import random
 import numpy as np
 import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
 # DIY
-import diyTool
+import lib.diyTool
 #===================  <- Import
 
 #===================  path area ->

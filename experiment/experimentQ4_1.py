@@ -3,7 +3,7 @@
 
 
 
-import hSketch
+
 #===================  Import ->
 # system
 import sys; sys.path.append("..")
@@ -12,7 +12,8 @@ import random
 import numpy as np
 import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
 # DIY
-import diyTool
+import lib.diyTool as diyTool
+import lib.hSketch as hSketch
 #===================  <- Import
 
 #================  parameter ->
@@ -37,6 +38,7 @@ repeatNumber = 10 # repeat times
 
 def getMedium(valueList):
     return (valueList[int(len(valueList)/2)] + valueList[~int(len(valueList)/2)])/ 2
+
 def getH1H2(num1,num2,h):
     h1h2List = []
     for i in range(num1,num2):
@@ -70,18 +72,18 @@ def evaluate_top_medium(sketch,topList):
         s=parts[0]; t=parts[1];freq = parts[2]
         estiValue = sketch.edge_frequency_query((s,t))
         valueList.append(abs(estiValue-freq)/freq)
-    ObservedError = np.mean(valueList)
+    ObservedError = getMedium(valueList)
     print('ObservedError is '+str(ObservedError))
     return ObservedError
 
 def evaluate_top_mean(sketch,topList):
     #
-    totalLoss1 = 0;totalFreq1 = 0
+    valueList = []
     for parts in topList:
         s=parts[0]; t=parts[1];freq = parts[2]
         estiValue = sketch.edge_frequency_query((s,t))
-        totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
-    ObservedError = totalLoss1/totalFreq1
+        valueList.append(abs(estiValue-freq)/freq)
+    ObservedError = np.mean(valueList)
     print('ObservedError is '+str(ObservedError))
     return ObservedError
 
@@ -99,27 +101,27 @@ def evaluate_rad_medium(sketch,radList):
     #
     ObservedError = 0
     for i in range(len(radList)):
-        totalLoss1 = 0;totalFreq1 = 0
+        totalLoss1 = []
         for parts in radList[i]:
             s=parts[0]; t=parts[1];freq = parts[2]
             estiValue = sketch.edge_frequency_query((s,t))
-            totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
-        ObservedError += totalLoss1/totalFreq1
+            totalLoss1.append(abs(estiValue-freq)/freq)
+        ObservedError += getMedium(totalLoss1) 
     print('ObservedError is '+str(ObservedError/len(radList)))
-    return ObservedError
+    return ObservedError/len(radList)
 
 def evaluate_rad_mean(sketch,radList):
     #
     ObservedError = 0
     for i in range(len(radList)):
-        totalLoss1 = 0;totalFreq1 = 0
+        totalLoss1 = []
         for parts in radList[i]:
             s=parts[0]; t=parts[1];freq = parts[2]
             estiValue = sketch.edge_frequency_query((s,t))
-            totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
-        ObservedError += totalLoss1/totalFreq1
+            totalLoss1.append(abs(estiValue-freq)/freq)
+        ObservedError += np.mean(totalLoss1) 
     print('ObservedError is '+str(ObservedError/len(radList)))
-    return ObservedError
+    return ObservedError/len(radList)
 
 def evaluate_rad_sum(sketch,radList):
     #
@@ -132,14 +134,14 @@ def evaluate_rad_sum(sketch,radList):
             totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
         ObservedError += totalLoss1/totalFreq1
     print('ObservedError is '+str(ObservedError/len(radList)))
-    return ObservedError
-
+    return ObservedError/len(radList)
 
 for ds in dataset:
-    oeListTop100Dict=[];oeListRad100Dict=[]
-    oeListTop500Dict=[];oeListRad500Dict=[]
-    oeListTop1000Dict=[];oeListRad1000Dict=[]
+    oeListTop100Dict=[[] for _ in range(3)];  oeListRad100Dict=[[] for _ in range(3)]
+    oeListTop500Dict=[[] for _ in range(3)];  oeListRad500Dict=[[] for _ in range(3)]
+    oeListTop1000Dict=[[] for _ in range(3)]; oeListRad1000Dict=[[] for _ in range(3)]
     for repeat in range(repeatNumber):
+        rad1000List = [];top1000List = []
         countNum = 0
         h1h2List = getH1H2(num1,num2,h)#h=500
         sketchList = []
@@ -188,29 +190,48 @@ for ds in dataset:
         rad500List = getRadList(500)
         rad1000List = getRadList(1000)
 
-        oeListTop100=[];oeListRad100=[]
-        oeListTop500=[];oeListRad500=[]
-        oeListTop1000=[];oeListRad1000=[]
+        oeListTop100=[[] for _ in range(3)];oeListRad100=[[] for _ in range(3)]
+        oeListTop500=[[] for _ in range(3)];oeListRad500=[[] for _ in range(3)]
+        oeListTop1000=[[] for _ in range(3)];oeListRad1000=[[] for _ in range(3)]
 
-        for i in range(len(sketchList)):
-            print('for %d'%i)
-            ObservedError = evaluate_top_mean(sketchList[i],top100List);oeListTop100.append(ObservedError)
-            ObservedError = evaluate_top_mean(sketchList[i],top500List);oeListTop500.append(ObservedError)
-            ObservedError = evaluate_top_mean(sketchList[i],top1000List);oeListTop1000.append(ObservedError)
-            print()
-        
         # evaluation
+        for i in range(len(sketchList)):
+            # top
+            print('for %d'%i)
+            ObservedError = evaluate_top_mean(sketchList[i],top100List);oeListTop100[0].append(ObservedError)
+            ObservedError = evaluate_top_mean(sketchList[i],top500List);oeListTop500[0].append(ObservedError)
+            ObservedError = evaluate_top_mean(sketchList[i],top1000List);oeListTop1000[0].append(ObservedError)
+            print()
+            ObservedError = evaluate_top_medium(sketchList[i],top100List);oeListTop100[1].append(ObservedError)
+            ObservedError = evaluate_top_medium(sketchList[i],top500List);oeListTop500[1].append(ObservedError)
+            ObservedError = evaluate_top_medium(sketchList[i],top1000List);oeListTop1000[1].append(ObservedError)
+            print()
+            ObservedError = evaluate_top_sum(sketchList[i],top100List);oeListTop100[2].append(ObservedError)
+            ObservedError = evaluate_top_sum(sketchList[i],top500List);oeListTop500[2].append(ObservedError)
+            ObservedError = evaluate_top_sum(sketchList[i],top1000List);oeListTop1000[2].append(ObservedError)
+            print()
 
-        oeListTop100Dict.append(oeListTop100)
-        oeListRad100Dict.append(oeListRad100)
-        oeListTop500Dict.append(oeListTop500)
-        oeListRad500Dict.append(oeListRad500)
-        oeListTop1000Dict.append(oeListTop1000)
-        oeListRad1000Dict.append(oeListRad1000)
+            # random
+            ObservedError = evaluate_rad_mean(sketchList[i],rad100List);oeListRad100[0].append(ObservedError)
+            ObservedError = evaluate_rad_mean(sketchList[i],rad500List);oeListRad500[0].append(ObservedError)
+            ObservedError = evaluate_rad_mean(sketchList[i],rad1000List);oeListRad1000[0].append(ObservedError)
+            print()
+            ObservedError = evaluate_rad_medium(sketchList[i],rad100List);oeListRad100[1].append(ObservedError)
+            ObservedError = evaluate_rad_medium(sketchList[i],rad500List);oeListRad500[1].append(ObservedError)
+            ObservedError = evaluate_rad_medium(sketchList[i],rad1000List);oeListRad1000[1].append(ObservedError)
+            print()
+            ObservedError = evaluate_rad_sum(sketchList[i],rad100List);oeListRad100[2].append(ObservedError)
+            ObservedError = evaluate_rad_sum(sketchList[i],rad500List);oeListRad500[2].append(ObservedError)
+            ObservedError = evaluate_rad_sum(sketchList[i],rad1000List);oeListRad1000[2].append(ObservedError)
+            print()
 
+        for i in range(3):
+            oeListTop100Dict[i].append(oeListTop100[i]);oeListRad100Dict[i].append(oeListRad100[i])
+            oeListTop500Dict[i].append(oeListTop500[i]);oeListRad500Dict[i].append(oeListRad500[i])
+            oeListTop1000Dict[i].append(oeListTop1000[i]);oeListRad1000Dict[i].append(oeListRad1000[i])
 
         # delete
-        del sketchList;
+        del sketchList; del radPool
 
     oeRad100 = getValue(oeListRad100Dict)
     oeTop100 = getValue(oeListTop100Dict)
