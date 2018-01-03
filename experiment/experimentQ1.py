@@ -1,4 +1,5 @@
-
+# -*- coding: utf-8 -*-
+'''
 """ 
 - GOAL
 get stream| std, mean
@@ -48,6 +49,65 @@ repeatNumber = 10 # repeat times
 #================ <- parameter
 
 #多少 percent 正确率还能保障
+#
+
+'''
+
+
+
+
+""" 
+- GOAL
+get stream| std, mean
+get sample stream| std, mean
+get sketch| std, mean
+get sample sketch| std, mean
+get ratio| std, mean
+get sample ratio| std, mean
+"""
+
+#===================  Import ->
+# system
+#import sys; sys.path.append("..")
+from copy import deepcopy
+import random
+import numpy as np
+#import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
+# DIY
+import diyTool
+#===================  <- Import
+
+#===================  path area ->
+homePath = 'C:/Users/alfonso.yan/Downloads/'# use '/' as ending
+
+Q1result_Stream_Path = homePath+'Q1_streamResultData'
+Q1result_Dataset_Path = homePath+'Q1_datasetResultData'
+Q1result_Dataset_set_Path = homePath+'Q1_datasetResultData_set'
+Q1result_Sketch_Path = homePath+'Q1_sketchResultData'
+Q1result_Sketch_set_Path = homePath+'Q1_sketchResultData_set'
+#===================  <- path area
+
+#================  parameter ->
+basicPercent = 0.7
+wSet = [10,15]
+hSet = [300,500,1000]
+Epsilon = [1, 3, 5, 10]
+dataset = [ 
+    #['D:/google desk PC/ip_graph_refined',4213084,2,'ip', 80],
+    ['C:/Users/alfonso.yan/Documents/graph_freq_comp18.txt',338239,2,'comp18', 0.90],
+    ['C:/Users/alfonso.yan/Documents/graph_freq_comp16.txt',1391333,2,'comp16', 0.90],
+    ['C:/Users/alfonso.yan/Documents/graph_freq_comp14.txt',7904564,2,'comp14', 0.70],
+    ['C:/Users/alfonso.yan/Documents/ip_graph_refined',4213084,2,'ip', 0.90],
+    ['C:/Users/alfonso.yan/Documents/tweet_stream_hashed_refined',17813281,2,'tweet', 0.60],
+    #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',338239,2,'comp18', 90],
+    ['C:/Users/alfonso.yan/Documents/graph_freq_comp10.txt',1372146644,2,'comp1', 0.05]
+]
+percent = [0.001, 0.003, 0.005, 0.01, 0.03, 0.05, 0.1, 0.2]
+percentNum = len(percent)
+repeatNumber = 1 # repeat times
+#================ <- parameter
+
+#?? percent ???????
 #
 
 
@@ -120,7 +180,7 @@ def getSketchRatio(ratioListDict):
     stdList = []
     for j in range(len(Epsilon)):
         totalE = []
-        for repeat in range(repeatNumber):
+        for repeat in range(len(ratioListDict)):
             totalE.append(ratioListDict[repeat][j])
         meanList.append(np.mean(totalE))
         stdList.append(np.std(totalE))
@@ -149,33 +209,41 @@ for w in wSet:
             if True: # just incident error
                 # n*2 sketches
                 if flag:
-                    streamList = {'mean':[[] for _ in range(repeatNumber)],'std':[[] for _ in range(repeatNumber)]}
+                    #streamList = {'mean':[[] for _ in range(repeatNumber)],'std':[[] for _ in range(repeatNumber)]}
+                    streamList = {'mean':[],'std':[]}
                     streamDict = {'basicPercent':0,'percent':0,'dataset':ds[3],'mean':0,'std':0} 
-
+                    
                 stdCSketch = []
                 meanCSketch = []
                 ratioListDict_cSketch = []
                 datasetDict_cSketch = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'SKETCHmean':0,'SKETCHstd':0}
-                sketchDict_cSketch = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'MEANratio':[0 for _ in range(len(Epsilon))],'STDratio':[0 for _ in range(len(Epsilon))]}
+                #sketchDict_cSketch = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'MEANratio':[0 for _ in range(len(Epsilon))],'STDratio':[0 for _ in range(len(Epsilon))]}
+                sketchDict_cSketch = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'MEANratio':[],'STDratio':[]}
 
                 stdGMatrix = []
                 meanGMatrix = []
                 ratioListDict_gMatrix = []
                 datasetDict_gMatrix = {'w':w,'h':h,'sketch':'gm','dataset':ds[3],'SKETCHmean':0,'SKETCHstd':0}
-                sketchDict_gMatrix = {'w':w,'h':h,'sketch':'gm','dataset':ds[3],'MEANratio':[0 for _ in range(len(Epsilon))],'STDratio':[0 for _ in range(len(Epsilon))]}
+                #sketchDict_gMatrix = {'w':w,'h':h,'sketch':'gm','dataset':ds[3],'MEANratio':[0 for _ in range(len(Epsilon))],'STDratio':[0 for _ in range(len(Epsilon))]}
+                sketchDict_gMatrix = {'w':w,'h':h,'sketch':'gm','dataset':ds[3],'MEANratio':[],'STDratio':[]}
 
-                stdCSketchList = [[] for _ in range(percentNum)]
-                meanCSketchList = [[] for _ in range(percentNum)]
-                ratioListDict_cSketchSet = [[] for _ in range(percentNum)]
-                datasetDict_cSketchSet = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'percent':[],'SKETCHmean':[0 for _ in range(percentNum)],'SKETCHstd':[0 for _ in range(percentNum)]}
-                sketchDict_cSketchSet = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'percent':[],'MEANratio':[[0 for _ in range(len(Epsilon))] for _ in range(percentNum)],'STDratio':[[0 for _ in range(len(Epsilon))] for _ in range(percentNum)]}
+                stdCSketchList = []#[[] for _ in range(percentNum)]
+                meanCSketchList = []#[[] for _ in range(percentNum)]
+                ratioListDict_cSketchSet = [] #[[] for _ in range(percentNum)]
+                #datasetDict_cSketchSet = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'percent':[],'SKETCHmean':[0 for _ in range(percentNum)],'SKETCHstd':[0 for _ in range(percentNum)]}
+                #sketchDict_cSketchSet = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'percent':[],'MEANratio':[[0 for _ in range(len(Epsilon))] for _ in range(percentNum)],'STDratio':[[0 for _ in range(len(Epsilon))] for _ in range(percentNum)]}
+                datasetDict_cSketchSet = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'percent':[],'SKETCHmean':[],'SKETCHstd':[]}
+                sketchDict_cSketchSet = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'percent':0,'MEANratio':[],'STDratio':[]}
 
-                stdGMatrixList = [[] for _ in range(percentNum)]
-                meanGMatrixList = [[] for _ in range(percentNum)]
-                ratioListDict_gMatrixSet = [[] for _ in range(percentNum)]
-                datasetDict_gMatrixSet = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'percent':[],'SKETCHmean':[0 for _ in range(percentNum)],'SKETCHstd':[0 for _ in range(percentNum)]}
-                sketchDict_gMatrixSet = {'w':w,'h':h,'sketch':'cs','dataset':ds[3],'percent':0,'MEANratio':[[0 for _ in range(len(Epsilon))] for _ in range(percentNum)],'STDratio':[[0 for _ in range(len(Epsilon))] for _ in range(percentNum)]}
-
+                stdGMatrixList = []#[[] for _ in range(percentNum)]
+                meanGMatrixList = []#[[] for _ in range(percentNum)]
+                ratioListDict_gMatrixSet = []#[[] for _ in range(percentNum)]
+                #datasetDict_gMatrixSet = {'w':w,'h':h,'sketch':'gm','dataset':ds[3],'percent':[],'SKETCHmean':[0 for _ in range(percentNum)],'SKETCHstd':[0 for _ in range(percentNum)]}
+                #sketchDict_gMatrixSet = {'w':w,'h':h,'sketch':'gm','dataset':ds[3],'percent':0,'MEANratio':[[0 for _ in range(len(Epsilon))] for _ in range(percentNum)],'STDratio':[[0 for _ in range(len(Epsilon))] for _ in range(percentNum)]}
+                datasetDict_gMatrixSet = {'w':w,'h':h,'sketch':'gm','dataset':ds[3],'percent':[],'SKETCHmean':[],'SKETCHstd':[]}
+                sketchDict_gMatrixSet = {'w':w,'h':h,'sketch':'gm','dataset':ds[3],'percent':0,'MEANratio':[],'STDratio':[]}
+                
+                basicPercent = ds[4]
                 for repeat in range(repeatNumber):
                     print('============repeat: '+str(repeat))
                     stream = []
@@ -223,15 +291,17 @@ for w in wSet:
                                 # sketch storing
                                 updateSketch(cSketchSet[i],csHash,edge,cN,freq,w,mask_c)
                                 updateSketch(gMatrixSet[i],gmHash,edge,gN,freq,w,mask_g)
-
+                    '''
                     print('============start checking stream')
-                    if flag: 
-                        streamList['mean'][repeat].append(np.mean(stream))
-                        streamList['std'][repeat].append(np.std(stream))
+                    if flag:
+                        meanList = [np.mean(stream)]
+                        stdList = [np.std(stream)]
                         for i in range(percentNum):
-                            streamList['mean'][repeat].append(np.mean(streamSample[i]))
-                            streamList['std'][repeat].append(np.std(streamSample[i]))
-
+                            meanList.append(np.mean(streamSample[i]))
+                            stdList.append(np.std(streamSample[i]))
+                        streamList['mean'].append(meanList)
+                        streamList['std'].append(stdList)
+                    '''
                     print('============start checking cSketch')
                     # baseline cSketch
                     stdSketch,meanSketch,ratioList = checkSketchRatio(cSketch,ds[2])
@@ -239,12 +309,24 @@ for w in wSet:
                     meanCSketch.append(meanSketch)
                     ratioListDict_cSketch.append(ratioList)
                     # percent cSketch
+                    stdListList = []
+                    meanList = []
+                    ratioList = []
                     for i in range(percentNum):
-                        stdSketch,meanSketch,ratioList = checkSketchRatio(cSketchSet[i],ds[2])
-                        stdCSketchList[i].append(stdSketch)
-                        meanCSketchList[i].append(meanSketch)
-                        ratioListDict_cSketchSet[i].append(ratioList)
-
+                        stdSketch,meanSketch,raList = checkSketchRatio(cSketchSet[i],ds[2])
+                        stdListList.append(stdSketch)
+                        meanList.append(meanSketch)
+                        ratioList.append(raList)
+                    print('-----stdListList')
+                    print(stdListList)
+                    print('-----meanList')
+                    print(meanList)
+                    print('-----ratioList')
+                    print(ratioList)
+                    stdCSketchList.append(stdListList)
+                    meanCSketchList.append(meanList)
+                    ratioListDict_cSketchSet.append(ratioList)
+                    '''
                     print('============start checking gMatrix')
                     # baseline gMatrix
                     stdSketch,meanSketch,ratioList = checkSketchRatio(gMatrix,ds[2])
@@ -253,90 +335,108 @@ for w in wSet:
                     ratioListDict_gMatrix.append(ratioList)
 
                     # percent gMatrix
+                    stdListList = []
+                    meanList = []
+                    ratioList = []
                     for i in range(percentNum):
-                        stdSketch,meanSketch,ratioList = checkSketchRatio(gMatrixSet[i],ds[2])
-                        stdGMatrixList[i].append(stdSketch)
-                        meanGMatrixList[i].append(meanSketch)
-                        ratioListDict_gMatrixSet[i].append(ratioList)
+                        stdSketch,meanSketch,raList = checkSketchRatio(gMatrixSet[i],ds[2])
+                        stdListList.append(stdSketch)
+                        meanList.append(meanSketch)
+                        ratioList.append(raList)
+                    
+                    stdGMatrixList.append(stdListList)
+                    meanGMatrixList.append(meanList)
+                    ratioListDict_gMatrixSet.append(ratioList)
+                    '''
                     # clear memory  
                     del sketch; del cSketch; del cSketchSet; del gMatrix; del gMatrixSet; del stream; del streamSample
                     
-                    
+                '''    
                 print('============get stream result')
                 if flag:
+                    temDict = deepcopy(streamDict)
                     totalMean = []
                     totalStd = []
                     for i in range(repeatNumber):
                         totalMean.append(streamList['mean'][i][0])
                         totalStd.append(streamList['std'][i][0])
-                    streamDict['basicPercent'] = basicPercent
-                    streamDict['percent'] = 1
-                    streamDict['mean'] = sum(totalMean)/repeatNum
-                    streamDict['std'] = sum(totalStd)/repeatNum
-                    streamResultData.append(streamDict) # put in
+                    temDict['basicPercent'] = basicPercent
+                    temDict['percent'] = 1
+                    temDict['mean'] = sum(totalMean)/repeatNumber
+                    temDict['std'] = sum(totalStd)/repeatNumber
+                    streamResultData.append(temDict) # put in
 
                     for j in range(percentNum):
+                        temDict = deepcopy(streamDict)
                         totalMean = []
                         totalStd = []
                         for i in range(repeatNumber):
                             totalMean.append(streamList['mean'][i][j+1])
                             totalStd.append(streamList['std'][i][j+1])
-                        streamDict['percent'] = percent[j]
-                        streamDict['mean'] = sum(totalMean)/repeatNum
-                        streamDict['std'] = sum(totalStd)/repeatNum
-                        streamResultData.append(streamDict) # put in
+                        temDict['percent'] = percent[j]
+                        temDict['mean'] = sum(totalMean)/repeatNumber
+                        temDict['std'] = sum(totalStd)/repeatNumber
+                        streamResultData.append(temDict) # put in
 
                     diyTool.savePickle(Q1result_Stream_Path,streamResultData)
-
+                    print('^^^^^^^^^^^streamResultData^^^^^^^^^^^')
+                    print(streamResultData)
+                    print()
+                '''
                 print('============get cSketch result')
-
                 # dataset
-                datasetDict_cSketch['SKETCHstd'] = sum(stdCSketch)/(repeatNumber)
-                datasetDict_cSketch['SKETCHmean'] = sum(meanCSketch)/(repeatNumber)
+                temDict = deepcopy(datasetDict_cSketch)
+                temDict['SKETCHstd'] = sum(stdCSketch)/(repeatNumber)
+                temDict['SKETCHmean'] = sum(meanCSketch)/(repeatNumber)
+                datasetResultData.append(temDict) # put in
 
-                datasetDict_cSketchSet['percent'] = deepcopy(percent)
-                datasetDict_cSketchSet['SKETCHstd'] = [sum(stdCSk)/(repeatNumber) for stdCSk in stdCSketchList]
-                datasetDict_cSketchSet['SKETCHmean'] = [sum(meanCSk)/(repeatNumber) for meanCSk in meanCSketchList]
-
-                datasetResultData.append(datasetDict_cSketch) # put in
-                datasetResultData_set.append(datasetDict_cSketchSet) # put in
+                temDict = deepcopy(datasetDict_cSketchSet)
+                temDict['percent'] = deepcopy(percent)
+                temDict['SKETCHstd'] = [sum(stdCSk)/(repeatNumber) for stdCSk in stdCSketchList]
+                temDict['SKETCHmean'] = [sum(meanCSk)/(repeatNumber) for meanCSk in meanCSketchList]
+                datasetResultData_set.append(temDict) # put in
 
                 # sketch
+                temDict = deepcopy(sketchDict_cSketch)
                 meanList,stdList = getSketchRatio(ratioListDict_cSketch)
-                sketchDict_cSketch['MEANratio'] = meanList
-                sketchDict_cSketch['STDratio'] = stdList
-                sketchResultData.append(sketchDict_cSketch)
+                temDict['MEANratio'] = meanList
+                temDict['STDratio'] = stdList
+                sketchResultData.append(temDict)
 
+                temDict = deepcopy(sketchDict_cSketchSet)
                 for i in range(percentNum):
                     meanList,stdList = getSketchRatio(ratioListDict_cSketchSet[i])
-                    sketchDict_cSketchSet['MEANratio'][i] = meanList
-                    sketchDict_cSketchSet['STDratio'][i] = stdList
-                sketchResultData_set.append(sketchDict_cSketchSet) # put in
-
+                    temDict['MEANratio'].append(meanList)
+                    temDict['STDratio'].append(stdList)
+                sketchResultData_set.append(temDict) # put in
+                '''
                 print('============get gMatrix result')
                 # dataset
-                datasetDict_gMatrix['SKETCHstd'] = sum(stdGMatrix)/(repeatNumber)
-                datasetDict_gMatrix['SKETCHmean'] = sum(meanGMatrix)/(repeatNumber)
+                temDict = deepcopy(datasetDict_gMatrix)
+                temDict['SKETCHstd'] = sum(stdGMatrix)/(repeatNumber)
+                temDict['SKETCHmean'] = sum(meanGMatrix)/(repeatNumber)
+                datasetResultData.append(temDict) # put in
 
-                datasetDict_gMatrixSet['percent'] = deepcopy(percent)
-                datasetDict_gMatrixSet['SKETCHstd'] = [sum(stdGMa)/(repeatNumber) for stdGMa in stdGMatrixList]
-                datasetDict_gMatrixSet['SKETCHmean'] = [sum(meanGMa)/(repeatNumber) for meanGMa in meanGMatrixList]
-
-                datasetResultData.append(datasetDict_gMatrix) # put in
-                datasetResultData_set.append(datasetDict_gMatrixSet) # put in
+                temDict = deepcopy(datasetDict_gMatrixSet)
+                temDict['percent'] = deepcopy(percent)
+                temDict['SKETCHstd'] = [sum(stdGMa)/(repeatNumber) for stdGMa in stdGMatrixList]
+                temDict['SKETCHmean'] = [sum(meanGMa)/(repeatNumber) for meanGMa in meanGMatrixList]
+                datasetResultData_set.append(temDict) # put in
                
                 # sketch
+                temDict = deepcopy(sketchDict_gMatrix)
                 meanList,stdList = getSketchRatio(ratioListDict_gMatrix)
-                sketchDict_gMatrix['MEANratio'] = meanList
-                sketchDict_gMatrix['STDratio'] = stdList
-                sketchResultData.append(sketchDict_gMatrix) # put in
+                temDict['MEANratio'] = meanList
+                temDict['STDratio'] = stdList
+                sketchResultData.append(temDict) # put in
 
+                temDict = deepcopy(sketchDict_gMatrixSet)
                 for i in range(percentNum):
                     meanList,stdList = getSketchRatio(ratioListDict_gMatrixSet[i])
-                    sketchDict_gMatrixSet['MEANratio'][i] = meanList
-                    sketchDict_gMatrixSet['STDratio'][i] = stdList
-                sketchResultData_set.append(sketchDict_gMatrixSet) # put in
-
+                    temDict['MEANratio'].append(meanList)
+                    temDict['STDratio'].append(stdList)
+                sketchResultData_set.append(temDict) # put in
+                '''
                 print('========saving') # saving .......
                 diyTool.savePickle(Q1result_Dataset_Path,datasetResultData)
                 diyTool.savePickle(Q1result_Dataset_set_Path,datasetResultData_set)
