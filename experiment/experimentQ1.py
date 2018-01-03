@@ -291,7 +291,7 @@ for w in wSet:
                                 # sketch storing
                                 updateSketch(cSketchSet[i],csHash,edge,cN,freq,w,mask_c)
                                 updateSketch(gMatrixSet[i],gmHash,edge,gN,freq,w,mask_g)
-                    '''
+                    
                     print('============start checking stream')
                     if flag:
                         meanList = [np.mean(stream)]
@@ -301,7 +301,7 @@ for w in wSet:
                             stdList.append(np.std(streamSample[i]))
                         streamList['mean'].append(meanList)
                         streamList['std'].append(stdList)
-                    '''
+                    
                     print('============start checking cSketch')
                     # baseline cSketch
                     stdSketch,meanSketch,ratioList = checkSketchRatio(cSketch,ds[2])
@@ -326,7 +326,7 @@ for w in wSet:
                     stdCSketchList.append(stdListList)
                     meanCSketchList.append(meanList)
                     ratioListDict_cSketchSet.append(ratioList)
-                    '''
+                    
                     print('============start checking gMatrix')
                     # baseline gMatrix
                     stdSketch,meanSketch,ratioList = checkSketchRatio(gMatrix,ds[2])
@@ -347,11 +347,11 @@ for w in wSet:
                     stdGMatrixList.append(stdListList)
                     meanGMatrixList.append(meanList)
                     ratioListDict_gMatrixSet.append(ratioList)
-                    '''
+                    
                     # clear memory  
                     del sketch; del cSketch; del cSketchSet; del gMatrix; del gMatrixSet; del stream; del streamSample
                     
-                '''    
+                    
                 print('============get stream result')
                 if flag:
                     temDict = deepcopy(streamDict)
@@ -382,7 +382,7 @@ for w in wSet:
                     print('^^^^^^^^^^^streamResultData^^^^^^^^^^^')
                     print(streamResultData)
                     print()
-                '''
+                
                 print('============get cSketch result')
                 # dataset
                 temDict = deepcopy(datasetDict_cSketch)
@@ -409,7 +409,7 @@ for w in wSet:
                     temDict['MEANratio'].append(meanList)
                     temDict['STDratio'].append(stdList)
                 sketchResultData_set.append(temDict) # put in
-                '''
+                
                 print('============get gMatrix result')
                 # dataset
                 temDict = deepcopy(datasetDict_gMatrix)
@@ -436,7 +436,7 @@ for w in wSet:
                     temDict['MEANratio'].append(meanList)
                     temDict['STDratio'].append(stdList)
                 sketchResultData_set.append(temDict) # put in
-                '''
+                
                 print('========saving') # saving .......
                 diyTool.savePickle(Q1result_Dataset_Path,datasetResultData)
                 diyTool.savePickle(Q1result_Dataset_set_Path,datasetResultData_set)

@@ -20,21 +20,29 @@ import lib.hSketch as hSketch
 w = 10
 num1 = 0
 num2 = 100
-increase = 100
-h = 1000
+increase = 30
+h = 300
 dataset = [ 
     #['D:/google desk PC/ip_graph_refined',4213084,2,'ip', 80],
-    ['C:/Users/alfonso.yan/Documents/graph_freq_comp18.txt',338239,2,'comp18', 0.80],
-    ['C:/Users/alfonso.yan/Documents/graph_freq_comp16.txt',1391333,2,'comp16', 0.80],
-    ['C:/Users/alfonso.yan/Documents/graph_freq_comp14.txt',7904564,2,'comp14', 0.60],
+    ['D:/google desk PC/graph_freq_comp18.txt',338239,2,'comp18', 0.80],
+    ['D:/google desk PC/graph_freq_comp16.txt',1391333,2,'comp16', 0.80],
+    ['D:/google desk PC/graph_freq_comp14.txt',7904564,2,'comp14', 0.60],
     ['D:/google desk PC/ip_graph_refined',4213084,2,'ip', 0.70],
-    ['C:/Users/alfonso.yan/Documents/tweet_stream_hashed_refined',17813281,2,'tweet', 0.50],
+    ['D:/google desk PC/tweet_stream_hashed_refined',17813281,2,'tweet', 0.50],
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',338239,2,'comp18', 90],
-    ['C:/Users/alfonso.yan/Documents/graph_freq_comp10.txt',1372146644,2,'comp1', 0.03]
+    ['D:/google desk PC/graph_freq_comp10.txt',1372146644,2,'comp1', 0.03]
 ]
 repeatNumber = 10 # repeat times
+datasetRad = []
+datasetTop = []
 #================ <- parameter
 
+#===================  path area ->
+homePath = 'C:/Users/alfonso.yan/Downloads/'# use '/' as ending
+
+Q4result_ResultTop_Path = homePath+'Q4_ResultTop'
+Q4result_ResultRad_Path = homePath+'Q4_ResultRad'
+#===================  <- path area
 
 def getMedium(valueList):
     return (valueList[int(len(valueList)/2)] + valueList[~int(len(valueList)/2)])/ 2
@@ -48,12 +56,13 @@ def getH1H2(num1,num2,h):
     return h1h2List
 
 def getValue(twoDlist):
+    # work for all the sketch
     result = []
     for i in range(num2-num1):
         valueList = []
         for repeat in range(repeatNumber):
             valueList.append(twoDlist[repeat][i])
-        result.append(sum(valueList)/repeatNumber)
+        result.append(np.mean(valueList))
     return result
 
 def getRadList(num,radPool):
@@ -135,6 +144,8 @@ def evaluate_rad_sum(sketch,radList):
         ObservedError += totalLoss1/totalFreq1
     print('ObservedError is '+str(ObservedError/len(radList)))
     return ObservedError/len(radList)
+
+
 
 for ds in dataset:
     oeListTop100Dict=[[] for _ in range(3)];  oeListRad100Dict=[[] for _ in range(3)]
@@ -241,5 +252,18 @@ for ds in dataset:
     oeTop1000 = getValue(oeListTop1000Dict)
 
 
+    temDict1 = {'w':w,'h':h,'dataset':ds[3],'type':'Rad','100':oeRad100,'500':oeRad500,'1000':oeRad1000}
+    datasetRad.append(temDict1)
+    temDict2 = {'w':w,'h':h,'dataset':ds[3],'type':'Top','100':oeTop100,'500':oeTop500,'1000':oeTop1000}
+    datasetTop.append(temDict2)
 
-
+    print('========saving') # saving .......
+    diyTool.savePickle(Q4result_ResultRad_Path,datasetRad)
+    diyTool.savePickle(Q4result_ResultTop_Path,datasetTop)
+                
+    print('^^^^^^^^^^^datasetRad^^^^^^^^^^^')
+    print(temDict1)
+    print()
+    print('^^^^^^^^^^^datasetTop^^^^^^^^^^^')
+    print(temDict2)
+    print()
