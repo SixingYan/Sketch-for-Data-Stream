@@ -20,7 +20,7 @@ import lib.hSketch as hSketch
 #================  parameter ->
 w = 10
 num1 = 0
-num2 = 10#0
+num2 = 100
 increase = 30
 h = 300
 dataset = [ 

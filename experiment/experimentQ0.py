@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     Test Q0, the Eq(2) 
 """
