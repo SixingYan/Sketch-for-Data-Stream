@@ -57,7 +57,7 @@ def getH1H2(num1,num2,h):
 
 def getValue(twoDlist):
     # work for all the sketch
-    result = []
+    result = [] # result = [100]
     for i in range(num2-num1):
         valueList = []
         for repeat in range(repeatNumber):
@@ -152,6 +152,7 @@ for ds in dataset:
     oeListTop100Dict=[[] for _ in range(3)];  oeListRad100Dict=[[] for _ in range(3)]
     oeListTop500Dict=[[] for _ in range(3)];  oeListRad500Dict=[[] for _ in range(3)]
     oeListTop1000Dict=[[] for _ in range(3)]; oeListRad1000Dict=[[] for _ in range(3)]
+    # three types of oe evaluation mean/medium/sum, 100 sketches  oeListTop100Dict = [3][100]
     for repeat in range(repeatNumber):
         print('============repeat: '+str(repeat))
         rad1000List = [];top1000List = []
@@ -204,7 +205,7 @@ for ds in dataset:
         rad500List = getRadList(500,radPool)
         rad1000List = getRadList(1000,radPool)
 
-        oeListTop100=[[] for _ in range(3)];oeListRad100=[[] for _ in range(3)]
+        oeListTop100=[[] for _ in range(3)];oeListRad100=[[] for _ in range(3)] # three types of oe evaluation mean/medium/sum
         oeListTop500=[[] for _ in range(3)];oeListRad500=[[] for _ in range(3)]
         oeListTop1000=[[] for _ in range(3)];oeListRad1000=[[] for _ in range(3)]
 
@@ -251,6 +252,7 @@ for ds in dataset:
     oeRad100 = [[] for _ in range(3)];oeTop100 = [[] for _ in range(3)]
     oeRad500 = [[] for _ in range(3)];oeTop500 = [[] for _ in range(3)]
     oeRad1000 = [[] for _ in range(3)];oeTop1000 = [[] for _ in range(3)]
+    # three type evaluation mean/medium/sum 100 sketch [3][100]
     for i in range(3):
         oeRad100[i] = getValue(oeListRad100Dict[i])
         oeTop100[i] = getValue(oeListTop100Dict[i])
