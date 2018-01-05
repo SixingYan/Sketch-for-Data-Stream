@@ -52,32 +52,24 @@ repeatNumber = 10 # repeat times
 alphaType = ['Mean','Medium','Max']
 evaluateType = [['meanEval','meanEvalBest'],['mediumEval','mediumEvalBest'],['sumEval','sumEvalBest']]
 h = 300
-oeIdx = {'Rad':['','',''],'Top':['','','']}
+oeIdx = {'Rad':['oeRad100','oeRad500','oeRad1000'],'Top':['oeTop100','oeTop500','oeTop1000']}
 #================ <- parameter
 
 
-
-
-
-
-
-
 #================
-# get range of sqrt beta
-def getH1Range(alpha):
 
+def getH1Range(alpha):
+    # get range basing on sqrt beta
     h1Predict = [] # point, uu, ll
     point = 1/(2*alpha)
-    ll
-    uu
-    
+    ll = 
+    uu = 
     h1_point = int(h * point) 
     h1Predict.append(point)
     h1_ll = int(h * ll) 
     h1Predict.append((h1,h2))
     h1_ii = int(h * uu) 
     h1Predict.append((h1,h2))
-    
     return h1Predict
 
 def getMedium(valueList):
@@ -92,7 +84,8 @@ def getRecord(resultDict,h,w,ds,qType):
             break
     return returnD
 
-def getBaseLine(record,qType):
+def getBaseLine(record,qType, num):
+    # num = '100'/500/1000
     # h1Range = [3][3][3]   100/500/1000  mean/medium/sum  point/ll/uu
     increace = int(record['h']/100)
     h1Range = []
@@ -125,6 +118,7 @@ for ds in dataset:
     for repeat in range(repeatNumber):
         dictKeyList = set([])
         nodeDict = {} #{}
+        # first stream for degree
         with open(ds[0],'r') as f:
             # out degree
             for line in f:
@@ -132,24 +126,24 @@ for ds in dataset:
                 if not len(line) > 0:
                     continue
                 s = int(parts[0]);t = int(parts[1]);freq = int(float(parts[2]))
-
+                # out degree
                 if s in dictKeyList:
                     nodeDict[s][1] += freq
                 else:
                     nodeDict[s] = [0,0]
                     nodeDict[s][1] += freq
                     dictKeyList.add(s)
-            # in degree
-            if t in dictKeyList:
-                nodeDict[t][0] += freq
-            else:
-                nodeDict[t] = [0,0]
-                nodeDict[t][0] += freq
-                dictKeyList.add(t)
-
+                # in degree
+                if t in dictKeyList:
+                    nodeDict[t][0] += freq
+                else:
+                    nodeDict[t] = [0,0]
+                    nodeDict[t][0] += freq
+                    dictKeyList.add(t)
+        # second stream for alpha
         aList = []
         with open(ds[0],'r') as f:
-            # out degree
+            
             for line in f:
                 line = line.strip()
                 if not len(line) > 0:
@@ -158,24 +152,6 @@ for ds in dataset:
                 # alpha = (i,*)/(*,j)
                 a = nodeDict[s][1]/nodeDict[t][0] * freq
                 aList.append(a)
-        """
-        outList = []
-        inList = []
-        for key in list(dictKeyList):
-            inList.append(nodeDict[key][0])
-            outList.append(nodeDict[key][1])
-
-        inList.sort(); outList.sort()
-        meanOut = np.mean(outList)
-        mediumOut = (outList[int(len(outList)/2)] + outList[~int(len(outList)/2)])/ 2
-        maxOut = max(outList)
-        meanIn = np.mean(inList)
-        mediumIn = (inList[int(len(inList)/2)] + inList[~int(len(inList)/2)])/ 2
-        maxIn = max(outList)
-        alphaMEAN = meanOut/meanIn
-        alphaMEDIUM = mediumOut/mediumIn
-        alphaMAX = maxOut/maxIn
-        """
         aList.sort()
         alphaMAX = max(aList)
         alphaMEAN = np.mean(aList)
@@ -184,59 +160,65 @@ for ds in dataset:
         meanList.append(alphaMEAN)
         mediumList.append(alphaMEDIUM)
         maxList.append(alphaMAX)
-
     # <- repeat end
 
-    '''
-    temDict = {'w':w,'h':h,'dataset':ds[3],'type':'Rad','100':oeRad100,'500':oeRad500,'1000':oeRad1000}
-    '''
-    # evaluating top
-
-
-    # given h, w, ds, type
+    # evaluating rad   given h, w, ds, type
     record = getRecord(resultDict,h,w,ds,'Rad')
-    h1Range = getBaseLine(record) # [[[point, ll, uu],[],...],[[]....]....] 100/500/1000 mean/medium/sum point/uu/ll h1Range = [3][3][3]
+    # one type per time 
+    for num in ['100','500','1000']:
+        h1Range = getBaseLine(record,'100') # [[[point, ll, uu],[],...],[[]....]....] mean/medium/sum point/uu/ll h1Range = [3][3][3]
 
-    evaluateResult = [[] for _ in range(3)] # mean/medium/max repeat10 alpha3 metric2 [3][10][3][2] 
-    for repeat in range(repeatNumber): # repeat 10
-        a = meanList[repeat]; valueRange = getH1Range(a,h); 
-        result = evaluate(valueRange,h1Range) # result = [3][2]
-        evaluateResult[0].append(result)
+        evaluateResult = [[] for _ in range(3)] # mean/medium/max repeat10 alpha3 metric2 [3][10][3][2] 
+        for repeat in range(repeatNumber): # repeat 10
+            a = meanList[repeat]; valueRange = getH1Range(a,h); 
+            result = evaluate(valueRange,h1Range) # result = [3][2]
+            evaluateResult[0].append(result)
 
-        a = mediumList[repeat]; valueRange = getH1Range(a,h); result = evaluate(valueRange,h1Range)
-        evaluateResult[1].append(result)
+            a = mediumList[repeat]; valueRange = getH1Range(a,h); result = evaluate(valueRange,h1Range)
+            evaluateResult[1].append(result)
 
-        a = maxList[repeat]; valueRange = getH1Range(a,h); result = evaluate(valueRange,h1Range)
-        evaluateResult[2].append(result)
+            a = maxList[repeat]; valueRange = getH1Range(a,h); result = evaluate(valueRange,h1Range)
+            evaluateResult[2].append(result)
 
-    # evaluateResult = [3][10][3] # 3 evaluating way 10 repeat time 3 alpha
-    # keep 10 results, find the best as result
-    for i in range(3):# 3 evaluating way
-        #evaluateResult[i]
-        resultList_bias = [0,0,0] # the smaller the better min
-        resultList_cover = [0,0,0] # the bigger the better max
-        
-        
-        for j in range(3): # 3 alpha
-            totalResult_b = []
-            totalResult_c = []
-            for repeat in range(repeatNumber):
-                totalResult_b.append(evaluateResult[i][repeat][j][0])
-                totalResult_c.append(evaluateResult[i][repeat][j][1])
-            bestValue = min(totalResult_b);resultList_bias[j] = bestValue
-            bestValue = min(totalResult_c);resultList_cover[j] = bestValue
+    # evaluateResult = [3][10][3][2] # 3 evaluating way 10 repeat time 3 alpha 2 metric
+    # keep 10 results, find the best as return [3][3]
+        result_bias = [] # [3][3] 3evaluate 3 alpha
+        result_cover = []
+        for i in range(3):# 3 evaluating way
+            resultList_bias = [0,0,0] # the smaller the better min
+            resultList_cover = [0,0,0] # the bigger the better max
+            for j in range(3): # 3 alpha
+                totalResult_b = []
+                totalResult_c = []
+                for repeat in range(repeatNumber): # 10 repeat find best as the final
+                    totalResult_b.append(evaluateResult[i][repeat][j][0])
+                    totalResult_c.append(evaluateResult[i][repeat][j][1])
+                bestValue = min(totalResult_b);resultList_bias[j] = bestValue
+                bestValue = min(totalResult_c);resultList_cover[j] = bestValue
 
-
+            result_bias.append(resultList_bias)
+            result_cover.append(resultList_cover)
         #{'w':0,'h':h,'meanEval':[0,0,0],}
-        #evaluteDict = {'w':0,'h':h,'ds':[],'meanEval':[],'meanEvalBest':'','mediumEval':[],'mediumEvalBest':'','sumEval':[],'sumEvalBest':''}
+        #evaluteDict = {'w':0,'h':h,'ds':[],'metrix':'','evaluate':'oeRad100','meanEval':[3],'meanEvalBest':'','mediumEval':[],'mediumEvalBest':'','sumEval':[],'sumEvalBest':''}
+        evaluteDict = {'w':w,'h':h,'ds':[],'metrix':'','evaluate':'','meanEval':[],'meanEvalBest':'','mediumEval':[],'mediumEvalBest':'','sumEval':[],'sumEvalBest':''}
         temDict = copy.deepcopy(evaluteDict)
+        temDict['metrix'] = 'bias'
+        temDict['evaluate'] = 'oeRad100'
+        for i in range(3):
+            temDict[evaluateType[i][0]] = result_bias[i]
+            idx = result_bias[i].index(min(result_bias[i])) # return 0,1,2 -> mean/medium/max
+            temDict[evaluateType[i][1]] = alphaType[idx]
+        Q42_datasetRad.append(temDict)
 
-        idx = resultList.index(min(resultList))
-        temDict[evaluateType[i][1]] = alphaType[idx]
-        temDict[evaluateType[i][0]] = resultList
+        temDict = copy.deepcopy(evaluteDict)
+        temDict['metrix'] = 'cover'
+        temDict['evaluate'] = 'oeRad100'
+        for i in range(3):
+            temDict[evaluateType[i][0]] = result_cover[i]
+            idx = result_cover[i].index(min(result_cover[i])) # return 0,1,2 -> mean/medium/max
+            temDict[evaluateType[i][1]] = alphaType[idx]
+        Q42_datasetRad.append(temDict)
         
-
-
     # evaluating rad
 
 
