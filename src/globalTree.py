@@ -2,6 +2,7 @@
 
 import sketchTreeNode
 import diyTool
+import treeTool
 []
 '''
 
@@ -10,8 +11,8 @@ return best path
 最后一段edge, 最小的那个最好
 
 
-
-先建树
+global tree 中途不计算边
+先建树, 不用算cost, 然后得到了leaf后回溯path
 后搜索
 
 
@@ -23,18 +24,9 @@ globalNodeID = 0
 nodeDict = {} # 'nodeID':node
 leafDict = {} # 'nodeID':[pathNodeList,cost]  pathNodeList = [N]
 
-def getPath():
-    # return nodelist of path
-    return 
 
-def getCost(node,subnode,edgeType):
-    #
-    preList = getPath()
-
-    return cost
 
 def get(partList):
-
     # edge=0 seperate  edge=1 combine 
     j = 0
     strategy = []#[[],...[]]
@@ -58,9 +50,7 @@ def f():
     pass
 
 
-def printPath(pathList):
-    # print
-    pass
+
 
 def buildTree(node):
     # node is not leaf
@@ -103,7 +93,8 @@ def searchBest():
     return minCost,bestPathList
 
 def main():
-    root = sketchTreeNode(globalNodeID)
+    rootID = diyTool.getRoot()
+    root = sketchTreeNode(globalNodeID, rootID,    ,)
     nodeList.append(root) # store this node
     globalNodeID += 1
 
