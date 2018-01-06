@@ -55,15 +55,12 @@ h = 300
 oeIdx = {'Rad':['oeRad100','oeRad500','oeRad1000'],'Top':['oeTop100','oeTop500','oeTop1000']}
 #================ <- parameter
 
-
-#================
-
 def getH1Range(alpha):
     # get range basing on sqrt beta
     h1Predict = [] # point, uu, ll
     point = 1/(2*alpha)
-    ll = 
-    uu = 
+    ll = max([0,min([(1-abs(2*alpha-1))/(2*alpha),(1+abs(2*alpha-1))/(2*alpha)])])
+    uu = max([(1-abs(2*alpha-1))/(2*alpha),(1+abs(2*alpha-1))/(2*alpha)])
     h1_point = int(h * point) 
     h1Predict.append(point)
     h1_ll = int(h * ll) 
@@ -76,7 +73,8 @@ def getMedium(valueList):
     return (valueList[int(len(valueList)/2)] + valueList[~int(len(valueList)/2)])/ 2
 
 def getRecord(resultDict,h,w,ds,qType):
-    #
+    # resultDict = {'w':w,'h':h,'dataset':ds[3],'type':'Rad','100':oeRad100,'500':oeRad500,'1000':oeRad1000}
+    # return dict-type record
     returnD = None
     for ky in list(resultDict.keys()):
         if resultDict[ky]['h']==h and resultDict[ky]['w']==w and resultDict[ky]['dataset']==ds and resultDict[ky]['type']==qType:
@@ -84,31 +82,26 @@ def getRecord(resultDict,h,w,ds,qType):
             break
     return returnD
 
-def getBaseLine(record,qType, num):
-    # num = '100'/500/1000
+def getBaseLine(record, num):
+    # num = '100'/500/1000  没写入这个
     # h1Range = [3][3][3]   100/500/1000  mean/medium/sum  point/ll/uu
     increace = int(record['h']/100)
     h1Range = []
-    for i in range(3):# oe 100/500/1000
-        key = oeIdx[qType][i] 
-        oeList = record[key] # oeList = mean/medium/sum 1,2,3,4,5 [3][100]
-        # [9] is the place of h1=h2
-        return_mms = []
-        for k in range(3): #mean/medium/sum
-            base = oeList[9]
-            rangeIndex = []
-            for j in range(oeList[k]): # 100 sketches
-                if oeList[j] < base:
-                    rangeIndex.append(j)
-            h1_uu = (max(rangeIndex)+1) * increace 
-            h1_ll = (min(rangeIndex)+1) * increace
-            h1_point = (index(min(oeList))+1) * increace
-
-            return_mms.append([h1_ll,h1_uu,h1_point])
-        h1Range.append(return_mms)
-
+    oeList = record[num] # oe100List = mean/medium/sum 100 sketch [3][100]
+    # [9] is the place of h1=h2
+    return_mms = []
+    for k in range(3): #mean/medium/sum
+        base = oeList[9]
+        rangeIndex = []
+        for j in range(oeList[k]): # 100 sketches
+            if oeList[j] < base:
+                rangeIndex.append(j)
+        h1_uu = (max(rangeIndex)+1) * increace 
+        h1_ll = (min(rangeIndex)+1) * increace
+        h1_point = (index(min(oeList))+1) * increace
+        return_mms.append([h1_ll,h1_uu,h1_point])
+    h1Range.append(return_mms)
     return h1Range 
-
 
 AlphaList = []
 for ds in dataset:
