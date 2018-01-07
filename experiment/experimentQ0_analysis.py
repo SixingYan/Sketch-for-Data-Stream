@@ -25,6 +25,7 @@ def getExpectProb():
     return ep
 
 def drawStackingDiagram():
+    
     pass
 
 expectProb = getExpectProb()
