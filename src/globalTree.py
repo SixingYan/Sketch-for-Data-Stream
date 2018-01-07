@@ -56,7 +56,7 @@ def buildTree(node):
     # node is not leaf
     candidate = getCandidate() # 没出现在path上的partID
     for partID in candidate:
-        if partID < node.partID:
+        if partID < node.partID: # MIND!!!! here should be part.order < part.order 
             globalNodeID += 1
             subnode = sketchTreeNode(globalNodeID);
             nodeDict[subnode.nodeID] = subnode # store this node

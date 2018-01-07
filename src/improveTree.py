@@ -24,10 +24,26 @@ globalNodeID = 0
 nodeDict = {} # 'nodeID':node
 leafDict = {} # 'nodeID':[pathNodeList,cost]  pathNodeList = [N]
 
+def getPath(node):
+    # return path = {'partID':[0,3,5,7],'edge':[S,C,S,...]}
+    priorNode = nodeDict[node.priorID]
+    edgeType = priorNode.nextNodes[node.partID]
+    if proprNode.order == 1:
+       return str(partID) 
+    else:
+        return getPath() + edgeType + str(partID) 
 
-def f():
+def getCost(node,subnode,edgeType):
     #
-    pass
+    prePathStr = getPath(node)
+    prePathStr = prePathStr + edgeType + str(subnode.partID)
+    cost = callSketch(prePathStr)
+    return cost
+
+def getCandidate(node):
+    pathStr = getPath(node)
+    return 
+
 def buildTree(node):
     # node is not leaf
     candidate = getCandidate() # 没出现在path上的partID
@@ -59,11 +75,10 @@ def buildTree(node):
         leafDict[subnode.nodeID] = [cost,currentPath]
 
 def main():
-    rootID = diyTool.getRoot()
-    root = sketchTreeNode(globalNodeID, rootID,    ,)
-    nodeList.append(root) # store this node
+    rootID = tn.getRoot()
+    root = sketchTreeNode(globalNodeID,rootID,-1, 1)
+    nodeDict[root.nodeID] = root# store this node
     globalNodeID += 1
-
     buildTree(root)
     minCost,bestPathList = searchBest()
     print(minCost)

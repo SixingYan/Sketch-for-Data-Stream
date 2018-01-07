@@ -12,7 +12,7 @@ def buildTree(node):
     candidate = getCandidate() # 没出现在path上的partID
     minCost = 0
     bestNode = []
-    # dont hurry to add, get cost firts
+
     for partID in candidate:
         if partID < node.partID:
             cost = getCost()
@@ -25,18 +25,17 @@ def buildTree(node):
         if cost < minCost:
             minCost = cost
             bestNode = [partID,'dotted']
-        break # each node only have one dotted edge
-
+        break 
+    #def __init__(self, partID, nodeID, priorID, order):        
     globalNodeID += 1
-    subnode = sketchTreeNode(globalNodeID, node.order+1);
+    subnode = sketchTreeNode(bestNode[0], globalNodeID, node.nodeID, node.order+1);
     nodeDict[subnode.nodeID] = subnode # store this node
     node.nextNodeEdge((bestNode[0],minCost,bestNode[1]))
     
     if not subnode.order == N:# not leaf 
         buildTree(node)
     else:
-        subnode.isLeaf = True # use for search 
-        currentPath = getPath() # list-type
+        currentPath = getPath() # dict-type
         leafDict[subnode.nodeID] = [cost,currentPath]
 
 def main():
