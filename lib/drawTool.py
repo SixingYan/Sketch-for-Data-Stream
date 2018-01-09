@@ -218,4 +218,24 @@ for i in range(4):
 
 
 
+Epsilon = [i+1 for i in range(10)]
+comp18=[0.99985177999999997,
+  0.99991038666666654,
+  0.99993279333333329,
+  0.99994549333333338,
+  0.99995399333333346,
+  0.99996019999999997,
+  0.99996399999999996,
+  0.9999667000000001,
+  0.99996970000000007,
+  0.99997229333333326]
 
+standard = [1-1/((e**2)**10) for e in Epsilon]
+diff = []
+
+for i in range(10):
+    if i == 0:
+        continue
+    diff.append(abs(comp18[i]-standard[i])/standard[i])
+
+plt.plot(standard,diff)

@@ -33,9 +33,11 @@ expectProb = getExpectProb()
 wSet = [10,15]
 hSet = [300,500,1000]
 sketchName = ['cs','gm']
-
+figNum = 1
 for w in wSet:
     for h in hSet:
+        plt.figure(figNum)
+        figNum += 1d
         for sName in sketchName:
             []
 
