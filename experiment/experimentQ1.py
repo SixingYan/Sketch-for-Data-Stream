@@ -69,11 +69,23 @@ dataset = [
     ['C:/Users/alfonso.yan/Documents/graph_freq_comp10.txt',1372146644,2,'comp1', 0.05]
 ]
 percent = [0.001, 0.003, 0.005, 0.01, 0.03, 0.05, 0.1, 0.2]
-n=[int(1/i) for i in percent]
 percentNum = len(percent)
 repeatNumber = 1 # repeat times
 #================ <- parameter
 
+
+
+
+total = 100000
+sampleNum = total * percent
+
+samplePool = []
+sampleList = []
+if len(samplePool) > sampleNum:
+    for _ in range(sampleNum):
+        idx = random.randint(0,sampleNum-1)
+
+#
 def combine(edge, N):
     combinedValue = ''
     for item in edge:
@@ -171,6 +183,9 @@ for w in wSet:
                     mask_g = [diyTool.getTwoRandomNum(gN) for _ in range(w)]
                     # start stream
                     print('============start stream')
+
+                    先做出sample，然后再用sample来评估
+
                     with open(ds[0], 'r') as f:
                         for line in f:
                             if not len(line) > 0:
