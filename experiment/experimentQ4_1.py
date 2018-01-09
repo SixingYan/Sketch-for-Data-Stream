@@ -45,6 +45,7 @@ Q4result_ResultRad_Path = homePath+'Q4_ResultRad'
 #===================  <- path area
 
 def getMedium(valueList):
+    valueList.sort()
     return (valueList[int(len(valueList)/2)] + valueList[~int(len(valueList)/2)])/ 2
 
 def getH1H2(num1,num2,h):
