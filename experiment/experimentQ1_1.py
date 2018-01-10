@@ -14,35 +14,30 @@ dataset = [
 
 home = 'D:/google desk PC/sample/'
 
+def getSamplePool(path, samplePool,percent):
+    with open(path,'r') as f:
+        for line in f:
+            if len(line)>0:
+                if not random.randint(0,10000) < 10000 * percent:
+                    continue # rej
+                samplePool.append(line)
+
 for ds in dataset:
+    print('=====now is '+ds[3])
     for i in range(len(percent)):
+        print('=======percent is '+str(percent[i]))
         samplePool = []
         sampleList = []
         print('======first sampling!')
-        with open(ds[0],'r') as f:
-            for line in f:
-                if len(line)>0:
-                    if not random.randint(0,10000) < 10000 * percent[i]:
-                        continue # rej
-                    samplePool.append(line)
+        while len(samplePool) < ds[2] * percent[i]:
+            print('=====get sampling!')
+            getSamplePool(ds[0], samplePool, percent[i])
         print('======second sampling!')
         if len(samplePool) > ds[2] * percent[i]:
             for _ in range(int(ds[2] * percent[i])):
                 idx = random.randint(0,len(samplePool)-1)
                 sampleList.append(samplePool[idx])
         print('======saving sampling!')
-        with open(home+ds[3]+'_'+percent[i],'w') as f:
+        with open(home+ds[3]+'_'+str(percent[i])+'.txt','w') as f:
             f.writelines(sampleList)
         del samplePool; del sampleList;
-        break
-    break
-
-
-
-
-
-
-
-
-
-
