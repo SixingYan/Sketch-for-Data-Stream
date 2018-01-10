@@ -135,7 +135,7 @@ def getSTD(sketch,edgeNum):
     mediumSTD = getMedium(stdList)
     return meanSTD, mediumSTD
 
-def checkSketchRatio(sketch,baselineSTD):
+def getRatio(sketch,baselineSTD):
     w = len(sketch)
     meanSketch = np.mean(sketch[0])
     mean_ratio = []
@@ -161,8 +161,21 @@ for w in wSet:
         print('====now h is: '+str(h))
         print()
         for ds in dataset: # 'ds' is the list [file name, N, itemNum, datasetName] of one data set
-            print('========now ds is: '+ds[3])
-            print()
+            print('========now ds is: '+ds[3]) # 
+            # for original data
+            cSketch = 
+            # given a stream
+            sketchSTD = getSTD()
+            # for sample data
+            for :
+                # given a stream
+                # 
+                mean_ratio, medium_ratio = getRatio(sketch, sketchSTD)
+
+
+
+
+
             if True: # just incident error
                 # n*2 sketches
                 sketchDict = {'w':w,'h':h,'dataset':ds[3]}

@@ -1,9 +1,5 @@
 
 
-
-
-
-
 #===================  Import ->
 # system
 import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
@@ -146,31 +142,33 @@ def evaluate_rad_sum(sketch,radList):
     print('ObservedError is '+str(ObservedError/len(radList)))
     return ObservedError/len(radList)
 
-
-
 for ds in dataset:
     print('========dataset:  '+str(ds))
+    #top = [100,500,1000,2000,5000] rand=[500,1000,2000,5000,10000]
+    oeListTop = [[[] for _  in range(3) ] for _ in range(5)]
+    oeListRad = [[[] for _  in range(3) ] for _ in range(5)]
+    '''
     oeListTop100Dict=[[] for _ in range(3)];  oeListRad100Dict=[[] for _ in range(3)]
     oeListTop500Dict=[[] for _ in range(3)];  oeListRad500Dict=[[] for _ in range(3)]
-    oeListTop1000Dict=[[] for _ in range(3)]; oeListRad1000Dict=[[] for _ in range(3)]
+    oeListTop1000Dict=[[] for _ in range(3)]; oeListRad1000Dict=[[] for _ in range(3)]'''
     # three types of oe evaluation mean/medium/sum, 100 sketches  oeListTop100Dict = [3][100]
-    for repeat in range(repeatNumber):
-        print('============repeat: '+str(repeat))
-        rad1000List = [];top1000List = []
-        countNum = 0
-        h1h2List = getH1H2(num1,num2,h)
-        sketchList = []
-        for i in range(len(h1h2List)):
-            h1,h2 = h1h2List[i]
+    #for repeat in range(repeatNumber):
+    #print('============repeat: '+str(repeat))
+    rad1000List = [];top1000List = []
+    countNum = 0
+    h1h2List = getH1H2(num1,num2,h)
+    sketchList = []
+    for i in range(len(h1h2List)):
+        h1,h2 = h1h2List[i]
             #print('for %d, h1 is %d   h2 is %d'%(i,h1,h2))
-            hS = copy.deepcopy(hSketch.sketch(w,h1,h2,ds[1]))
-            sketchList.append(hS)
-        radPool = []
-        print('========start stream')# start stream
-        with open(ds[0],'r') as f:
-            for line in f:
-                line = line.strip()
-                if not len(line)>0:
+        hS = copy.deepcopy(hSketch.sketch(w,h1,h2,ds[1]))
+        sketchList.append(hS)
+    radPool = []
+    print('========start stream')# start stream
+    with open(ds[0],'r') as f:
+        for line in f:
+            line = line.strip()
+            if not len(line)>0:
                     continue
                 countNum += 1
                 if countNum % 1000000 == 0:
