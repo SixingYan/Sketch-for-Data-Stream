@@ -147,6 +147,7 @@ for ds in dataset:
     print('========start stream')# start stream
     with open(ds[0],'r') as f:
         for line in f:
+        #for line in f.readlines():
             line = line.strip()
             if len(line)>0:
                 countNum += 1
