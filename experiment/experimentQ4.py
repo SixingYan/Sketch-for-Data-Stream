@@ -27,11 +27,11 @@ hSet = [300,500,1000]
 Epsilon = [i+1 for i in range(10)]
 dataset = [ 
     ['C:/Users/alfonso.yan/Documents/graph_freq_comp18.txt',338239,'comp18', 0.90],
-    ['C:/Users/alfonso.yan/Documents/graph_freq_comp16.txt',1391333,'comp16', 0.90],
-    ['C:/Users/alfonso.yan/Documents/graph_freq_comp14.txt',7904564,'comp14', 0.70],
-    ['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.90],
-    ['C:/Users/alfonso.yan/Documents/tweet_stream_hashed_refined',17813281,'tweet', 0.60],
-    ['C:/Users/alfonso.yan/Documents/graph_freq_comp10.txt',1372146644,'comp1', 0.05]
+    #['C:/Users/alfonso.yan/Documents/graph_freq_comp16.txt',1391333,'comp16', 0.90],
+    #['C:/Users/alfonso.yan/Documents/graph_freq_comp14.txt',7904564,'comp14', 0.70],
+    #['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.90],
+    #['C:/Users/alfonso.yan/Documents/tweet_stream_hashed_refined',17813281,'tweet', 0.60],
+    #['C:/Users/alfonso.yan/Documents/graph_freq_comp10.txt',1372146644,'comp1', 0.05]
 ]
 percent = [0.01,0.03,0.05,0.1,0.2]
 evaType = {'rad':['rad_mean','rad_medium','rad_max'],'top':['top_mean','top_medium','top_max']}
@@ -91,7 +91,7 @@ def RelativeBias(expectOpt, trueOpt, OElist):
 def getH1Range(a):
     #
     point = 1/(2*a)
-    ll = min([(1-abs(2*a-1))/(2*a),(1+abs(2*a-1))/(2*a)])
+    ll = min([(a+1-abs(a-1))/(2*a),(a+1+abs(a-1))/(2*a)])
     uu = max([(1-abs(2*a-1))/(2*a),(1+abs(2*a-1))/(2*a)])
     optH1 = int(h * point) 
     rangeH1 = (int(h * ll),int(h * uu))
