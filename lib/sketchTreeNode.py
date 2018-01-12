@@ -14,8 +14,6 @@ class node(object):
         self.nextNode = {}
 
 
-
-
 def getPathDict(pathStr):
     # input a string 
     pathDict = {'partID':[],'edgeType':[]}
