@@ -74,8 +74,6 @@ repeatNumber = 1 # repeat times
 #================ <- parameter
 
 
-
-
 total = 100000
 sampleNum = total * percent
 

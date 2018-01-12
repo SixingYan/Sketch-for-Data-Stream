@@ -13,8 +13,9 @@ class node(object):
         self.order = order 
         self.nextNode = {}
 
-    def function(self, ):
-        pass
+
+
+
 def getPathDict(pathStr):
     # input a string 
     pathDict = {'partID':[],'edgeType':[]}
@@ -38,14 +39,6 @@ def getPathDict(pathStr):
 
 def callSketch(pathStr):
     #
-
-    getStrategy()
-
-    #
-    get
-    return 
-
-
 
 def getStrategy(pathDict):
     # edge=0 seperate  edge=1 combine 
