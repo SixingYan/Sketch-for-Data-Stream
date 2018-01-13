@@ -23,9 +23,9 @@ dataset = [
     #['D:/google desk PC/graph_freq_comp16.txt',1391333,2,'comp16', 0.80],
     #['D:/google desk PC/graph_freq_comp14.txt',7904564,2,'comp14', 0.60],
     #['D:/google desk PC/ip_graph_refined',4213084,2,'ip', 0.70],
-    #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
+    ['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',31160379,'comp12', 90],
-    ['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
+    #['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
 ]
 datasetRad = []
 datasetTop = []
@@ -33,8 +33,8 @@ datasetTop = []
 
 #===================  path area ->
 homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'# use '/' as ending
-Q4result_Top_Path = homePath+'Q4_Top_comp1'
-Q4result_Rad_Path = homePath+'Q4_Rad_comp1'
+Q4result_Top_Path = homePath+'Q4_Top_'
+Q4result_Rad_Path = homePath+'Q4_Rad_'
 #===================  <- path area
 
 def getMedium(valueList):
@@ -129,6 +129,21 @@ def evaluate_rad_sum(sketch,radList):
     print('ObservedError is '+str(ObservedError/len(radList)))
     return ObservedError/len(radList)
 
+def getTopList(dsName):
+    top5000List = []
+    home = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/data/top5000_'
+    path = home+dsName+'.txt'
+    with open(path,'r') as f:
+        for line in f.readlines():
+            line = line.strip()
+            if len(line)>0:
+                parts = line.split(' ')
+                s = int(parts[0])
+                t = int(parts[1])
+                freq = float(parts[2])
+                top5000List.append([s,t,freq])
+    return top5000List
+
 for ds in dataset:
     print('========dataset:  '+str(ds))
     topNum = [100,500,1000,2000,5000] 
@@ -163,21 +178,22 @@ for ds in dataset:
                 # get rad and top
                 if random.randint(0,10000)<10000 * 0.02:
                     radPool.append([s,t,freq])
-                
+                '''
                 if len(top5000List)>5000:
                     minV = min(top5000List, key=lambda x: x[2])
                     if freq>minV[2]:
                         indx = top5000List.index(minV);top5000List[indx] = [s,t,freq]
                 else:
                     top5000List.append([s,t,freq])
-
+                '''
                 # update 
                 for i in range(len(sketchList)):
                     sketchList[i].update((s,t),freq)
 
     print('========evaluation')# evaluation
+    top5000List = getTopList(ds[2])
     topList = []; radList = []
-    top5000List.sort(reverse = False)
+    top5000List.sort(key= lambda d : d[2], reverse = False)
     for i in range(len(topNum)):
         topList.append(top5000List[:topNum[i]])
         radList.append(getRadList(radNum[i],radPool))
@@ -206,6 +222,7 @@ for ds in dataset:
     datasetTop.append(tem)
 
     # radList
+    tem = copy.deepcopy(sketchOE)
     print('----------random')# random
     for j in range(len(radList)): # 5
         tem[radNum[j]] = {}
@@ -226,5 +243,5 @@ for ds in dataset:
     datasetRad.append(tem)
 
     print('========saving') # saving .......
-    diyTool.savePickle(Q4result_Top_Path,datasetTop)
-    diyTool.savePickle(Q4result_Rad_Path,datasetRad)
+    diyTool.savePickle(Q4result_Top_Path+ds[2],datasetTop)
+    diyTool.savePickle(Q4result_Rad_Path+ds[2],datasetRad)
