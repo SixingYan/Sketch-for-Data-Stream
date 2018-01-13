@@ -1,19 +1,10 @@
-"""
-load data
-
-evaluate
-
-draw figure
-"""
 # -*- coding: utf-8 -*-
-"""
-    Test Q4, the Eq( ) 
-"""
 #===================  Import ->
 # system
 #import sys; sys.path.append("..")
-import copy 
+#import copy 
 import numpy as np
+import matplotlib.pyplot as plt
 #import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
 # DIY
 import diyTool
@@ -21,27 +12,20 @@ import diyTool
 #===================  path area ->
 homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'# use '/' as ending
 sampleP = 'D:/google desk PC/sample/'
-Q4result_Rad_Path = homePath + 'Q4_Rad_'
-Q4result_Top_Path = homePath + 'Q4_Top_'
-Q4evaluate_Rad_Path = homePath + 'Q4_Rad_evaluate'
-Q4evaluate_Top_Path = homePath + 'Q4_Top_evaluate'
+Q4result_Rad_Path = homePath + 'Q4_Rad'
+Q4result_Top_Path = homePath + 'Q4_Top'
+#Q4evaluate_Rad_Path = homePath + 'Q4_Rad_evaluate'
+#Q4evaluate_Top_Path = homePath + 'Q4_Top_evaluate'
 #===================  <- path area
 #================  parameter ->
-Epsilon = [i+1 for i in range(10)]
-dataset = [ 
-    #['C:/Users/alfonso.yan/Documents/graph_freq_comp18.txt',338239,'comp18', 0.90],
-    #['C:/Users/alfonso.yan/Documents/graph_freq_comp16.txt',1391333,'comp16', 0.90],
-    #['C:/Users/alfonso.yan/Documents/graph_freq_comp14.txt',7904564,'comp14', 0.70],
-    #['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.90]
-    ['C:/Users/alfonso.yan/Documents/tweet_stream_hashed_refined',17813281,'tweet', 0.60],
-    #['C:/Users/alfonso.yan/Documents/graph_freq_comp10.txt',1372146644,'comp1', 0.05]
-]
 percent = [0.2]#[0.01,0.03,0.05,0.1,0.2]
 evaType = {'rad':['rad_mean','rad_medium','rad_sum'],'top':['top_mean','top_medium','top_sum']}
 h = 300
 w = 10
 increase = 30
 evaNum = {'rad':[500,1000,2000,5000,10000],'top':[100,500,1000,2000,5000]}
+datasetName = 'tweet'
+figureID = 1
 #================ <- parameter
 kError = 3
 
@@ -84,18 +68,18 @@ def Coverage(expectRange, trueRange, OElist):
 
     upH1 = min([up,up_true])
     lowH1 = max([low,low_true])
+    '''
     coverOE = [] 
     trueOE = []
-    
     for i in range(len(OElist)):
         if (h1Range[i] <= upH1) and (h1Range[i] >= lowH1):
             coverOE.append(OElist[i])
         if (h1Range[i] <= up_true) and (h1Range[i] >= low_true):
             trueOE.append(OElist[i]) 
-
+    '''
     coverPrecent = abs(upH1-lowH1)/(up_true-low_true)
-    coverageOE = sum(coverOE)/sum(trueOE)
-    return coverPrecent, coverageOE
+    #coverageOE = sum(coverOE)/sum(trueOE)
+    return coverPrecent#, coverageOE
 
 def RelativeBias(expectOpt, trueOpt, OElist):
     #
@@ -106,11 +90,11 @@ def RelativeBias(expectOpt, trueOpt, OElist):
         if h1Range[i] > expectOpt:
             expectOE = OElist[i]
             break
-    OElist.sort(reverse = False) 
-    trueOE = np.mean(OElist[:3])
     rbPrecent = abs(trueOpt-expectOpt)/trueOpt
-    rbOE = abs(trueOE-expectOE)/trueOE
-    return rbPrecent, rbOE
+    #OElist.sort(reverse = False) 
+    #trueOE = np.mean(OElist[:3])
+    #rbOE = abs(trueOE-expectOE)/trueOE
+    return rbPrecent#, rbOE
 
 # get range of sqrt beta
 def getH1Range(a):
@@ -158,16 +142,15 @@ def measureH1Range(OElist):
 def getMedium(valueList):
     valueList.sort()
     return (valueList[int(len(valueList)/2)] + valueList[~int(len(valueList)/2)])/ 2
-evaluateDict = []
-for ds in dataset:
-    resultDict = {'w':w,'h':h,'ds':ds[2]}
+
+def evaluateAnalysis(sampleP,Q4result_Rad_Path,Q4result_Top_Path,h):
+    global figureID
+    #resultDict = {'w':w,'h':h,'ds':datasetName}
     AlphaDict = []
     for i in range(len(percent)):
-        meanList = []
-        mediumList = []
         dictKeyList = set([])
         nodeDict = {}
-        path = sampleP+ds[2]+'_'+str(percent[i])+'.txt'
+        path = sampleP+datasetName+'_'+str(percent[i])+'.txt'
         print('get sample ==== '+path)
         countNum = 0
         with open(path,'r') as f:
@@ -193,7 +176,6 @@ for ds in dataset:
                     nodeDict[t] = [0,0]
                     nodeDict[t][0] += freq
                     dictKeyList.add(t)
-                
         aList = []
         with open(path,'r') as f:
             for line in f:
@@ -212,22 +194,17 @@ for ds in dataset:
         AlphaDict.append([alphaMEAN,alphaMEDIUM,alphaMAX])
     
     # check optimal range 
-    rad_path = Q4result_Rad_Path + ds[2]+'.pickle'
-    top_path = Q4result_Top_Path + ds[2]+'.pickle'
-    datasetRad = diyTool.loadPickle(rad_path)
-    datasetTop = diyTool.loadPickle(top_path)
+    datasetRad = diyTool.loadPickle(Q4result_Rad_Path)
+    datasetTop = diyTool.loadPickle(Q4result_Top_Path)
     # check random 
-    recordDict = getRecord(w,h,ds[2],'rad',datasetRad) #[3][5][100]  #5 = 100/500/1000/200/5000
+    recordDict = getRecord(w,h,datasetName,'rad',datasetRad) #[3][5][100]  #5 = 100/500/1000/200/5000
     cgPDict = {}
-    cgVDict = {}
     rbPDict = {}
-    rbVDict = {}
+
     for i in range(len(percent)): # 
         aList = AlphaDict[i]  #[3]
         cgPList = [[] for _ in range(9)]
-        cgVList = [[] for _ in range(9)]
         rbPList = [[] for _ in range(9)]
-        rbVList = [[] for _ in range(9)]
         for j in range(len(aList)): #  3 types of getting alpha mean/medium/max
             print('===i j are '+str(i)+' '+str(j))
             h1h2,opt = getH1Range(aList[j])
@@ -240,30 +217,19 @@ for ds in dataset:
                     h1h2Data,optData = measureH1Range(recordDict[evaNum['rad'][n]][k])
                     print('h1h2Data '+str(h1h2Data))
                     print('opt '+str(optData))
-                    cgP, cgV = Coverage(h1h2,h1h2Data,recordDict[evaNum['rad'][n]][k])
-                    #evaluateCG[i][j][k] = [cgP, cgV] 
+                    cgP = Coverage(h1h2,h1h2Data,recordDict[evaNum['rad'][n]][k])
                     print('____cgP: '+str(cgP))
-                    print('____cgV: '+str(cgV))
-                    rbP, rbV = RelativeBias(opt,optData,recordDict[evaNum['rad'][n]][k])
-                    #evaluateRB[i][j][k] = [rbP, rbV]
+                    rbP = RelativeBias(opt,optData,recordDict[evaNum['rad'][n]][k])
                     print('____rbP: '+str(rbP))
-                    print('____rbV: '+str(rbV))
-                    print()
-                    
+                    print()                    
                     cgPList[j*3+k].append(cgP)
-                    cgVList[j*3+k].append(cgV)
                     rbPList[j*3+k].append(rbP)
-                    rbVList[j*3+k].append(rbV)
         cgPDict['rad'] = cgPList
-        cgVDict['rad'] = cgVList
         rbPDict['rad'] = rbPList
-        rbVDict['rad'] = rbVList
 
         cgPList = [[] for _ in range(9)]
-        cgVList = [[] for _ in range(9)]
         rbPList = [[] for _ in range(9)]
-        rbVList = [[] for _ in range(9)]
-        recordDict = getRecord(w,h,ds[2],'top',datasetTop) #[3][5][100]  #5 = 100/500/1000/200/5000
+        recordDict = getRecord(w,h,datasetName,'top',datasetTop) #[3][5][100]  #5 = 100/500/1000/200/5000
         for j in range(len(aList)): #  3 types of getting alpha mean/medium/max
             print('===i j are '+str(i)+' '+str(j))
             h1h2,opt = getH1Range(aList[j])
@@ -276,76 +242,123 @@ for ds in dataset:
                     h1h2Data,optData = measureH1Range(recordDict[evaNum['top'][n]][k])
                     print('h1h2Data '+str(h1h2Data))
                     print('opt '+str(optData))
-                    cgP, cgV = Coverage(h1h2,h1h2Data,recordDict[evaNum['top'][n]][k])
-                    #evaluateCG[i][j][k] = [cgP, cgV] 
+                    cgP = Coverage(h1h2,h1h2Data,recordDict[evaNum['top'][n]][k])
                     print('____cgP: '+str(cgP))
-                    print('____cgV: '+str(cgV))
-                    rbP, rbV = RelativeBias(opt,optData,recordDict[evaNum['top'][n]][k])
-                    #evaluateRB[i][j][k] = [rbP, rbV]
+                    rbP= RelativeBias(opt,optData,recordDict[evaNum['top'][n]][k])
                     print('____rbP: '+str(rbP))
-                    print('____rbV: '+str(rbV))
                     print()
-                    
                     cgPList[j*3+k].append(cgP)
-                    cgVList[j*3+k].append(cgV)
                     rbPList[j*3+k].append(rbP)
-                    rbVList[j*3+k].append(rbV)
         cgPDict['top'] = cgPList
-        cgVDict['top'] = cgVList
         rbPDict['top'] = rbPList
-        rbVDict['top'] = rbVList
-    evaluateDict.append([cgPDict,cgVDict,rbPDict,rbVDict])
-    #diyTool.savePickle(Q4evaluate_Rad_Path,evaluateRad)
-    #diyTool.savePickle(Q4evaluate_Top_Path,evaluateTop)
+
+    return cgPDict, rbPDict
 
 
+MediumSum = []
+MaxSum = []
+labelSet = []  
+for ds in dataset:
+    sampleP = 
+    Q4result_Rad_Path = 
+    Q4result_Top_Path = 
+    dataName = ds[]
+    cgPDict, rbPDict = evaluateAnalysis(sampleP,Q4result_Rad_Path,Q4result_Top_Path,h)
 
+    MediumSum.append([cgPDict['rad'][5],cgPDict['top'][5],rbPDict['rad'][5],rbPDict['top'][5]])
+    MaxSum.append([cgPDict['rad'][8],cgPDict['top'][8],rbPDict['rad'][8],rbPDict['top'][8]])
+    labelSet.append(dataName)
 
-
-
-import matplotlib.pyplot as plt
-plt.figure(1)
-tPlot, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,15))
-tPlot.tight_layout(renderer=None, pad=5, h_pad=5, w_pad=5, rect=None)
 ax = [(0,0),(0,1),(1,0),(1,1)]
-x = [500,1000,2000,5000,10000]
-wholeData = [cgPDict['rad'],cgVDict['rad'],rbPDict['rad'],rbVDict['rad']]
-wholeName = ["Coverage percent","Coverage value","Relaive-bias percent","Relaive-bias Value"]
 markerList = ['|','o','*','p','d','>','v','+','x']
-labelSet = ['mean-mean','mean-medium','mean-sum','medium-mean','medium-medium','medium-sum','max-mean','max-medium','max-sum']
+wholeName = ["Rad Query: Coverage percent","Top Query: Coverage percent","Rad Query: Relaive-bias percent","Top Query: Relaive-bias percent"]
+plt.figure(figureID); figureID += 1
+tPlot, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,15))
+tPlot.tight_layout(renderer=None, pad=3, h_pad=4, w_pad=4, rect=None)
+x = {0:[500,1000,2000,5000,10000],1:[100,500,1000,2000,5000]}
 for k in range(4):
     i,j = ax[k]
-    for n in range(9):
-        axes[i][j].plot(x,wholeData[k][n], label=labelSet[n],marker=markerList[n],markersize=8, linestyle='--',lw=3)
+    for n in range(len(dataset)):
+        axes[i][j].plot(x[int(k%2)],MediumSum[k][n],label=labelSet[n],marker=markerList[n],markersize=9, linestyle='--',lw=4)
         axes[i][j].set_xlabel('query size')
         axes[i][j].set_ylabel('ratio value')
         axes[i][j].set_title(wholeName[k])
         axes[i][j].set_xticks(x)
         axes[i][j].set_xticklabels(x)
-#plt.title("sample size = 20%, dataset = comp18, h=300")  
 plt.legend(prop={'size':18})
-plt.savefig("D:/google desk PC/Q4_tweet_h300_20%_rad.jpg",dpi=200)  
+plt.savefig("D:/google desk PC/Q4_"+datasetName+"_h"+str(h)+"_20%_rad.jpg",dpi=200)  
 plt.show()
 
-plt.figure(2)
-tPlot, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,15))
-tPlot.tight_layout(renderer=None, pad=5, h_pad=5, w_pad=5, rect=None)
+
 ax = [(0,0),(0,1),(1,0),(1,1)]
-x = [500,1000,2000,5000,10000]
-wholeData = [cgPDict['top'],cgVDict['top'],rbPDict['top'],rbVDict['top']]
-wholeName = ["Coverage percent","Coverage value","Relaive-bias percent","Relaive-bias Value"]
 markerList = ['|','o','*','p','d','>','v','+','x']
-labelSet = ['mean-mean','mean-medium','mean-sum','medium-mean','medium-medium','medium-sum','max-mean','max-medium','max-sum']
+wholeName = ["Rad Query: Coverage percent","Top Query: Coverage percent","Rad Query: Relaive-bias percent","Top Query: Relaive-bias percent"]
+plt.figure(figureID); figureID += 1
+tPlot, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,15))
+tPlot.tight_layout(renderer=None, pad=3, h_pad=4, w_pad=4, rect=None)
+x = {0:[500,1000,2000,5000,10000],1:[100,500,1000,2000,5000]}
 for k in range(4):
     i,j = ax[k]
-    for n in range(9):
-        axes[i][j].plot(x,wholeData[k][n], label=labelSet[n],marker=markerList[n],markersize=8, linestyle='--',lw=3)
+    for n in range(len(dataset)):
+        axes[i][j].plot(x[int(k%2)],MaxSum[k][n],label=dataset[],marker=markerList[n],markersize=9, linestyle='--',lw=4)
         axes[i][j].set_xlabel('query size')
         axes[i][j].set_ylabel('ratio value')
         axes[i][j].set_title(wholeName[k])
         axes[i][j].set_xticks(x)
         axes[i][j].set_xticklabels(x)
-#plt.title("sample size = 20%, dataset = comp18, h=300")  
 plt.legend(prop={'size':18})
-plt.savefig("D:/google desk PC/Q4_tweet_h300_20%_top.jpg",dpi=200)  
+plt.savefig("D:/google desk PC/Q4_"+datasetName+"_h"+str(h)+"_20%_rad.jpg",dpi=200)  
 plt.show()
+
+'''
+    plt.figure(figureID); figureID += 1
+    tPlot, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,15))
+    tPlot.tight_layout(renderer=None, pad=3, h_pad=4, w_pad=4, rect=None)
+    
+    x = {'rad':[500,1000,2000,5000,10000],'top':[100,500,1000,2000,5000]}
+    
+    # only leave medium-sum and max-sum
+    #wholeData = [cgPDict['rad'],cgVDict['rad'],rbPDict['rad'],rbVDict['rad']]
+    #wholeName = ["Coverage percent","Coverage value","Relaive-bias percent","Relaive-bias Value"]
+    wholeData = [cgPDict['rad'],cgPDict['top'],rbPDict['rad'],rbPDict['top']]
+    markerList = ['|','o','*','p','d','>','v','+','x']
+    labelSet = ['mean-mean','mean-medium','mean-sum','medium-mean','medium-medium','medium-sum','max-mean','max-medium','max-sum']
+    
+    for k in range(4):
+        i,j = ax[k]
+        for n in range(9):
+            axes[i][j].plot(x,wholeData[k][n], label=labelSet[n],marker=markerList[n],markersize=9, linestyle='--',lw=4)
+            axes[i][j].set_xlabel('query size')
+            axes[i][j].set_ylabel('ratio value')
+            axes[i][j].set_title(wholeName[k])
+            axes[i][j].set_xticks(x)
+            axes[i][j].set_xticklabels(x)
+    #plt.title("sample size = 20%, dataset = comp18, h=300")  
+    plt.legend(prop={'size':18})
+    plt.savefig("D:/google desk PC/Q4_"+datasetName+"_h"+str(h)+"_20%_rad.jpg",dpi=200)  
+    plt.show()
+
+    plt.figure(figureID); figureID += 1
+    tPlot, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,15))
+    tPlot.tight_layout(renderer=None, pad=3, h_pad=4, w_pad=4, rect=None)
+    ax = [(0,0),(0,1),(1,0),(1,1)]
+    x = [500,1000,2000,5000,10000]
+    wholeData = [cgPDict['top'],cgVDict['top'],rbPDict['top'],rbVDict['top']]
+    wholeName = ["Coverage percent","Coverage value","Relaive-bias percent","Relaive-bias Value"]
+    markerList = ['|','o','*','p','d','>','v','+','x']
+    labelSet = ['mean-mean','mean-medium','mean-sum','medium-mean','medium-medium','medium-sum','max-mean','max-medium','max-sum']
+    for k in range(4):
+        i,j = ax[k]
+        for n in range(9):
+            axes[i][j].plot(x,wholeData[k][n], label=labelSet[n],marker=markerList[n],markersize=9, linestyle='--',lw=4)
+            axes[i][j].set_xlabel('query size')
+            axes[i][j].set_ylabel('ratio value')
+            axes[i][j].set_title(wholeName[k])
+            axes[i][j].set_xticks(x)
+            axes[i][j].set_xticklabels(x)
+    
+    plt.legend(prop={'size':18})
+    plt.savefig("D:/google desk PC/Q4_"+datasetName+"_h"+str(h)+"_20%_top.jpg",dpi=200)  
+    plt.show()
+
+'''

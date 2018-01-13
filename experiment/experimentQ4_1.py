@@ -1,5 +1,4 @@
-
-
+#import os;os.chdir('D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment');import experimentQ4_1
 #===================  Import ->
 # system
 import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
@@ -8,7 +7,7 @@ import copy
 import random
 import numpy as np
 # DIY
-#import lib
+import lib
 import lib.diyTool as diyTool
 import lib.hSketch as hSketch
 #===================  <- Import
@@ -24,9 +23,9 @@ dataset = [
     #['D:/google desk PC/graph_freq_comp16.txt',1391333,2,'comp16', 0.80],
     #['D:/google desk PC/graph_freq_comp14.txt',7904564,2,'comp14', 0.60],
     #['D:/google desk PC/ip_graph_refined',4213084,2,'ip', 0.70],
-    ['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
-    #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',338239,2,'comp18', 90],
-    #['D:/google desk PC/graph_freq_comp10.txt',1372146644,2,'comp1', 0.03]
+    #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
+    #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',31160379,'comp12', 90],
+    ['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
 ]
 datasetRad = []
 datasetTop = []
@@ -34,8 +33,8 @@ datasetTop = []
 
 #===================  path area ->
 homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'# use '/' as ending
-Q4result_Top_Path = homePath+'Q4_Top'
-Q4result_Rad_Path = homePath+'Q4_Rad'
+Q4result_Top_Path = homePath+'Q4_Top_comp1'
+Q4result_Rad_Path = homePath+'Q4_Rad_comp1'
 #===================  <- path area
 
 def getMedium(valueList):
@@ -158,11 +157,11 @@ for ds in dataset:
                 t = int(parts[1])
                 freq = float(parts[2])
 
-                #if random.randint(0,10000)>10000 * 0.5:
-                #    continue
+                if random.randint(0,10000)>10000 * 0.5:
+                    continue
 
                 # get rad and top
-                if random.randint(0,10000)<10000 * 0.2:
+                if random.randint(0,10000)<10000 * 0.02:
                     radPool.append([s,t,freq])
                 
                 if len(top5000List)>5000:
