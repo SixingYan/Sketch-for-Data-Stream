@@ -19,11 +19,11 @@ num2 = 100
 increase = 30
 h = 300
 dataset = [ 
-    #['D:/google desk PC/graph_freq_comp18.txt',338239,'comp18', 0.80],
-    #['D:/google desk PC/graph_freq_comp16.txt',1391333,2,'comp16', 0.80],
-    #['D:/google desk PC/graph_freq_comp14.txt',7904564,2,'comp14', 0.60],
+    ['D:/google desk PC/graph_freq_comp18.txt',338239,'comp18', 0.80],
+    ['D:/google desk PC/graph_freq_comp16.txt',1391333,'comp16', 0.80],
+    ['D:/google desk PC/graph_freq_comp14.txt',7904564,'comp14', 0.60],
     #['D:/google desk PC/ip_graph_refined',4213084,2,'ip', 0.70],
-    ['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
+    #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',31160379,'comp12', 90],
     #['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
 ]
@@ -198,7 +198,7 @@ for ds in dataset:
         topList.append(top5000List[:topNum[i]])
         radList.append(getRadList(radNum[i],radPool))
     del radPool # clean
-
+    print('start top')
     sketchOE = {'h':h,'w':w,'ds':ds[2]}
     tem = copy.deepcopy(sketchOE)
     # topList
@@ -220,7 +220,7 @@ for ds in dataset:
         tem[topNum[j]]['top_medium'] = top_medium
         tem[topNum[j]]['top_sum'] = top_sum
     datasetTop.append(tem)
-
+    print('start rad')
     # radList
     tem = copy.deepcopy(sketchOE)
     print('----------random')# random
