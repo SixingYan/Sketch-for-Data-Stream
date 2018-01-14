@@ -19,8 +19,8 @@ num2 = 100
 increase = 30
 h = 300
 dataset = [ 
-    ['D:/google desk PC/graph_freq_comp18.txt',338239,'comp18', 0.80],
-    ['D:/google desk PC/graph_freq_comp16.txt',1391333,'comp16', 0.80],
+    #['D:/google desk PC/graph_freq_comp18.txt',338239,'comp18', 0.80],
+    #['D:/google desk PC/graph_freq_comp16.txt',1391333,'comp16', 0.80],
     ['D:/google desk PC/graph_freq_comp14.txt',7904564,'comp14', 0.60],
     #['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.70],
     #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
@@ -172,7 +172,7 @@ for ds in dataset:
                 t = int(parts[1])
                 freq = float(parts[2])
 
-                if random.randint(0,10000)>10000 * 0.5:
+                if random.randint(0,10000)>10000 * 0.7:
                     continue
 
                 # get rad and top
@@ -193,11 +193,12 @@ for ds in dataset:
     print('========evaluation')# evaluation
     top5000List = getTopList(ds[2])
     topList = []; radList = []
-    top5000List.sort(key= lambda d : d[2], reverse = False)
+    #top5000List.sort(key= lambda d : d[2], reverse = False)
     for i in range(len(topNum)):
         topList.append(top5000List[:topNum[i]])
         radList.append(getRadList(radNum[i],radPool))
     del radPool # clean
+
     print('start top')
     sketchOE = {'h':h,'w':w,'ds':ds[2]}
     tem = copy.deepcopy(sketchOE)
