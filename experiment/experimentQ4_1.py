@@ -22,7 +22,7 @@ dataset = [
     ['D:/google desk PC/graph_freq_comp18.txt',338239,'comp18', 0.80],
     ['D:/google desk PC/graph_freq_comp16.txt',1391333,'comp16', 0.80],
     ['D:/google desk PC/graph_freq_comp14.txt',7904564,'comp14', 0.60],
-    #['D:/google desk PC/ip_graph_refined',4213084,2,'ip', 0.70],
+    #['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.70],
     #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',31160379,'comp12', 90],
     #['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
