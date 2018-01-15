@@ -1,15 +1,15 @@
 #import os;os.chdir('D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment');import experimentQ4_1
 #===================  Import ->
 # system
-import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
-import sys; sys.path.append("..")
+#import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
+#import sys; sys.path.append("..")
 import copy
 import random
 import numpy as np
 # DIY
-import lib
-import lib.diyTool as diyTool
-import lib.hSketch as hSketch
+#import lib
+import diyTool
+import hSketch
 #===================  <- Import
 
 #================  parameter ->
@@ -19,10 +19,10 @@ num2 = 100
 increase = 30
 h = 300
 dataset = [ 
-    #['D:/google desk PC/graph_freq_comp18.txt',338239,'comp18', 0.80],
-    #['D:/google desk PC/graph_freq_comp16.txt',1391333,'comp16', 0.80],
-    ['D:/google desk PC/graph_freq_comp14.txt',7904564,'comp14', 0.60],
-    ['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.70],
+    ['/data1/Sixing/stream dataset/graph_freq_comp18.txt',338239,'comp18', 0.80],
+    ['/data1/Sixing/stream dataset/graph_freq_comp16.txt',1391333,'comp16', 0.80],
+    ['/data1/Sixing/stream dataset/graph_freq_comp14.txt',7904564,'comp14', 0.60],
+    ['/data1/Sixing/stream dataset/ip_graph_refined',4213084,'ip', 0.70],
     #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',31160379,'comp12', 90],
     #['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
@@ -32,7 +32,7 @@ datasetTop = []
 #================ <- parameter
 
 #===================  path area ->
-homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'# use '/' as ending
+homePath = '/data1/Sixing/expdata/'# use '/' as ending
 Q4result_Top_Path = homePath+'Q4_Top_'
 Q4result_Rad_Path = homePath+'Q4_Rad_'
 #===================  <- path area
@@ -131,7 +131,7 @@ def evaluate_rad_sum(sketch,radList):
 
 def getTopList(dsName):
     top5000List = []
-    home = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/data/top5000_'
+    home = '/data1/Sixing/expdata/top/top5000_'
     path = home+dsName+'.txt'
     with open(path,'r') as f:
         for line in f.readlines():
@@ -160,8 +160,8 @@ for ds in dataset:
     radPool = []
     print('========start stream')# start stream
     with open(ds[0],'r') as f:
-        for line in f:
-        #for line in f.readlines():
+        #for line in f:
+        for line in f.readlines():
             line = line.strip()
             if len(line)>0:
                 countNum += 1
@@ -172,7 +172,7 @@ for ds in dataset:
                 t = int(parts[1])
                 freq = float(parts[2])
 
-                if random.randint(0,10000)>10000 * 0.9:
+                if random.randint(0,10000)>10000 * 0.7:
                     continue
 
                 # get rad and top

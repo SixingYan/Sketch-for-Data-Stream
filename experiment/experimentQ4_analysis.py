@@ -11,11 +11,10 @@ import diyTool
 #===================  <- Import
 #===================  path area ->
 homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'# use '/' as ending
-sampleP = 'D:/google desk PC/sample/'
-Q4result_Rad_Path = homePath + 'Q4_Rad'
-Q4result_Top_Path = homePath + 'Q4_Top'
-#Q4evaluate_Rad_Path = homePath + 'Q4_Rad_evaluate'
-#Q4evaluate_Top_Path = homePath + 'Q4_Top_evaluate'
+samplePath = 'D:/google desk PC/sample/'
+Q4result_Rad_P = homePath + 'Q4_Rad_'
+Q4result_Top_P = homePath + 'Q4_Top_'
+
 #===================  <- path area
 #================  parameter ->
 percent = [0.2]#[0.01,0.03,0.05,0.1,0.2]
@@ -26,6 +25,9 @@ increase = 30
 evaNum = {'rad':[500,1000,2000,5000,10000],'top':[100,500,1000,2000,5000]}
 datasetName = 'tweet'
 figureID = 1
+dataset = [
+    ['comp18'],
+]
 #================ <- parameter
 kError = 3
 
@@ -47,7 +49,7 @@ def getRecord(w,h,dsName,ty,dataset):
     #
     recordList = {}
     for rec in dataset:
-        if rec['w']==w and rec['h']==h and rec['ds']==dsName:
+        if rec['w']==w  and rec['ds']==dsName: #and rec['h']==h
             #here exist 5 
             for num in evaNum[ty]:
                 tem = []
@@ -259,10 +261,10 @@ MediumSum = []
 MaxSum = []
 labelSet = []  
 for ds in dataset:
-    sampleP = 
-    Q4result_Rad_Path = 
-    Q4result_Top_Path = 
-    dataName = ds[]
+    samplePath = sampleP+ds[0]+str(percent)+'.txt'
+    Q4result_Rad_Path = Q4result_Rad_P+ds[0]+'.pickle'
+    Q4result_Top_Path = Q4result_Top_P+ds[0]+'.pickle'
+    dataName = ds[0]
     cgPDict, rbPDict = evaluateAnalysis(sampleP,Q4result_Rad_Path,Q4result_Top_Path,h)
 
     MediumSum.append([cgPDict['rad'][5],cgPDict['top'][5],rbPDict['rad'][5],rbPDict['top'][5]])
@@ -286,10 +288,10 @@ for k in range(4):
         axes[i][j].set_xticks(x)
         axes[i][j].set_xticklabels(x)
 plt.legend(prop={'size':18})
-plt.savefig("D:/google desk PC/Q4_"+datasetName+"_h"+str(h)+"_20%_rad.jpg",dpi=200)  
+plt.savefig("D:/google desk PC/Q4_"+str(percent[0])+"_rad.jpg",dpi=200)  
 plt.show()
 
-
+'''
 ax = [(0,0),(0,1),(1,0),(1,1)]
 markerList = ['|','o','*','p','d','>','v','+','x']
 wholeName = ["Rad Query: Coverage percent","Top Query: Coverage percent","Rad Query: Relaive-bias percent","Top Query: Relaive-bias percent"]
@@ -309,56 +311,4 @@ for k in range(4):
 plt.legend(prop={'size':18})
 plt.savefig("D:/google desk PC/Q4_"+datasetName+"_h"+str(h)+"_20%_rad.jpg",dpi=200)  
 plt.show()
-
-'''
-    plt.figure(figureID); figureID += 1
-    tPlot, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,15))
-    tPlot.tight_layout(renderer=None, pad=3, h_pad=4, w_pad=4, rect=None)
-    
-    x = {'rad':[500,1000,2000,5000,10000],'top':[100,500,1000,2000,5000]}
-    
-    # only leave medium-sum and max-sum
-    #wholeData = [cgPDict['rad'],cgVDict['rad'],rbPDict['rad'],rbVDict['rad']]
-    #wholeName = ["Coverage percent","Coverage value","Relaive-bias percent","Relaive-bias Value"]
-    wholeData = [cgPDict['rad'],cgPDict['top'],rbPDict['rad'],rbPDict['top']]
-    markerList = ['|','o','*','p','d','>','v','+','x']
-    labelSet = ['mean-mean','mean-medium','mean-sum','medium-mean','medium-medium','medium-sum','max-mean','max-medium','max-sum']
-    
-    for k in range(4):
-        i,j = ax[k]
-        for n in range(9):
-            axes[i][j].plot(x,wholeData[k][n], label=labelSet[n],marker=markerList[n],markersize=9, linestyle='--',lw=4)
-            axes[i][j].set_xlabel('query size')
-            axes[i][j].set_ylabel('ratio value')
-            axes[i][j].set_title(wholeName[k])
-            axes[i][j].set_xticks(x)
-            axes[i][j].set_xticklabels(x)
-    #plt.title("sample size = 20%, dataset = comp18, h=300")  
-    plt.legend(prop={'size':18})
-    plt.savefig("D:/google desk PC/Q4_"+datasetName+"_h"+str(h)+"_20%_rad.jpg",dpi=200)  
-    plt.show()
-
-    plt.figure(figureID); figureID += 1
-    tPlot, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,15))
-    tPlot.tight_layout(renderer=None, pad=3, h_pad=4, w_pad=4, rect=None)
-    ax = [(0,0),(0,1),(1,0),(1,1)]
-    x = [500,1000,2000,5000,10000]
-    wholeData = [cgPDict['top'],cgVDict['top'],rbPDict['top'],rbVDict['top']]
-    wholeName = ["Coverage percent","Coverage value","Relaive-bias percent","Relaive-bias Value"]
-    markerList = ['|','o','*','p','d','>','v','+','x']
-    labelSet = ['mean-mean','mean-medium','mean-sum','medium-mean','medium-medium','medium-sum','max-mean','max-medium','max-sum']
-    for k in range(4):
-        i,j = ax[k]
-        for n in range(9):
-            axes[i][j].plot(x,wholeData[k][n], label=labelSet[n],marker=markerList[n],markersize=9, linestyle='--',lw=4)
-            axes[i][j].set_xlabel('query size')
-            axes[i][j].set_ylabel('ratio value')
-            axes[i][j].set_title(wholeName[k])
-            axes[i][j].set_xticks(x)
-            axes[i][j].set_xticklabels(x)
-    
-    plt.legend(prop={'size':18})
-    plt.savefig("D:/google desk PC/Q4_"+datasetName+"_h"+str(h)+"_20%_top.jpg",dpi=200)  
-    plt.show()
-
 '''
