@@ -25,7 +25,7 @@ dataset = [
     #['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.70],
     #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',31160379,'comp12', 90],
-    #['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
+    ['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
 ]
 datasetRad = []
 datasetTop = []
@@ -172,28 +172,28 @@ for ds in dataset:
                 t = int(parts[1])
                 freq = float(parts[2])
 
-                if random.randint(0,10000)>10000 * 0.7:
+                if random.randint(0,10000)>10000 * 0.1:
                     continue
 
                 # get rad and top
                 if random.randint(0,10000)<10000 * 0.02:
                     radPool.append([s,t,freq])
-                '''
+                
                 if len(top5000List)>5000:
                     minV = min(top5000List, key=lambda x: x[2])
                     if freq>minV[2]:
                         indx = top5000List.index(minV);top5000List[indx] = [s,t,freq]
                 else:
                     top5000List.append([s,t,freq])
-                '''
+                
                 # update 
                 for i in range(len(sketchList)):
                     sketchList[i].update((s,t),freq)
 
     print('========evaluation')# evaluation
-    top5000List = getTopList(ds[2])
+    #top5000List = getTopList(ds[2])
     topList = []; radList = []
-    #top5000List.sort(key= lambda d : d[2], reverse = False)
+    top5000List.sort(key= lambda d : d[2], reverse = False)
     for i in range(len(topNum)):
         topList.append(top5000List[:topNum[i]])
         radList.append(getRadList(radNum[i],radPool))
