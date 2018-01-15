@@ -1,8 +1,13 @@
-homePath = 'C:/Users/alfonso.yan/Downloads/'
+import matplotlib.pyplot as plt
+import diyTool
+homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'
 dataset = [
     ['comp16',homePath+'Q0_sketch_result_comp1012.pickle'],
     ['comp12',homePath+'Q0_sketch_result_comp1012.pickle'],
     ['comp1',homePath+'Q0_sketch_result_comp1012.pickle'],
+    ['comp14',homePath+'Q0_sketch_result_comp14tweetip.pickle'],
+    ['tweet',homePath+'Q0_sketch_result_comp14tweetip.pickle'],
+    ['ip',homePath+'Q0_sketch_result_comp14tweetip.pickle'],
 ]
 resultSet = []
 
@@ -28,8 +33,11 @@ for k in range(len(dataset)):
     diff = [abs(resultSet[k][i]-standard[i])/standard[i] for i in range(10)]
     plt.plot(range(2,12),diff,label=dataset[k][0],marker='v',linestyle='--')
 
-
-
+#plt.xlabel("Epsilon")
+#plt.ylabel("Relative Efficiency")
+#plt.title("w=15, h=1000")  
+plt.legend()
+plt.show()
 
 
 
@@ -121,8 +129,4 @@ for i in range(10):
     diff.append(abs(comp1[i]-standard[i])/standard[i])
 plt.plot(range(2,11),diff,label='comp1-gm',c='green',marker='h',linestyle='-')
 '''
-plt.xlabel("Epsilon")
-plt.ylabel("Relative Efficiency")
-plt.title("w=15, h=1000")  
-plt.legend()
-plt.show()
+
