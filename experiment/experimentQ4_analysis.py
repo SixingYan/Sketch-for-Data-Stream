@@ -287,27 +287,26 @@ tPlot.tight_layout(renderer=None, pad=2, h_pad=2, w_pad=2, rect=None)
 for i in range(len(dataset1)):#
     if dataset1[i][0] == 'comp12':
         cgPDict = resultSet[1][0]
-        #for k in range(len(percent)):
         data = [d*0.9 for d in cgPDict[percent[1]]['rad'][5]]
-        axes[4][k].plot(xRad,data,label='MAX',marker=markerList[i],markersize=7, color='red', linestyle='--',lw=2)
+        axes[4][0].plot(xRad,data,label='MAX',marker=markerList[i],markersize=7, color='red', linestyle='--',lw=2)
         data = [d*0.9 for d in cgPDict[percent[1]]['rad'][8]]
-        axes[4][k].plot(xRad,data,label='MEDIUM',marker=markerList[i],markersize=7, color='blue', linestyle='--',lw=2)
+        axes[4][0].plot(xRad,data,label='MEDIUM',marker=markerList[i],markersize=7, color='blue', linestyle='--',lw=2)
         
         rbPDict = resultSet[1][1]
-        #for k in range(len(percent)):
         data = [d*0.9999 for d in rbPDict[percent[1]]['rad'][5]]
-        axes[4][k].plot(xRad,data,label='MAX',marker=markerList[i],markersize=7,color='red', linestyle='--',lw=2)
+        axes[4][1].plot(xRad,data,label='MAX',marker=markerList[i],markersize=7,color='red', linestyle='--',lw=2)
         data = [d*0.9999 for d in rbPDict[percent[1]]['rad'][8]]
-        axes[4][k].plot(xRad,data,label='MEDIUM',marker=markerList[i],markersize=7,color='blue',  linestyle='--',lw=2)
+        axes[4][1].plot(xRad,data,label='MEDIUM',marker=markerList[i],markersize=7,color='blue', linestyle='--',lw=2)
         break
     else:
         cgPDict = resultSet[i][0]
-        #for k in range(len(percent)):
-        axes[i][k].plot(xRad,cgPDict[percent[k]]['rad'][8],label='MAX',marker=markerList[i],markersize=7, linestyle='--',lw=2)
-        axes[i][k].plot(xRad,rbPDict[percent[k]]['rad'][5],label='MEDIUM',marker=markerList[i],markersize=7, linestyle='--',lw=2)
+        axes[i][0].plot(xRad,cgPDict[percent[1]]['rad'][5],label='MAX',marker=markerList[i],color='red', markersize=7, linestyle='--',lw=2)
+        axes[i][0].plot(xRad,cgPDict[percent[1]]['rad'][8],label='MEDIUM',marker=markerList[i],color='blue', markersize=7, linestyle='--',lw=2)
         
-        rbPDict = resultSet[1][1]
-        axes[k].plot(xRad,data,label='MAX',marker=markerList[i],markersize=7,color='red', linestyle='--',lw=2)
+        rbPDict = resultSet[i][1]
+        axes[i][1].plot(xRad,rbPDict[percent[1]]['rad'][8],label='MAX',marker=markerList[i],color='red', markersize=7, linestyle='--',lw=2)
+        axes[i][1].plot(xRad,rbPDict[percent[1]]['rad'][8],label='MEDIUM',marker=markerList[i],color='blue', markersize=7, linestyle='--',lw=2)
+
 for k in range(len(percent)):
     axes[k].set_xlabel('# of random queries with %.2f %% sample'% (percent[k]*100))
     axes[k].set_ylabel('Optimal Coverage')
