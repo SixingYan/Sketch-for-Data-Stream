@@ -7,10 +7,15 @@ figureID = 1
 
 plt.figure(1)
 Epsilon = [20,21,22]
-standard = [1-1/((e**2)**w) for e in Epsilon]
+#standard = [1-1/((e**2)**w) for e in Epsilon]
 #percent = [0.001, 0.003, 0.005, 0.01, 0.03, 0.05, 0.1, 0.2]
-percent = [0.003, 0.005, 0.01, 0.03]
+percent = [0.05, 0.1, 0.2]
 nSet = [int(1/percent[i]) for i in range(len(percent))]
+
+
+
+
+
 
 for ds in dataset:
     dataName = ds[0]
