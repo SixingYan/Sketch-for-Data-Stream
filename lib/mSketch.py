@@ -1,55 +1,31 @@
 import numpy as np
-
-
-
-
-
-
-
-
-
+from lib.diyTool import get_Prime, getTwoRandomNum
+'''
+Given m parts stream
+'''
 class mGMatrix(object):
     """docstring for ClassName"""
-    def __init__(self, arg):
+    def __init__(self, maxID, P, h, N, w):
         self.maxID = maxID
-        self.strategy = strategy # [(),(),...]
-        #self.weight = weight 
         self.P = P
-        self.PList = PList
         self.h = h
-        #self.hNum = hNum
-        #self.hList = hList
-        self.mGMatrix = np.zeros(tuple([h for i in range(N)]))
-        #getPList()
-        #getHList()
+        self.N = N
+        self.w = w
+        self.mGMatrix = np.zeros(tuple([h for i in range(self.N)]))
+        self.mask = [getTwoRandomNum(self.P) for _ in range(self.w)]
 
-    
-    def getSketch():
-        []
-
-        self.mSketch = [deepcopy() for _ in range(self.w) ] 
-
-    def getHash():
-        #
-        return
-
-    def getNewEdgeID(edge):
-        #
-        edgeList = []
-        for part in self.strategy:
-            if len(part) == 1:
-                partID = part[0]
-                edgeList.append(edge[partID]) 
-            else:
-                partIDs = [edge[partID] for partID in part]
-                newPart = getCombine(partIDs)
-                edgeList.append(newPart) 
-        return edgeList
+    def getH(self, node):
+        i = hash(node)
+        for m in self.mask:
+            a, b = m[0], m[1]
+            yield (i * a + b) % self.P % self.h
 
     def update(self, edge, f=1):
-        #
-        edgeList = getNewEdgeID(edgeList)
-        for i in range(hNum):
-            zip(self.hSketch)
+        #((1,2,3,4),(1,2,3,4))
+        s, t = edge #sourceNode, destinationNode
+        for wDimension,s1,s2,s3,s4,t1,t2,t3,t4 in zip(self.mGMatrix,self.getH(s[0]),self.getH(s[1]),self.getH(s[2]),self.getH(s[3]),self.getH(t[0]),self.getH(t[1]),self.getH(t[2]),self.getH(t[3])):
+            wDimension[s1][s2][s3][s4][t1][t2][t3][t4] += f
+
     def query(self, edge):
-        return 
+
+        return min(wDimension[p][q] for wDimension,s1,s2,s3,s4,t1,t2,t3,t4 in zip(self.mGMatrix,self.getH(s[0]),self.getH(s[1]),self.getH(s[2]),self.getH(s[3]),self.getH(t[0]),self.getH(t[1]),self.getH(t[2]),self.getH(t[3])))
