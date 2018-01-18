@@ -2,6 +2,10 @@
 
 
 w = 10
+h = 50
+n = 4
+maxIDList = [255 for i in range(n)]
+hList = [h for i in range(n)]
 
 class treenode(object):
     """docstring for ClassName"""
@@ -123,22 +127,13 @@ def generateSketch(num):
     #pathNum.append(len(list(leafDict.keys())))
     #del nodeDict; del leafDict;
 
+    sketchList = []
     for ky in list(leafDict.keys()):
         pathStr = leafDict[ky]
         d = getPathDict(pathStr)
         stra = getStrategy(d)
 
-        self, maxID, hList, w, sg
-
-        mSketch.mSketch(,stra)
-
-
-
-
-    '''
-    '''
-
-
-
+        sketch = copy.deepcopy(mSketch.mSketch(maxID,hList,w,stra))
+        sketchList.append(sketch)
 
 

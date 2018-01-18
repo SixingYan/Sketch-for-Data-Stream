@@ -11,7 +11,7 @@ def generateEdgeID(edge,maxID):
             nStr = '0' * num + str(edge[i])
             total += nStr
         else:
-            total += len(str(edge[i]))
+            total += str(edge[i])
     return int(total)
 
 class mCSketch(object):
