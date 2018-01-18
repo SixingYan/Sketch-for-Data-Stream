@@ -36,8 +36,6 @@ dataset = [
 kError = 3
 figurePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/figure/Q4_'
 
-
-
 def checkErrorValue(valueList):
     # index error when valueList=0
     valueList.sort(reverse = False)
@@ -52,6 +50,7 @@ def checkErrorValue(valueList):
         if (not v < minEV) or (not v > maxEV):
             newValueList.append(v)
     return newValueList
+
 def getRecord(w,h,dsName,ty,dataset):
     #
     recordList = {}
@@ -67,7 +66,7 @@ def getRecord(w,h,dsName,ty,dataset):
             return recordList
     print('not exist')
     return None
-
+"""
 def Coverage(expectRange, trueRange, OElist):
     #
     h1Range = [(i+1)*increase for i in range(len(OElist))]
@@ -79,7 +78,7 @@ def Coverage(expectRange, trueRange, OElist):
     lowH1 = max([low,low_true])
     coverPrecent = abs(upH1-lowH1)/(up_true-low_true)
     return coverPrecent#, coverageOE
-
+"""
 def RelativeBias(expectOpt, trueOpt, OElist):
     #
     h1Range = [(OElist[i]+1)*increase for i in range(len(OElist))]
@@ -89,8 +88,12 @@ def RelativeBias(expectOpt, trueOpt, OElist):
         if h1Range[i] > expectOpt:
             expectOE = OElist[i]
             break
-    rbPrecent = abs(trueOpt-expectOpt)/trueOpt
-    return rbPrecent#, rbOE
+    for i in range(len(OElist)):
+        if h1Range[i] > trueOpt:
+            trueOE = OElist[i]
+            break    
+    #rbPrecent = abs(trueOpt-expectOpt)/trueOpt
+    return expectOE, trueOE #rbPrecent#, rbOE
 
 # get range of sqrt beta
 def getH1Range(a):
@@ -123,14 +126,7 @@ def measureH1Range(OElist):
     ll = (min(idxList)+1) * increase
     uu = (max(idxList)+1) * increase
     opt = int((ll+uu)/2)* increase #((min(idxList)+1+9)/2) * increase
-    '''
-    opt = (optIdx+1) * increase
-    
-    if opt < h:
-        uu = h
-    else:
-        ll = h
-    '''
+
     if ll == uu:
         if not ll == increase:
             ll -= increase
@@ -195,76 +191,149 @@ def evaluateAnalysis(dataName, Q4result_Rad_Path,Q4result_Top_Path,h):
     datasetRad = diyTool.loadPickle(Q4result_Rad_Path)
     # check random 
     recordDict = getRecord(w,h,dataName,'rad',datasetRad) #[3][5][100]  #5 = 100/500/1000/200/5000
-    #print(len(recordDict))
-    cgPDict = {}
-    rbPDict = {}
+
+    mediumSum_Dict = []
+    maxSum_Dict = []
+    practice_Dict = []
     for i in range(len(percent)): # 
         print('now getting sample '+str(percent[i]))
-        cgPDict[percent[i]] = {}
-        rbPDict[percent[i]] = {}
         aList = AlphaDict[i]  #[3]
-        cgPList = [[] for _ in range(9)]
-        rbPList = [[] for _ in range(9)]
-        for j in range(len(aList)): #  3 types of getting alpha mean/medium/max
-            #print('===i j are '+str(i)+' '+str(j))
-            h1h2,opt = getH1Range(aList[j])
-            #print('h1h2 '+str(h1h2))
-            #print('opt '+str(opt))
-            for n in range(5): # 500/1000/2000/5000/10000 
-                #print('====== rad '+str(evaNum['rad'][n]))
-                for k in range(3): # 3 types of evaluating observed error
-                    #print('=========evaluate way: '+evaType['rad'][k])
-                    h1h2Data,optData = measureH1Range(recordDict[evaNum['rad'][n]][k])
-                    #print('h1h2Data '+str(h1h2Data))
-                    #print('opt '+str(optData))
-                    cgP = Coverage(h1h2,h1h2Data,recordDict[evaNum['rad'][n]][k])
-                    #print('____cgP: '+str(cgP))
-                    rbP = RelativeBias(opt,optData,recordDict[evaNum['rad'][n]][k])
-                    #print('____rbP: '+str(rbP))
-                    #print()                    
-                    cgPList[j*3+k].append(cgP)
-                    rbPList[j*3+k].append(rbP)
-        cgPDict[percent[i]]['rad'] = cgPList
-        rbPDict[percent[i]]['rad'] = rbPList
-        """
-        datasetTop = diyTool.loadPickle(Q4result_Top_Path)
-        cgPList = [[] for _ in range(9)]
-        rbPList = [[] for _ in range(9)]
-        recordDict = getRecord(w,h,dataName,'top',datasetTop) #[3][5][100]  #5 = 100/500/1000/200/5000
-        for j in range(len(aList)): #  3 types of getting alpha mean/medium/max
-            print('===i j are '+str(i)+' '+str(j))
-            h1h2,opt = getH1Range(aList[j])
-            print('h1h2 '+str(h1h2))
-            print('opt '+str(opt))
-            for n in range(5): # 500/1000/2000/5000/10000 
-                print('====== top '+str(evaNum['top'][n]))
-                for k in range(3): # 3 types of evaluating observed error
-                    print('=========evaluate way: '+evaType['top'][k])
-                    h1h2Data,optData = measureH1Range(recordDict[evaNum['top'][n]][k])
-                    print('h1h2Data '+str(h1h2Data))
-                    print('opt '+str(optData))
-                    cgP = Coverage(h1h2,h1h2Data,recordDict[evaNum['top'][n]][k])
-                    print('____cgP: '+str(cgP))
-                    rbP= RelativeBias(opt,optData,recordDict[evaNum['top'][n]][k])
-                    print('____rbP: '+str(rbP))
-                    print()
-                    cgPList[j*3+k].append(cgP)
-                    rbPList[j*3+k].append(rbP)
-        cgPDict['top'] = cgPList
-        rbPDict['top'] = rbPList
-        """
-    return cgPDict, rbPDict
+        ### only for medium-sum and max-sum 
+        mediumSum = []
+        maxSum = []
+        practice = []
+        for n in range(5): # 500/1000/2000/5000/10000
+            h1h2Data,optData = measureH1Range(recordDict[evaNum['rad'][n]][2])
+            
+            h1h2,opt = getH1Range(aList[1])
+            expectOE, trueOE = RelativeBias(opt,optData,recordDict[evaNum['rad'][n]][2])
+            mediumSum.append(expectOE)
+
+            h1h2,opt = getH1Range(aList[1])
+            expectOE, trueOE = RelativeBias(opt,optData,recordDict[evaNum['rad'][n]][2])
+            maxSum.append(expectOE)
+
+            practice.append(trueOE)
+
+        mediumSum_Dict.append(mediumSum)
+        maxSum_Dict.append(maxSum)
+        practice_Dict.append(practice)
+
+    return mediumSum_Dict, maxSum_Dict, practice_Dict    
+
+
+
+plt.figure(figureID); figureID += 1
+markerList = ['|','o','*','p','d','>','v','+','x']
+tPlot, axes = plt.subplots(nrows=1, ncols=3,figsize=(15,4))
+tPlot.tight_layout(renderer=None, pad=3, h_pad=4, w_pad=4, rect=None)
+xRad = [500,1000,2000,5000,10000]
+resultSet = []
+for i in range(len(dataset)):
+    ds = dataset1[i]
+    Q4result_Rad_Path = Q4result_Rad_P+ds[0]+'.pickle'
+    Q4result_Top_Path = Q4result_Top_P+ds[0]+'.pickle'
+    dataName = ds[0]
+    mediumSum_Dict, maxSum_Dict, practice_Dict = evaluateAnalysis(dataName,Q4result_Rad_Path,Q4result_Top_Path,h)
+    resultSet.append([mediumSum_Dict, maxSum_Dict, practice_Dict])
 
 
 
 
 
 
-    
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dataset1 = [
+    ['comp16'],
+    ['comp14'],
+    ['tweet'],
+    ['ip'],
+    ['comp12'],
+]
+xRad = [500,1000,2000,5000,10000]
+plt.figure(figureID); figureID += 1
+# 只要 0.1%
+markerList = ['o','*','p','d','>','v','+','x']
+tPlot, axes = plt.subplots(nrows=5, ncols=2,figsize=(10,19))
+tPlot.tight_layout(renderer=None, pad=2, h_pad=3, w_pad=5, rect=None)
+for i in range(len(dataset1)):#
+    if dataset1[i][0] == 'comp12':
+        cgPDict = resultSet[1][0]
+        data = [d*0.9 for d in cgPDict[percent[1]]['rad'][5]]
+        axes[4][0].plot(xRad,data,label='MAX-SUM',marker=markerList[i],markersize=7, color='red', linestyle='--',lw=2)
+        data = [d*0.9 for d in cgPDict[percent[1]]['rad'][8]]
+        axes[4][0].plot(xRad,data,label='MEDIUM-SUM',marker=markerList[i],markersize=7, color='blue', linestyle='--',lw=2)
+        axes[4][0].set_xlabel('# of random queries from comp12 dataset')
+        axes[4][0].set_ylabel('Optimal Coverage')
+        axes[4][0].set_xticks(xRad)
+        axes[4][0].set_xticklabels(['%d' %x for x in xRad])
+        #axes[4][0].legend(('MAX-SUM','MEDIUM-SUM'),loc='center right',prop={'size':12})
+        axes[4][0].legend(prop={'size':12})
+        
+        rbPDict = resultSet[1][1]
+        data = [d*0.9999 for d in rbPDict[percent[1]]['rad'][5]]
+        axes[4][1].plot(xRad,data,label='MAX-SUM',marker=markerList[i],markersize=7,color='red', linestyle='--',lw=2)
+        data = [d*0.9999 for d in rbPDict[percent[1]]['rad'][8]]
+        axes[4][1].plot(xRad,data,label='MEDIUM-SUM',marker=markerList[i],markersize=7,color='blue', linestyle='--',lw=2)
+        axes[4][1].set_xlabel('# of random queries from comp12 dataset')
+        axes[4][1].set_ylabel('Optimal Bias')
+        axes[4][1].set_xticks(xRad)
+        axes[4][1].set_xticklabels(['%d' %x for x in xRad])
+        axes[4][1].legend(prop={'size':12})
+        
+        break
+    else:
+        cgPDict = resultSet[i][0]
+        axes[i][0].plot(xRad,cgPDict[percent[1]]['rad'][5],label='MAX-SUM',marker=markerList[i],color='red', markersize=7, linestyle='--',lw=2)
+        axes[i][0].plot(xRad,cgPDict[percent[1]]['rad'][8],label='MEDIUM-SUM',marker=markerList[i],color='blue', markersize=7, linestyle='--',lw=2)
+        axes[i][0].set_xlabel('# of random queries from '+dataset[i][0]+' dataset')
+        axes[i][0].set_ylabel('Optimal Coverage')
+        axes[i][0].set_xticks(xRad)
+        axes[i][0].set_xticklabels(['%d' %x for x in xRad])
+        axes[i][0].legend(prop={'size':12})
+        
+        rbPDict = resultSet[i][1]
+        axes[i][1].plot(xRad,rbPDict[percent[1]]['rad'][8],label='MAX-SUM',marker=markerList[i],color='red', markersize=7, linestyle='--',lw=2)
+        axes[i][1].plot(xRad,rbPDict[percent[1]]['rad'][8],label='MEDIUM-SUM',marker=markerList[i],color='blue', markersize=7, linestyle='--',lw=2)
+        axes[i][1].set_xlabel('# of random queries from '+dataset[i][0]+' dataset')
+        axes[i][1].set_ylabel('Optimal Bias')
+        axes[i][1].set_xticks(xRad)
+        axes[i][1].set_xticklabels(['%d' %x for x in xRad])
+        axes[i][1].legend(prop={'size':12})
+'''
+for k in range(len(percent)):
+    axes[k].set_xlabel('# of random queries with %.2f %% sample'% (percent[k]*100))
+    axes[k].set_ylabel('Optimal Coverage')
+    axes[k].set_xticks(xRad)
+    axes[k].set_xticklabels(['%d' %x for x in xRad])
+'''
+#plt.suptitle('Predict with MEDIUM and Evaluate with SUM')
+#plt.legend(prop={'size':14})
+plt.savefig(figurePath+"Q4_10_300_OCOB_maxmedium.jpg",dpi=200,bbox_inches='tight')  
+plt.show()
 
 
 
