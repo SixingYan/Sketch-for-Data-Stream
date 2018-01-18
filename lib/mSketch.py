@@ -12,8 +12,6 @@ def generateEdgeID(edge,maxID):
             total += nStr
     return int(total)
 
-
-
 class mSketch(object):
     """docstring for ClassName"""
     def __init__(self, maxID, hList, w, sg):  # 255255255255 255255255255255
@@ -21,7 +19,6 @@ class mSketch(object):
         self.maxIDList = maxIDList
         self.PList = []#[get_Prime(i) for i in self.maxIDList]
         self.hList = []
-        #self.n = n
         self.w = w
         self.mSketch = [] #[[0 for _ in range(self.h**self.n)] for _ in range(self.w)] 
         self.mask = [getTwoRandomNum(self.P) for _ in range(self.w)]
@@ -45,20 +42,34 @@ class mSketch(object):
             self.PList.append(int(mx))
 
     def combineIDs(self, nodeList):
-        if i in :
-            if [i] < self.maxIDList[i]
-        pass
+        newEdgeID = ''
+        if i in range(len(nodeList)):
+            if len(str(nodeList[i][0])) < len(str(nodeList[i][1])):
+                num = len(str(nodeList[i][1]))-len(str(nodeList[i][0]))
+                newID = '0'*num + str(nodeList[i][0])
+            else:
+                newID = str(nodeList[i][0])
+            newEdgeID += newID
+        return int(newEdgeID) #int
 
     def trafEdge(self, edge):
         #
+        newEdge = []
         for tp in self.sg:
-            nodeList = []
-            for i in tp:
-                edge[i]
-                nodeList.append()
-            eid = combineIDs(nodeList)
-        .append(eid)
-        return 
+            if not len(tp) >1:
+                eid =  edge[tp[0]]
+            else:
+                nodeList = []
+                for i in tp:
+                    nodeList.append([edge[i], self.maxIDList[i]])
+                eid = combineIDs(nodeList)
+            newEdge.append(eid)
+        return newEdge
+
+    def getEdge(self, edge):
+        s, t = edge #sourceNode, destinationNode
+        e = list(s);e.extend(list(t))
+        return e
 
     def getH(self, node, wIDX, P, h):
         #
@@ -67,8 +78,10 @@ class mSketch(object):
         return (i * a + b) % P % h
 
     def update(self, edge, f=1):
-        #((1,2,3,4),(1,2,3,4))
-        newEdge = trafEdge(edge) # 已经combine了
+        #input: ((1,2,3,4),(5,6,7,8))
+        #operate (1,2,3,4,5,6,7,8)
+        e = getEdge(edge)
+        newEdge = trafEdge(e) # 已经combine了
         for wIDX in range(self.w):
             idx = []
             for i in range(len(newEdge)):
@@ -77,7 +90,15 @@ class mSketch(object):
             self.mSketch[wIDX][tuple(idx)] += f
 
     def query(self, edge):
-        s, t = edge #sourceNode, destinationNode
-        e = list(s);e.extend(list(t))
-        edgeID = generateEdgeID(e,self.maxID)
-        return min(wDimension[p] for wDimension, p in zip(self.mCSketch, self.getH(edgeID)))
+        #input: ((1,2,3,4),(5,6,7,8))
+        #operate (1,2,3,4,5,6,7,8)
+        e = getEdge(edge)
+        newEdge = trafEdge(e)
+        candidate = []
+        for wIDX in range(self.w):
+            idx = []
+            for i in range(len(newEdge)):
+                hv = getH(newEdge[i], wIDX, self.PList[i], self.hList[i])
+                idx.append(hv)
+            candidate.append(self.mSketch[wIDX][tuple(idx)])
+        return min(candidate)
