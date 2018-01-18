@@ -3,15 +3,24 @@ from lib.diyTool import get_Prime, getTwoRandomNum
 '''
 Given m parts stream
 '''
+def generateEdgeID(edge,maxID):
+    total = ''
+    for i in range(len(edge)):
+        if len(str(edge[i])) < (len(str(maxID))/len(edge)):
+            num = int(len(str(maxID))/len(edge))-len(str(edge[i]))
+            nStr = '0' * num + str(edge[i])
+            total += nStr
+    return int(total)
+
 class mGMatrix(object):
     """docstring for ClassName"""
-    def __init__(self, maxID, P, h, N, w):
+    def __init__(self, maxID, h, w, n):  # 255255255255 255255255255255
         self.maxID = maxID
-        self.P = P
+        self.P = get_Prime(self.maxID)
         self.h = h
-        self.N = N
+        self.n = n
         self.w = w
-        self.mGMatrix = np.zeros(tuple([h for i in range(self.N)]))
+        self.mGMatrix = [[0 for _ in range(self.h**self.n)] for _ in range(self.w)]    np.zeros(tuple([h for i in range(self.N)]))
         self.mask = [getTwoRandomNum(self.P) for _ in range(self.w)]
 
     def getH(self, node):
