@@ -12,7 +12,7 @@ def generateEdgeID(edge,maxID):
             total += nStr
     return int(total)
 
-class mGMatrix(object):
+class mCSketch(object):
     """docstring for ClassName"""
     def __init__(self, maxID, h, w, n):  # 255255255255 255255255255255
         self.maxID = maxID
@@ -20,7 +20,7 @@ class mGMatrix(object):
         self.h = h
         self.n = n
         self.w = w
-        self.mGMatrix = [[0 for _ in range(self.h**self.n)] for _ in range(self.w)]    np.zeros(tuple([h for i in range(self.N)]))
+        self.mCSketch = [[0 for _ in range(self.h**self.n)] for _ in range(self.w)] 
         self.mask = [getTwoRandomNum(self.P) for _ in range(self.w)]
 
     def getH(self, node):
@@ -32,9 +32,13 @@ class mGMatrix(object):
     def update(self, edge, f=1):
         #((1,2,3,4),(1,2,3,4))
         s, t = edge #sourceNode, destinationNode
-        for wDimension,s1,s2,s3,s4,t1,t2,t3,t4 in zip(self.mGMatrix,self.getH(s[0]),self.getH(s[1]),self.getH(s[2]),self.getH(s[3]),self.getH(t[0]),self.getH(t[1]),self.getH(t[2]),self.getH(t[3])):
-            wDimension[s1][s2][s3][s4][t1][t2][t3][t4] += f
+        e = list(s);e.extend(list(t))
+        edgeID = generateEdgeID(e,self.maxID)
+        for wD, p in zip(range(self.w), self.getH(edgeID)):
+            self.mCSketch[wD][p] += f
 
     def query(self, edge):
-
-        return min(wDimension[p][q] for wDimension,s1,s2,s3,s4,t1,t2,t3,t4 in zip(self.mGMatrix,self.getH(s[0]),self.getH(s[1]),self.getH(s[2]),self.getH(s[3]),self.getH(t[0]),self.getH(t[1]),self.getH(t[2]),self.getH(t[3])))
+        s, t = edge #sourceNode, destinationNode
+        e = list(s);e.extend(list(t))
+        edgeID = generateEdgeID(e,self.maxID)
+        return min(wDimension[p] for wDimension, p in zip(self.mCSketch, self.getH(edgeID)))

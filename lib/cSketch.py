@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-from publicTool import get_Prime, getTwoRandomNum
-from numpy import array
-from math import sqrt
-
+from lib.diyTool import get_Prime, getTwoRandomNum
 def generateEdgeID(s,t,N):
     if len(str(t)) < len(str(N))/2:
         num = int(len(str(N))/2)-len(str(t))
@@ -10,6 +7,7 @@ def generateEdgeID(s,t,N):
         return str(s)+tStr
     else:
         return int(str(s)+str(t))
+
 class sketch(object):
     def __init__(self, w, H, N):
         self.w = w
@@ -34,6 +32,6 @@ class sketch(object):
 
     def edge_frequency_query(self, edge):
         source, destination = edge
-        edgeID = int(generateEdgeID(source,destination,self.N))
+        edgeID = generateEdgeID(source,destination,self.N)
         return min(wDimension[p] for wDimension, p in zip(self.cSketch, self.get_hash(edgeID)))
 

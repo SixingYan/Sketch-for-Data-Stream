@@ -11,7 +11,7 @@ class mGMatrix(object):
         self.h = h
         self.n = n
         self.w = w
-        self.mGMatrix = np.zeros(tuple([h for i in range(self.n)]+[self.w]))
+        self.mGMatrix = np.zeros(tuple([h for i in range(self.h)]+[self.w]))
         self.mask = [getTwoRandomNum(self.P) for _ in range(self.w)]
 
     def getH(self, node):
