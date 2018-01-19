@@ -27,5 +27,4 @@ class mGMatrix(object):
             wDimension[s1][s2][s3][s4][t1][t2][t3][t4] += f
 
     def query(self, edge):
-
         return min(wDimension[p][q] for wDimension,s1,s2,s3,s4,t1,t2,t3,t4 in zip(self.mGMatrix,self.getH(s[0]),self.getH(s[1]),self.getH(s[2]),self.getH(s[3]),self.getH(t[0]),self.getH(t[1]),self.getH(t[2]),self.getH(t[3])))
