@@ -1,5 +1,6 @@
 import numpy as np
-from lib.diyTool import get_Prime, getTwoRandomNum
+#from lib.diyTool import get_Prime, getTwoRandomNum
+from diyTool import get_Prime, getTwoRandomNum
 '''
 Given m parts stream
 '''
@@ -70,7 +71,7 @@ class mSketch(object):
         #input: ((1,2,3,4),(5,6,7,8))
         #operate (1,2,3,4,5,6,7,8)
         e = self.getEdge(edge)
-        newEdge = self.trafEdge(e) # 已经combine了
+        newEdge = self.trafEdge(e) #
         for wIDX in range(self.w):
             idx = []
             for i in range(len(newEdge)):
