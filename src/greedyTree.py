@@ -1,11 +1,45 @@
 """
 greedyTree
 
-中途需要计算边
 
 """
+
+
+dataPath = []
+
+
+def function(sketch,partList):
+    # input structure of sketch 
+    # open a sample of stream partList=5,6,7
+
+    with open as f:
+        # this is for 4 parts
+        # get part of stream
+        parts = 
+
+        edge = []
+        for pID in partList:
+            edge.append(parts[pID])
+
+        sketch.update(edge,fre)
+    # outthe std of sketch
+    pass
  
-N = 
+
+def getProfit(partID, currentPath, edgeType):
+
+    newPath = str(partID)+edgeType+currentPath 
+
+    getPathDict()
+    changeDict() 
+    getStrategy()
+    partList
+    std = getSTD(,partList)
+
+    return 1/std
+
+
+
 
 
 def buildTree(node):

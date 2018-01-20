@@ -3,7 +3,6 @@ import copy
 import random
 import mSketch
 class treenode(object):
-
     def __init__(self, partID, nodeID, priorID, order):
         self.isLeaf = False # true/false
         self.partID = partID
