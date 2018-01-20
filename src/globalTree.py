@@ -30,7 +30,37 @@ def buildTree(node):
         currentPath = tn.getPath(subnode) # str-type
         leafDict[subnode.nodeID] = currentPath
 
+def evaluate_top_sum(sketch,topList):
+    totalLoss1 = 0;totalFreq1 = 0
+    for parts in topList:
+        s=parts[0]; t=parts[1];freq = parts[2]
+        estiValue = sketch.edge_frequency_query((s,t))
+        totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
+    ObservedError = totalLoss1/totalFreq1
+    print('ObservedError is '+str(ObservedError))
+    return ObservedError
 
+def evaluate_rad_sum(sketch,radList):
+    #
+    ObservedError = 0
+    for i in range(len(radList)):
+        totalLoss1 = 0;totalFreq1 = 0
+        for parts in radList[i]:
+            s=parts[0]; t=parts[1];freq = parts[2]
+            estiValue = sketch.edge_frequency_query((s,t))
+            totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
+        ObservedError += totalLoss1/totalFreq1
+    print('ObservedError is '+str(ObservedError/len(radList)))
+    return ObservedError/len(radList)    
+
+def getRadList(num,radPool):
+    radList = [[] for i in range(5)]
+    for i in range(len(radList)):
+        while len(radList[i]) < num:
+            tem = random.choice(radPool)
+            if tem not in radList[i]:
+                radList[i].append(tem)
+    return radList
 
 w = 10
 h = 50
@@ -103,27 +133,39 @@ del radPool # clean
 
 
 print('start top')
-    #sketchOE = {'h':h,'w':w,'ds':ds[2]}
-    tem = {'h':h,'w':w,'ds':ds[2]}
-    # topList
-    print('----------top')# random
-    for j in range(len(topList)): # 5
-        tem[topNum[j]] = {}
-        top_mean = []
-        top_medium = []
-        top_sum = []
-        print('====now is '+str(topNum[j]))
-        for i in range(len(sketchList)): #150?
-            ObservedError = evaluate_top_mean(sketchList[i],topList[j]);top_mean.append(ObservedError)
-            print()
-            ObservedError = evaluate_top_medium(sketchList[i],topList[j]);top_medium.append(ObservedError)
-            print()
-            ObservedError = evaluate_top_sum(sketchList[i],topList[j]);top_sum.append(ObservedError)
-            print()
-        tem[topNum[j]]['top_mean'] = top_mean
-        tem[topNum[j]]['top_medium'] = top_medium
-        tem[topNum[j]]['top_sum'] = top_sum
-    datasetTop.append(tem)
+tem = {'h':h,'w':w,'ds':ds[2]}
+# topList
+print('----------top')# random
+for j in range(len(topList)): # 5
+    #tem[topNum[j]] = {}
+    top_sum = []
+    print('============now is '+str(topNum[j]))
+    for i in range(len(sketchList)): #
+        ObservedError = evaluate_top_sum(sketchList[i],topList[j]);top_sum.append(ObservedError)
+        print()
+    idx = top_sum.index(min(top_sum))
+    print('========the best is '+str(strategy[idx]))
+
+
+    #tem[topNum[j]]['top_sum'] = top_sum
+
+print('start rad')
+tem = {'h':h,'w':w,'ds':ds[2]}
+# topList
+print('----------rad')# random
+for j in range(len(topList)): # 5
+    #tem[topNum[j]] = {}
+    top_sum = []
+    print('============now is '+str(topNum[j]))
+    for i in range(len(sketchList)): #
+        ObservedError = evaluate_top_sum(sketchList[i],topList[j]);top_sum.append(ObservedError)
+        print()
+    idx = top_sum.index(min(top_sum))
+    print('========the best is '+str(strategy[idx]))
+
+
+
+
 
 
 
