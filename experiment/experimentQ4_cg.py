@@ -10,6 +10,7 @@ import numpy as np
 import lib
 import lib.diyTool as diyTool
 import lib.hSketch as hSketch
+
 #===================  <- Import
 
 #================  parameter ->
@@ -33,8 +34,8 @@ datasetTop = []
 
 #===================  path area ->
 homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'# use '/' as ending
-Q4result_Top_Path = homePath+'Q4_Top_'
-Q4result_Rad_Path = homePath+'Q4_Rad_'
+Q4result_Top_Path = homePath+'Q4_TopCG_'+str(h)+'_'
+Q4result_Rad_Path = homePath+'Q4_RadCG_'+str(h)+'_'
 #===================  <- path area
 
 def getMedium(valueList):
@@ -150,13 +151,10 @@ for ds in dataset:
     radNum = [500,1000,2000,5000,10000]
     rad10000List = [];top5000List = []
     countNum = 0
-    h1h2List = getH1H2(num1,num2,h)
-    sketchList = []
-    for i in range(len(h1h2List)):
-        h1,h2 = h1h2List[i]
-        print('for %d, h1 is %d   h2 is %d'%(i,h1,h2))
-        hS = copy.deepcopy(hSketch.sketch(w,h1,h2,ds[1]))
-        sketchList.append(hS)
+    maxNodeID = int(ds[1]) 
+    edgeMax = int(str(maxNodeID)+str(maxNodeID))
+    cS = cSketch.sketch(w,h**2,edgeMax)
+    gM = gMatrix.sketch(w,h,maxNodeID)
     radPool = []
     print('========start stream')# start stream
     with open(ds[0],'r') as f:
@@ -172,11 +170,11 @@ for ds in dataset:
                 t = int(parts[1])
                 freq = float(parts[2])
 
-                if random.randint(0,10000)>10000 * 0.9:
+                if random.random()>0.4:
                     continue
 
                 # get rad and top
-                if random.randint(0,10000)<10000 * 0.02:
+                if random.random()<0.2:
                     radPool.append([s,t,freq])
                 '''
                 if len(top5000List)>5000:
@@ -187,64 +185,64 @@ for ds in dataset:
                     top5000List.append([s,t,freq])
                 '''
                 # update 
-                for i in range(len(sketchList)):
-                    sketchList[i].update((s,t),freq)
+                cS.update((s,t),freq)
+                gM.update((s,t),freq)
 
     print('========evaluation')# evaluation
     top5000List = getTopList(ds[2])
     topList = []; radList = []
-    top5000List.sort(key= lambda d : d[2], reverse = False)
+    #top5000List.sort(key= lambda d : d[2], reverse = True)
     for i in range(len(topNum)):
         topList.append(top5000List[:topNum[i]])
         radList.append(getRadList(radNum[i],radPool))
     del radPool # clean
 
-    print('start top')
-    #sketchOE = {'h':h,'w':w,'ds':ds[2]}
-    tem = {'h':h,'w':w,'ds':ds[2]}
-    # topList
-    print('----------top')# random
+    print('============start top')
+
+    tem = {'h':h,'w':w,'ds':ds[2],'sketch':'cs'}
+    print('----------cs')# random
     for j in range(len(topList)): # 5
         tem[topNum[j]] = {}
-        top_mean = []
-        top_medium = []
-        top_sum = []
         print('====now is '+str(topNum[j]))
-        for i in range(len(sketchList)): #150?
-            ObservedError = evaluate_top_mean(sketchList[i],topList[j]);top_mean.append(ObservedError)
-            print()
-            ObservedError = evaluate_top_medium(sketchList[i],topList[j]);top_medium.append(ObservedError)
-            print()
-            ObservedError = evaluate_top_sum(sketchList[i],topList[j]);top_sum.append(ObservedError)
-            print()
+        ObservedError = evaluate_top_mean(cS,topList[j]);top_mean = ObservedError
+        ObservedError = evaluate_top_medium(cS,topList[j]);top_medium = ObservedError
+        ObservedError = evaluate_top_sum(cS,topList[j]);top_sum = ObservedError
         tem[topNum[j]]['top_mean'] = top_mean
         tem[topNum[j]]['top_medium'] = top_medium
         tem[topNum[j]]['top_sum'] = top_sum
     datasetTop.append(tem)
     
-    '''
-    print('start rad')
-    # radList
-    tem1 = {'h':h,'w':w,'ds':ds[2]}
-    print('----------random')# random
+    tem = {'h':h,'w':w,'ds':ds[2],'sketch':'gm'}
+    print('----------gm')# random
+    for j in range(len(topList)): # 5
+        tem[topNum[j]] = {}
+        print('====now is '+str(topNum[j]))
+        ObservedError = evaluate_top_mean(gM,topList[j]);top_mean = ObservedError
+        ObservedError = evaluate_top_medium(gM,topList[j]);top_medium = ObservedError
+        ObservedError = evaluate_top_sum(gM,topList[j]);top_sum = ObservedError
+        tem[topNum[j]]['top_mean'] = top_mean
+        tem[topNum[j]]['top_medium'] = top_medium
+        tem[topNum[j]]['top_sum'] = top_sum
+    datasetTop.append(tem)
+
+    print('============start rad')
+
+    tem1 = {'h':h,'w':w,'ds':ds[2],'sketch':'cs'}
+    print('----------cs')# random
     for j in range(len(radList)): # 5
         tem1[radNum[j]] = {}
         rad_mean = []
         rad_medium = []
         rad_sum = []
         print('====now is '+str(radNum[j]))
-        for i in range(len(sketchList)): #150?
-            ObservedError = evaluate_rad_mean(sketchList[i],radList[j]);rad_mean.append(ObservedError)
-            print()
-            ObservedError = evaluate_rad_medium(sketchList[i],radList[j]);rad_medium.append(ObservedError)
-            print()
-            ObservedError = evaluate_rad_sum(sketchList[i],radList[j]);rad_sum.append(ObservedError)
-            print()
+        ObservedError = evaluate_rad_mean(cS,radList[j]);rad_mean = (ObservedError)
+        ObservedError = evaluate_rad_medium(cS,radList[j]);rad_medium = ObservedError
+        ObservedError = evaluate_rad_sum(cS,radList[j]);rad_sum = ObservedError
         tem1[radNum[j]]['rad_mean'] = rad_mean
         tem1[radNum[j]]['rad_medium'] = rad_medium
         tem1[radNum[j]]['rad_sum'] = rad_sum
     datasetRad.append(tem1)
-    '''
+
     print('========saving') # saving .......
     diyTool.savePickle(Q4result_Top_Path+ds[2],datasetTop)
-    #diyTool.savePickle(Q4result_Rad_Path+ds[2],datasetRad)
+    diyTool.savePickle(Q4result_Rad_Path+ds[2],datasetRad)

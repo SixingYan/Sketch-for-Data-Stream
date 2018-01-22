@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from lib.diyTool import get_Prime, getTwoRandomNum
+from diyTool import get_Prime, getTwoRandomNum
+
 def generateEdgeID(s,t,N):
     if len(str(t)) < len(str(N))/2:
         num = int(len(str(N))/2)-len(str(t))

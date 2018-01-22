@@ -2,7 +2,7 @@
 from random import randint
 from numpy import array
 from math import floor,sqrt
-from publicTool import get_Prime, getTwoRandomNum
+from diyTool import get_Prime, getTwoRandomNum
 
 class sketch(object):
 

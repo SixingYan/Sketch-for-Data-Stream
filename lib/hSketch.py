@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #import lib
-from lib.diyTool import get_Prime, getTwoRandomNum
+from diyTool import get_Prime, getTwoRandomNum
 
 class sketch(object):
 	def __init__(self, w, h1, h2, N):
