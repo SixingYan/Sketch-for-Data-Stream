@@ -3,7 +3,7 @@ extract ipv4
 """
 """
 Data example
-T   192.172.226.37  32.158.127.63   1   1   1166139697  N   0   0   0   U   1   I   192.172.226.1,0.743,1   198.17.46.8,8.463,1 137.164.24.205,5.067,1  4.71.128.5,5.020,1  4.68.102.172,5.498,1    192.205.33.225,17.990,1 12.127.3.214,79.596,1   12.122.10.13,79.547,1   12.122.9.141,79.718,1   
+T   192.172.226.37  32.158.127.63   1   1   1166139697  N   0   0   0   U   1   I   192.172.226.1, 0.743,1   198.17.46.8,8.463,1 137.164.24.205,5.067,1  4.71.128.5,5.020,1  4.68.102.172,5.498,1    192.205.33.225,17.990,1 12.127.3.214,79.596,1   12.122.10.13,79.547,1   12.122.9.141,79.718,1   
 """
 
 #===================  Import ->
@@ -16,10 +16,10 @@ from os.path import isfile, join
 
 #===================  path area ->
 #homePath = ''
-sourcePath = 'D:/点击这里/Nanyang/dataIPv4/t1_warts/' # use '/' as ending
+sourcePath = 'D:/点击这里/Nanyang/dataIPv4/t1_warts_txt/' # use '/' as ending
 destinationPath = ''
-ds1Path = 'D:/点击这里/Nanyang/dataIPv4/t1/dataset1'
-ds2Path = 'D:/点击这里/Nanyang/dataIPv4/t1/dataset2'
+ds1Path = 'D:/点击这里/Nanyang/dataIPv4/t1/tr_fre'
+ds2Path = 'D:/点击这里/Nanyang/dataIPv4/t1/tr_1'
 #===================  <- path area
 
 # get the file name list
@@ -45,19 +45,29 @@ for k in range(totalNum):
                 # read line starts with T
                 if line.startswith('T'):
                     parts = line.strip().split('\t')
-
                     # first type 
-                    sourceIP = parts[1]
+                    #sourceIP = parts[1]
                     destiIP = parts[2]
-                    freq = len(parts)-14
-                    record1 = sourceIP+' '+destiIP+' '+str(freq)
-                    dataset1.append(record1)
-
+                    #freq = len(parts)-14
+                    #record1 = sourceIP+' '+destiIP+' '+str(freq)
+                    #dataset1.append(record1)
                     # second type
                     for i in range(13,len(parts)): 
-                        respondIP = parts[i]
+                        respondIPstr = parts[i]
+                        '''
                         record2 = sourceIP +' '+ respondIP+' '+'1' #as default
+                        '''
+                        elements = respondIPstr.strip().split(',')
+                        respondIP = elements[0]
+                        try:
+                            fre = float(elements[1])
+                        except:
+                            fre = 1
+                        record1 = destiIP+' '+respondIP+' '+str(fre)
+                        dataset1.append(record1)
+                        record2 = destiIP +' '+ respondIP+' '+'1' #as default
                         dataset2.append(record2)
+
     #except IOError, error:
     except:
         print('reading fails: '+fileName)
