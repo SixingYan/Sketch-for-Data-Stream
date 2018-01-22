@@ -1,7 +1,8 @@
-
-ds = ['/data1/Sixing/stream dataset/tweet_stream_hashed_refined','tweet']
+import math
+import random
 #ds = ['/data1/Sixing/stream dataset/tweet_stream_hashed_refined','tweet']
-#ds = ['/data1/Sixing/stream dataset/tweet_stream_hashed_refined','tweet']
+#ds = ['/data1/Sixing/stream dataset/ipv4_sr_4ij','sr_4ij']
+ds = ['/data1/Sixing/stream dataset/ipv4_st_4ij','st_4ij']
 sSet = set([])
 tSet = set([])
 sDict = {}
@@ -46,10 +47,11 @@ with open(ds[0],'r') as f:
         line = line.strip()
         if not len(line.strip()) > 0:
             continue
-        
+        if random.random(0,1) > 0.5:
+            continue
         #count += 1
         parts = line.split(' ')
-        s = int(parts[0]);t = int(parts[1]);freq = float(parts[2])
+        s = int(parts[0]);t = int(parts[1]);freq = math.ceil(float(parts[2]))
         #print(t)
         # out degree
         if s in sSet:
@@ -66,7 +68,7 @@ with open(ds[0],'r') as f:
             tDict[t] += freq
             tSet.add(t)
 tList = []
-
+tNum = len(tSet)
 for t in tSet:
     tList.append(tDict[t]) # in degree value list
 tList = [int(t) for t in tList]
@@ -75,7 +77,7 @@ with open(homePath+'inDegree_'+ds[1],'w') as f:
     for t in tfList:
         f.write(str(t[0])+' '+str(t[1])+'\n') # inDegree, freq
 del tfList; del tList
-
+sNum = len(sSet)
 sList = []
 for s in sSet:
     sList.append(sDict[s])
@@ -96,8 +98,12 @@ with open(ds[0],'r') as f:
         parts = line.split(' ')
         s = int(parts[0])
         t = int(parts[1])
-        a = round(sDict[s]/tDict[t], 5) # O(i,*)/O(*,j)
-        aList.append(a)
+        if s in sSet and t in tSet:
+            if sDict[s] * tDict[t] == 0:
+                continue
+            a = round(sDict[s]/tDict[t], 5) # O(i,*)/O(*,j)
+            aList.append(a)
+
 afList = refine(aList)
 with open(homePath+'alpha_'+ds[1],'w') as f:
     for a in afList:
@@ -105,3 +111,6 @@ with open(homePath+'alpha_'+ds[1],'w') as f:
 del afList; del aList
 
 del sSet; del tSet; del sDict; del tDict;
+
+with open(homePath+'outin_'+ds[1],'w') as f:
+    f.write(str(sNum)+' '+str(tNum)+'\n') #
