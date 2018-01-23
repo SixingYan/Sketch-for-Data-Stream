@@ -102,8 +102,8 @@ def getBaseLine(record, num):
         return_mms.append([h1_ll,h1_uu,h1_point])
     h1Range.append(return_mms)
     return h1Range 
-
 AlphaList = []
+
 for ds in dataset:
     meanList = []
     mediumList = []

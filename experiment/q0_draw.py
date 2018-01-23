@@ -9,6 +9,7 @@ dataset = [
     ['tweet',homePath+'Q0_sketch_result_comp14tweetip.pickle'],
     ['ip',homePath+'Q0_sketch_result_comp14tweetip.pickle'],
 ]
+
 resultSet = []
 
 h = 500
