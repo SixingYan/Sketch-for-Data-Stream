@@ -2,6 +2,7 @@
 '''
 
 dataName = 'tweet'
+homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/investigation/data/'
 def getData(path):
     pairList = []
     with open(path+dataName,'r') as f:
@@ -10,11 +11,11 @@ def getData(path):
             pairList.append(parts)
     return pairList
 
-
-plt.figure(figureID)
+plt.figure(1)
 tPlot_top, axes = plt.subplots(nrows=1, ncols=4,figsize=(5,16))
 tPlot.tight_layout(renderer=None, pad=2, h_pad=2, w_pad=2, rect=None)
 
+inList = getData(homePath+'inDegree_')
 inX = []
 inY = []
 for i in inList:
@@ -25,6 +26,7 @@ axes[2].plot(range(len(inY)),inY)
 axes[2].set_xticks(range(len(inY)))
 axes[2].set_xticklabels(inX)
 
+outList = getData(homePath+'outDegree_')
 outX = []
 outY = []
 for o in outList:
@@ -35,6 +37,7 @@ axes[3].plot(range(len(outY)),outY)
 axes[3].set_xticks(range(len(outY)))
 axes[3].set_xticklabels(outX)
 
+aList = getData(homePath+'alpha_')
 a0X = [];a0Y = []
 a1X = [];a1Y = []
 for a in aList:
