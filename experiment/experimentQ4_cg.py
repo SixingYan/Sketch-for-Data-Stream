@@ -1,16 +1,16 @@
-#import os;os.chdir('D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment');import experimentQ4_1
+#import os;os.chdir('D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment');import experimentQ4_cg
 #===================  Import ->
 # system
-import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
-import sys; sys.path.append("..")
-import copy
+#import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
+#import sys; sys.path.append("..")
 import random
 import numpy as np
 # DIY
-import lib
-import lib.diyTool as diyTool
-import lib.hSketch as hSketch
-
+#import lib
+import diyTool
+#import lib.hSketch as hSketch
+import gMatrix
+import cSketch
 #===================  <- Import
 
 #================  parameter ->
@@ -18,22 +18,24 @@ w = 10
 num1 = 0
 num2 = 100
 increase = 30
-h = 300
+h = 1000
 dataset = [ 
     #['D:/google desk PC/graph_freq_comp18.txt',338239,'comp18', 0.80],
     #['D:/google desk PC/graph_freq_comp16.txt',1391333,'comp16', 0.80],
-    ['D:/google desk PC/graph_freq_comp14.txt',7904564,'comp14', 0.60],
-    ['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.70],
+    #['D:/google desk PC/graph_freq_comp14.txt',7904564,'comp14', 0.60],
+    #['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.70],
     #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',31160379,'comp12', 90],
-    #['D:/google desk PC/graph_freq_comp1.txt',56175513,'comp1', 0.03]
+    ['/data1/Sixing/stream dataset/graph_freq_comp10.txt',56175513,'comp1', 0.03]
 ]
 datasetRad = []
 datasetTop = []
 #================ <- parameter
 
 #===================  path area ->
-homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'# use '/' as ending
+#homePath = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment/result/'# use '/' as ending
+homePath = '/data1/Sixing/expdata/'
+topPath = '/data1/Sixing/expdata/top5000_'
 Q4result_Top_Path = homePath+'Q4_TopCG_'+str(h)+'_'
 Q4result_Rad_Path = homePath+'Q4_RadCG_'+str(h)+'_'
 #===================  <- path area
@@ -132,8 +134,9 @@ def evaluate_rad_sum(sketch,radList):
 
 def getTopList(dsName):
     top5000List = []
-    home = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/data/top5000_'
-    path = home+dsName+'.txt'
+    #home = 'D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/data/top5000_'
+    path = topPath+dsName+'.txt'
+    #path = home+dsName+'.txt'
     with open(path,'r') as f:
         for line in f.readlines():
             line = line.strip()
@@ -172,7 +175,6 @@ for ds in dataset:
 
                 if random.random()>0.4:
                     continue
-
                 # get rad and top
                 if random.random()<0.2:
                     radPool.append([s,t,freq])
@@ -235,9 +237,25 @@ for ds in dataset:
         rad_medium = []
         rad_sum = []
         print('====now is '+str(radNum[j]))
-        ObservedError = evaluate_rad_mean(cS,radList[j]);rad_mean = (ObservedError)
+        ObservedError = evaluate_rad_mean(cS,radList[j]);rad_mean = ObservedError
         ObservedError = evaluate_rad_medium(cS,radList[j]);rad_medium = ObservedError
         ObservedError = evaluate_rad_sum(cS,radList[j]);rad_sum = ObservedError
+        tem1[radNum[j]]['rad_mean'] = rad_mean
+        tem1[radNum[j]]['rad_medium'] = rad_medium
+        tem1[radNum[j]]['rad_sum'] = rad_sum
+    datasetRad.append(tem1)
+
+    tem1 = {'h':h,'w':w,'ds':ds[2],'sketch':'gm'}
+    print('----------gm')# random
+    for j in range(len(radList)): # 5
+        tem1[radNum[j]] = {}
+        rad_mean = []
+        rad_medium = []
+        rad_sum = []
+        print('====now is '+str(radNum[j]))
+        ObservedError = evaluate_rad_mean(gM,radList[j]);rad_mean = ObservedError
+        ObservedError = evaluate_rad_medium(gM,radList[j]);rad_medium = ObservedError
+        ObservedError = evaluate_rad_sum(gM,radList[j]);rad_sum = ObservedError
         tem1[radNum[j]]['rad_mean'] = rad_mean
         tem1[radNum[j]]['rad_medium'] = rad_medium
         tem1[radNum[j]]['rad_sum'] = rad_sum
