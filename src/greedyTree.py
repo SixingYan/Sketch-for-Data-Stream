@@ -39,16 +39,33 @@ def changeDict(d):
         newPartList.append(idx)
     d['partID'] = newPartList
     return d    
+
+def getRatioDist(stra):
+    # input ((1,2),(3,4),(5))
+    stra.reverse() # ((5),(3,4),(1,2))
+    h1 = [0 for _ in range(len(stra))]
+    for i in range(len(stra)):
+        sList = stra[i]
+        tList = []
+        for j in range(i,len(stra)):
+            for p in stra[j]:
+                tList.append(p)
+        sqrtBeta = getRatio(dataName,percent,sList,tList)
+        h1[i] = int(sqrt(h**(len(sList)+len(tList)))/sqrtBeta)
+    h1.reverse()
+    return h1
+def getMaxList():
+    pass
     
 def getProfit(partID, currentPath, edgeType):
 
     newPath = str(partID)+edgeType+currentPath 
     d = getPathDict(newPath)
-    d = changeDict()
-
+    d = changeDict(d)
     partList = d['partID']
     stra = getStrategy(d)
-    sketch = copy.deepcopy(mSketch.mSketch(maxIDList,hList,w,stra))
+    hList = getRatioDist(stra)
+    sketch = copy.deepcopy(mSketch2D.mSketch2D(maxIDList,hList,w,stra))
     sketch.buildSketch()
     std = getStream(sketch,partList)
 

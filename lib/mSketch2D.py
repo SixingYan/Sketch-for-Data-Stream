@@ -15,9 +15,7 @@ def combineIDs(nodeList):
         newEdgeID += newID
     return int(newEdgeID) #int
 
-
-
-class mSketch(object):
+class mSketch2D(object):
     def __init__(self, maxIDList, hList, w, sg):  # 255255255255 255255255255255
         self.n = n
         self.sg = sg # [(1,3),(2,5),(4)...] the parts to be combined start by 0!!!
@@ -25,47 +23,39 @@ class mSketch(object):
         self.PList = []#[get_Prime(i) for i in self.maxIDList]
         self.hList = hList # h13, h25, h4 ...  
         self.w = w
-        self.mSketch = [[0 for _ in range(self.h**self.n)] for _ in range(self.w)]
+        self.mSketch2D = [[0 for _ in range(self.h**self.n)] for _ in range(self.w)]
         self.mask = []
-
-    def function(w):
-        finalH = 0
-        a, b = self.mask[w]
-        for i in len(groupList):
-            itemH = 0
-            if len()>1:
-                tID = combineIDs(groupList[i]) 
-            else:
-                tID = groupList[i]
-                itemH = (a * tID + b) % self.PList[i] % self.hList[i]
-
-            for j in range(i,len(self.hList)):
-                itemH *= self.hList[j]
-            finalH += itemH
-        return finalH
-
 
     def buildSketch(self):
         #
-        side = [self.w] # [100*700, 600, 500*300] #the first is w
-        for tp in self.sg:
-            times = 1
-            for i in tp: 
-                times *= self.hList[i]
-            side.append(times)    
-        #side.append()    
-        self.mSketch = np.zeros(tuple(side))
-
         for tp in self.sg:
             mx = ''
             for i in tp:
                 mx += str(self.maxIDList[i])
             self.PList.append(get_Prime(int(mx)))
         self.mask = [getTwoRandomNum(max(self.PList)) for _ in range(self.w)]
-    
+
+    def getH(self, edgeList):
+        #
+        for m in self.mask:
+            finalH = 0
+            a, b = m[0], m[1]
+            for i in len(edgeList):
+                itemH = 0
+                if len()>1:
+                    tID = combineIDs(edgeList[i]) 
+                    tID = hash(tID)
+                else:
+                    tID = hash(edgeList[i])
+                itemH = (a * tID + b) % self.PList[i] % self.hList[i]
+                for j in range(i,len(self.hList)):
+                    itemH *= self.hList[j]
+                finalH += itemH
+            yield finalH
+
     def trafEdge(self, edge):
         #
-        newEdge = []
+        newEdge = [] # (),(),()....
         for tp in self.sg:
             if not len(tp) >1:
                 eid =  edge[tp[0]]
@@ -78,38 +68,23 @@ class mSketch(object):
         return newEdge
     
     def getEdge(self, edge):
+        # release all the parts
         s, t = edge #sourceNode, destinationNode
         e = list(s);e.extend(list(t))
         return e
 
-    def getH(self, node, wIDX, P, h):
-        #
-        i = hash(node)
-        a, b = self.mask[wIDX][0], self.mask[wIDX][1]
-        return (i * a + b) % P % h
-
     def update(self, edge, f=1):
-        #input: ((1,2,3,4),(5,6,7,8))
-        #operate (1,2,3,4,5,6,7,8)
+        #input: ((11,22,33,44),(55,66,77,88)) #sg = (1,3) (2) (4, 5, 6) (7)
+        #operate (11,33) (22) (44, 55, 66) (77)
         e = self.getEdge(edge)
         newEdge = self.trafEdge(e) #
         for wIDX in range(self.w):
-            idx = []
-            for i in range(len(newEdge)):
-                hv = self.getH(newEdge[i], wIDX, self.PList[i], self.hList[i])
-                idx.append(hv)
-            self.mSketch[wIDX][tuple(idx)] += f
+            hv = self.getH(wIDX)
+            self.mSketch2D[wIDX][hv] += f
 
     def query(self, edge):
-        #input: ((1,2,3,4),(5,6,7,8))
-        #operate (1,2,3,4,5,6,7,8)
+        #input: ((11,22,33,44),(55,66,77,88)) #sg = (1,3) (2) (4, 5, 6) (7)
+        #operate (11,33) (22) (44, 55, 66) (77)
         e = self.getEdge(edge)
         newEdge = self.trafEdge(e)
-        candidate = []
-        for wIDX in range(self.w):
-            idx = []
-            for i in range(len(newEdge)):
-                hv = self.getH(newEdge[i], wIDX, self.PList[i], self.hList[i])
-                idx.append(hv)
-            candidate.append(self.mSketch[wIDX][tuple(idx)])
-        return min(candidate)
+        return min(wDimension[p] for wDimension, p in zip(self.mSketch2D, self.getH(newEdge)))
