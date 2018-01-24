@@ -17,7 +17,7 @@ def combineIDs(nodeList):
 
 class mSketch2D(object):
     def __init__(self, maxIDList, hList, w, sg):  # 255255255255 255255255255255
-        self.n = n
+        self.n = len(sg)
         self.sg = sg # [(1,3),(2,5),(4)...] the parts to be combined start by 0!!!
         self.maxIDList = maxIDList
         self.PList = []#[get_Prime(i) for i in self.maxIDList]

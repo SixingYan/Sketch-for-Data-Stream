@@ -12,9 +12,8 @@ def getSTD():
 
 def getStream(sketch,partList):
     # input structure of sketch 
-    # open a sample of stream partList=5,6,7
-
-    with open as f:
+    # open a sample of stream partList, e.g., 5,6,7
+    with open(,'r') as f:
         # this is for 4 parts
         # get part of stream
         parts = 
@@ -54,9 +53,23 @@ def getRatioDist(stra):
         h1[i] = int(sqrt(h**(len(sList)+len(tList)))/sqrtBeta)
     h1.reverse()
     return h1
-def getMaxList():
-    pass
-    
+
+def getMaxList(stra):
+    maxIDList = []
+    for i in range(len(stra)):
+        if len(stra[i]) > 1:
+            total = ''
+            for idx in stra[1]:
+                idx = stra[i][i]
+                m = maxList[idx]
+                total += str(m)
+            mVal = int(total)
+        else:
+            idx = stra[i][0]
+            mVal = maxList[idx]
+        maxIDList.append(mVal)
+    return maxIDList
+
 def getProfit(partID, currentPath, edgeType):
 
     newPath = str(partID)+edgeType+currentPath 
@@ -65,6 +78,7 @@ def getProfit(partID, currentPath, edgeType):
     partList = d['partID']
     stra = getStrategy(d)
     hList = getRatioDist(stra)
+    maxIDList = getMaxList(stra)
     sketch = copy.deepcopy(mSketch2D.mSketch2D(maxIDList,hList,w,stra))
     sketch.buildSketch()
     std = getStream(sketch,partList)
