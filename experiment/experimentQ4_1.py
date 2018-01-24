@@ -193,7 +193,7 @@ for ds in dataset:
     print('========evaluation')# evaluation
     top5000List = getTopList(ds[2])
     topList = []; radList = []
-    top5000List.sort(key= lambda d : d[2], reverse = False)
+    top5000List.sort(key= lambda d : d[2], reverse = True) # big -> small
     for i in range(len(topNum)):
         topList.append(top5000List[:topNum[i]])
         radList.append(getRadList(radNum[i],radPool))

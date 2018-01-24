@@ -7,8 +7,10 @@ greedyTree
 
 dataPath = []
 
+def getSTD():
+    pass
 
-def function(sketch,partList):
+def getStream(sketch,partList):
     # input structure of sketch 
     # open a sample of stream partList=5,6,7
 
@@ -24,23 +26,35 @@ def function(sketch,partList):
         sketch.update(edge,fre)
     # outthe std of sketch
     pass
+    return std
  
-
+def changeDict(d):
+    # 0,6,4,3 -> 0,3,2,1
+    partList = d['partID']
+    partList.sort(reverse = False)            #### big -> small 
+    num = len(partList)
+    newPartList = []
+    for p in d['partID']:
+        idx = partList.index(p)
+        newPartList.append(idx)
+    d['partID'] = newPartList
+    return d    
+    
 def getProfit(partID, currentPath, edgeType):
 
     newPath = str(partID)+edgeType+currentPath 
+    d = getPathDict(newPath)
+    d = changeDict()
 
-    getPathDict()
-    changeDict() 
-    getStrategy()
-    partList
-    std = getSTD(,partList)
+    partList = d['partID']
+    stra = getStrategy(d)
+    sketch = copy.deepcopy(mSketch.mSketch(maxIDList,hList,w,stra))
+    sketch.buildSketch()
+    std = getStream(sketch,partList)
+
+    getSTD(,partList)
 
     return 1/std
-
-
-
-
 
 def buildTree(node):
     global globalNodeID
@@ -87,6 +101,7 @@ def buildTree(node):
         leafDict[subnode.nodeID] = currentPath
 
 
+def getSTD():
 
 
 
