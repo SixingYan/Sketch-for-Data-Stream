@@ -27,7 +27,9 @@ dataset = [
     #['D:/google desk PC/ip_graph_refined',4213084,'ip', 0.70],
     #['D:/google desk PC/tweet_stream_hashed_refined',17813281,'tweet']#
     #['C:/Users/alfonso.yan/Documents/graph_freq_comp12.txt',31160379,'comp12', 90],
-    ['/data1/Sixing/stream dataset/graph_freq_comp10.txt',56175513,'comp1']
+    #['/data1/Sixing/stream dataset/graph_freq_comp10.txt',56175513,'comp1'],
+    ['/data1/Sixing/tr_fre_4ij',29643448,'tr_fre_4ij'],
+    #['/data1/Sixing/stream dataset/graph_freq_comp10.txt',56175513,'comp1'],
 ]
 datasetRad = []
 datasetTop = []

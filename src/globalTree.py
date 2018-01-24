@@ -2,6 +2,8 @@
 import copy
 import random
 import mSketch
+dataPath = '/data1/Sixing/Stream dataset/ipv4_st_2'
+
 class treenode(object):
     def __init__(self, partID, nodeID, priorID, order):
         self.isLeaf = False # true/false
@@ -129,9 +131,9 @@ def getRadList(num,radPool):
                 radList[i].append(tem)
     return radList
 
-dataPath = '/data1/Sixing/Stream dataset/ipv4_st_2'
+
 w = 10
-h = 5
+h = 25
 N = 4
 maxIDList = [255 for i in range(N)]
 hList = [h for i in range(N)]

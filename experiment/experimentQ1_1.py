@@ -1,10 +1,10 @@
 """
 """
 import random
-percent = [0.001, 0.003, 0.005, 0.01, 0.03, 0.05, 0.1, 0.2]
+percent = [0.001, 0.003, 0.005, 0.01, 0.03, 0.05, 0.1, 0.2]#[ ]
 dataset = [ 
     #['D:/google desk PC/graph_freq_comp18.txt',338239,568532,'comp18']#,
-    ['D:/google desk PC/graph_freq_comp16.txt',1391333,2815263,'comp16']#,
+    #['D:/google desk PC/graph_freq_comp16.txt',1391333,2815263,'comp16']#,
     #['D:/google desk PC/graph_freq_comp14.txt',7904564,20441831,'comp14'],
     #['C:/Users/alfonso.yan/Documents/ip_graph_refined',4213084,12714850,'ip'],
     #['C:/Users/alfonso.yan/Documents/tweet_stream_hashed_refined',17813281,78508963,'tweet'],

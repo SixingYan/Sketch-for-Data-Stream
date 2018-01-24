@@ -11,7 +11,7 @@ dataset = [
     #['/data1/Sixing/stream dataset/graph_freq_comp12.txt',31160379,'comp12', 0.8],
     #['/data1/Sixing/stream dataset/graph_freq_comp1.txt',56175513,'comp1', 0.1]
     #['/data1/Sixing/stream dataset/graph_freq_comp1.txt',56175513,'comp1', 0.1]
-    #['/data1/Sixing/stream dataset/graph_freq_comp1.txt',56175513,'comp1', 0.1]
+    ['/data1/Sixing/tr_fre_4ij',56175513,'tr_fre_4ij', 0.1]
 ]
 for ds in dataset:
     print('now is '+str(ds))
