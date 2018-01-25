@@ -2,6 +2,7 @@
 from random import randint
 import pickle
 from math import sqrt
+import time
 
 def get_Prime(N):
     # larger than N, the number index of nodes; Ensure N > 2 and N is an integer
@@ -44,6 +45,7 @@ def getMedium(valueList):
     return (valueList[int(len(valueList)/2)] + valueList[~int(len(valueList)/2)])/ 2
 
 def getRatio(dataName,perc,sList,tList,samplePath):
+    print('now get ratio:' + str([dataName,perc,sList,tList,samplePath]))
     #perc(ent) float value
     percent = [perc]
     for i in range(len(percent)):
@@ -91,6 +93,7 @@ def getRatio(dataName,perc,sList,tList,samplePath):
                 else:
                     nodeDict[t] = [0,0];nodeDict[t][0] += freq
                     dictKeyList.add(t)
+        print('predicting alpha')
         aList = []
         with open(path,'r') as f:
             for line in f:
@@ -106,6 +109,7 @@ def getRatio(dataName,perc,sList,tList,samplePath):
         alphaMEDIUM = getMedium(aList)
 
     sqrtBeta = 1+alphaMEDIUM/(2 * alphaMEDIUM)
+    print('completed!\n')
     return sqrtBeta
 
 

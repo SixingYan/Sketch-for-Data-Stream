@@ -16,22 +16,20 @@ def combineIDs(nodeList):
     return int(newEdgeID) #int
 
 class mSketch2D(object):
-    def __init__(self, maxIDList, hList, w, sg):  # 255255255255 255255255255255
+    def __init__(self, maxIDList, hList, w,h, sg):  # 255255255255 255255255255255
         self.n = len(sg)
         self.sg = sg # [(1,3),(2,5),(4)...] the parts to be combined start by 0!!!
         self.maxIDList = maxIDList
         self.PList = []#[get_Prime(i) for i in self.maxIDList]
         self.hList = hList # h13, h25, h4 ...  
         self.w = w
+        self.h = h
         self.mSketch2D = [[0 for _ in range(self.h**self.n)] for _ in range(self.w)]
         self.mask = []
 
     def buildSketch(self):
         #
-        for tp in self.sg:
-            mx = ''
-            for i in tp:
-                mx += str(self.maxIDList[i])
+        for mx in self.maxIDList:
             self.PList.append(get_Prime(int(mx)))
         self.mask = [getTwoRandomNum(max(self.PList)) for _ in range(self.w)]
 
@@ -58,7 +56,7 @@ class mSketch2D(object):
         newEdge = [] # (),(),()....
         for tp in self.sg:
             if not len(tp) >1:
-                eid =  edge[tp[0]]
+                eid = edge[tp[0]]
             else:
                 nodeList = []
                 for i in tp:
