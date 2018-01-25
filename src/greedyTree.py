@@ -1,37 +1,137 @@
+# -*- coding: utf-8 -*-
 """
 greedyTree
 
-
 """
+#import os;os.chdir('D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment');import experimentQ4_1
+#===================  Import ->
+# system
+import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/src")
+import sys; sys.path.append("..")
+import random
+import copy
+import numpy as np
+# DIY
+#from diyTool import getSTD2
+from diy import treenode
+import lib.mSketch2D as mSketch2D
+import lib.diyTool as diyTool
+dataPath = 'D:/google desk PC/sample/tr_fre_2_0.001'
+samplePath = 'D:/google desk PC/sample/' 
+dataName = 'tr_fre_2'
+percent = '0.2'
+w = 10
+h = 20
+N = 4
+globalNodeID = 0
+maxIDList = [255 for i in range(N)]
+hList = [h for i in range(N)]
+globalNodeID = 0
+partList = [i for i in range(N)]
+nodeDict = {}
+leafDict = {}
 
+def getSTD(sketch):
+    return np.mean([np.std(wd) for wd in sketch])
 
-dataPath = []
+def getCandidate(node,partList):
+    pathStr = getPath(node)
+    #print('obtaining path '+pathStr)
+    pd = getPathDict(pathStr)
+    return list(set(partList) - set(pd['partID']))
 
-def getSTD():
-    pass
+def getPathDict(pathStr):
+    # input a string 
+    pathDict = {}
+    pathDict['partID'] = []
+    pathDict['edgeType'] = []
+    preIndex = 0
+    for i in range(len(pathStr)):
+        if pathStr[i] == 'S' or pathStr[i] == 'C':
+            pathDict['partID'].append(int(pathStr[preIndex:i]))
+            if pathStr[i] == 'S':
+                pathDict['edgeType'].append(0)
+            else:
+                pathDict['edgeType'].append(1)
+            preIndex = i + 1
+    pathTem = pathStr[::-1]# reverse string
+    idx = 0
+    #print(pathTem)
+    for i in range(len(pathTem)):
+        if pathTem[i] == 'S' or pathTem[i] == 'C':
+            idx = i
+            break
+    pathDict['partID'].append(int(pathStr[-idx:]))
+    return pathDict    
+
+def getStrategy(pathDict):
+    # edge=0 seperate  edge=1 combine 
+    j = 0
+    strategy = []#[[],...[]]
+    for i in range(len(pathDict['partID'])):
+        if i == len(pathDict['partID'])-1:
+            continue
+        if i == 0:
+            strategy.append([])
+            strategy[j].append(pathDict['partID'][i])
+        edge = pathDict['edgeType'][i]
+        if edge == 1:
+            strategy[j].append(pathDict['partID'][i+1])
+        else:
+            strategy.append([])
+            j += 1
+            strategy[j].append(pathDict['partID'][i+1])
+    return strategy
+
+def getPath(node):
+    # return path = {'partID':[0,3,5,7],'edge':[S,C,S,...]}
+    if node.priorID == -1:
+        #print('getting root')
+        return str(node.partID)
+    else:
+        priorNode = nodeDict[node.priorID]
+        edgeType = priorNode.nextNodes[node.nodeID]
+        return getPath(priorNode) + edgeType + str(node.partID) 
+
 
 def getStream(sketch,partList):
     # input structure of sketch 
     # open a sample of stream partList, e.g., 5,6,7
-    with open(,'r') as f:
-        # this is for 4 parts
-        # get part of stream
-        parts = 
+    pool = []
+    with open(samplePath,'r') as f:
+        for line in f:
+            line = line.strip()
+            if not len(line) > 0:
+                continue
+                #countNum += 1
+            parts = line.split(' ')
+                # should be multi-part
+            if len(parts) > 3: # for 8 parts
+                sNode = [int(i) for i in parts[0].split('.')];
+                tNode = [int(i) for i in parts[1].split('.')];
+                fre = float(parts[2])
+                nodeList = sNode + tNode
+            else:# for 4 parts
+                nodeList = [int(i) for i in parts[:4]]
+            fre = parts[-1]
+            edge = []
+            for pID in partList:
+                edge.append(nodeList[pID])
 
-        edge = []
-        for pID in partList:
-            edge.append(parts[pID])
+            if random.random() > 0.5:
+                pool.append([edge,fre])            
+            sketch.update(edge,fre)
 
-        sketch.update(edge,fre)
-    # outthe std of sketch
-    pass
+    std = getSTD(sketch)
+    #std = getSTD2(sketch,pool)
+    del pool
     return std
  
 def changeDict(d):
     # 0,6,4,3 -> 0,3,2,1
     partList = d['partID']
-    partList.sort(reverse = False)            #### big -> small 
-    num = len(partList)
+    partList.sort(reverse = False)
+    #num = len(partList)
     newPartList = []
     for p in d['partID']:
         idx = partList.index(p)
@@ -49,12 +149,12 @@ def getRatioDist(stra):
         for j in range(i,len(stra)):
             for p in stra[j]:
                 tList.append(p)
-        sqrtBeta = getRatio(dataName,percent,sList,tList)
-        h1[i] = int(sqrt(h**(len(sList)+len(tList)))/sqrtBeta)
+        sqrtBeta = diyTool.getRatio(dataName,percent,sList,tList,samplePath)
+        h1[i] = int(np.sqrt(h**(len(sList)+len(tList)))/sqrtBeta)
     h1.reverse()
     return h1
 
-def getMaxList(stra):
+def getMaxList(stra,maxList):
     maxIDList = []
     for i in range(len(stra)):
         if len(stra[i]) > 1:
@@ -71,7 +171,7 @@ def getMaxList(stra):
     return maxIDList
 
 def getProfit(partID, currentPath, edgeType):
-
+    #
     newPath = str(partID)+edgeType+currentPath 
     d = getPathDict(newPath)
     d = changeDict(d)
@@ -82,9 +182,6 @@ def getProfit(partID, currentPath, edgeType):
     sketch = copy.deepcopy(mSketch2D.mSketch2D(maxIDList,hList,w,stra))
     sketch.buildSketch()
     std = getStream(sketch,partList)
-
-    getSTD(,partList)
-
     return 1/std
 
 def buildTree(node):
@@ -101,83 +198,30 @@ def buildTree(node):
                 optEdge = 'C'
                 optPart = partID
                 optProf = profit
-
             profit = getProfit(partID, currentPath, 'S')
             if profit > optProf:
                 optEdge = 'S'
                 optPart = partID
                 optProf = profit
-
-
-            #subnode = treenode(partID, globalNodeID, node.nodeID, node.order+1);
-            #globalNodeID += 1
-            #nodeDict[subnode.nodeID] = subnode # store this node
-            #node.nextNodes[subnode.nodeID] = 'C' #
-            #if subnode.order < N:# not leaf 
-            #    buildTree(subnode)
-            #else:
-            #    subnode.isLeaf = True # use for search 
-            #    currentPath = getPath(subnode) # list-type
-            #    leafDict[subnode.nodeID] = currentPath
     #for partID in candidate:
-    subnode = treenode(max(candidate), globalNodeID, node.nodeID, node.order+1)
+    subnode = treenode(optPart, globalNodeID, node.nodeID, node.order+1)
     globalNodeID += 1
     nodeDict[subnode.nodeID] = subnode # store this node
-    node.nextNodes[subnode.nodeID] = 'S'
+    node.nextNodes[subnode.nodeID] = optEdge
     if subnode.order < N:# not leaf 
         buildTree(subnode)
     else:
-        subnode.order  = True #
+        subnode.leaf  = True #
         currentPath = getPath(subnode) # str-type
-        leafDict[subnode.nodeID] = currentPath
-
-
-def getSTD():
-
-
-
-
-def buildTree(node):
-    # node is not leaf
-    candidate = getCandidate() # 没出现在path上的partID
-    minCost = 0
-    bestNode = []
-
-    for partID in candidate:
-        if partID < node.partID:
-            cost = getCost()
-            if cost < minCost:
-                minCost = cost
-                bestNode = [partID,'solid']
-
-    for partID in candidate:
-        cost = getCost()
-        if cost < minCost:
-            minCost = cost
-            bestNode = [partID,'dotted']
-        break 
-    #def __init__(self, partID, nodeID, priorID, order):        
-    globalNodeID += 1
-    subnode = sketchTreeNode(bestNode[0], globalNodeID, node.nodeID, node.order+1);
-    nodeDict[subnode.nodeID] = subnode # store this node
-    node.nextNodeEdge((bestNode[0],minCost,bestNode[1]))
-    
-    if not subnode.order == N:# not leaf 
-        buildTree(node)
-    else:
-        currentPath = getPath() # dict-type
-        leafDict[subnode.nodeID] = [cost,currentPath]
+        leafDict[subnode.nodeID] = [optProf, currentPath]
 
 def main():
-    rootID = diyTool.getRoot()
-    root = sketchTreeNode(globalNodeID, rootID,    ,)
-    nodeList.append(root) # store this node
+    global globalNodeID
+    rootID = max(partList) #diyTool.getRoot()
+    root = treenode(rootID, globalNodeID, -1, 1)
+    nodeDict[globalNodeID] = root # store this node
     globalNodeID += 1
-
     buildTree(root)
-    minCost, bestPathList = searchBest()
-    print(minCost)
-    printPath(bestPathList)
 
 if __name__ == '__main__':
     main()

@@ -107,3 +107,16 @@ def getRatio(dataName,perc,sList,tList,samplePath):
 
     sqrtBeta = 1+alphaMEDIUM/(2 * alphaMEDIUM)
     return sqrtBeta
+
+
+class treenode(object):
+    def __init__(self, partID, nodeID, priorID, order):
+        self.isLeaf = False # true/false
+        self.partID = partID
+        self.nodeID = nodeID
+        self.priorID = priorID
+        self.order = order 
+        self.nextNodes = {} # key is node ID
+
+def getSTD2(sketch, pool):
+    pass
