@@ -127,7 +127,6 @@ def getRatio(dataName,perc,sList,tList,samplePath):
     print('completed!\n')
     return sqrtBeta
 
-
 class treenode(object):
     def __init__(self, partID, nodeID, priorID, order):
         self.isLeaf = False # true/false
@@ -137,5 +136,15 @@ class treenode(object):
         self.order = order 
         self.nextNodes = {} # key is node ID
 
-def getSTD2(sketch, pool):
-    pass
+def getSTD2(sketch,pool):
+    #
+    ObservedError = 0
+    #for i in range(len(pool)):
+    totalLoss1 = 0;totalFreq1 = 0
+    for parts in pool:
+        edge = parts[0]; freq = parts[1]
+        estiValue = sketch.query(edge)
+        totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
+    ObservedError = totalLoss1/totalFreq1
+    #print('ObservedError is '+str(ObservedError/len(radList)))
+    return ObservedError/len(pool)
