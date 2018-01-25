@@ -63,15 +63,15 @@ def getRatio(dataName,perc,sList,tList,samplePath):
                     continue
                 #countNum += 1
                 parts = line.split(' ')
-                # should be multi-part
-                if len(parts) > 3: # for 8 parts
+                # should be multi-part ===== >
+                if len(parts) > 5: # for 8 parts
                     sNode = [int(i) for i in parts[0].split('.')];
                     tNode = [int(i) for i in parts[1].split('.')];
                     freq = float(parts[2])
                     nodeList = sNode + tNode
                 else:# for 4 parts
                     nodeList = [int(i) for i in parts[:4]]
-
+                    freq = float(parts[4])
                 s = [];t = []
                 for idx in sList:
                     s.append(nodeList[idx])
@@ -79,8 +79,7 @@ def getRatio(dataName,perc,sList,tList,samplePath):
                 for idx in tList:
                     t.append(nodeList[idx])
                 t = tuple(t)
-                #s = int(parts[0]);t = int(parts[1]);freq = float(parts[2])
-
+                # <===== should be multi-part
                 # out degree
                 if s in dictKeyList:
                     nodeDict[s][1] += freq
@@ -101,9 +100,25 @@ def getRatio(dataName,perc,sList,tList,samplePath):
                 if not len(line) > 0:
                     continue
                 parts = line.split(' ')
-                s = int(parts[0]);t = int(parts[1]);#freq = int(float(parts[2]))
-                # alpha = (i,*)/(*,j)
-                a = nodeDict[s][1]/nodeDict[t][0] # * freq
+                # should be multi-part ===== >
+                if len(parts) > 5: # for 8 parts
+                    sNode = [int(i) for i in parts[0].split('.')];
+                    tNode = [int(i) for i in parts[1].split('.')];
+                    freq = float(parts[2])
+                    nodeList = sNode + tNode
+                else:# for 4 parts
+                    nodeList = [int(i) for i in parts[:4]]
+                    freq = float(parts[4])
+                s = [];t = []
+                for idx in sList:
+                    s.append(nodeList[idx])
+                s = tuple(s)
+                for idx in tList:
+                    t.append(nodeList[idx])
+                t = tuple(t)
+                # <===== should be multi-part
+                
+                a = nodeDict[s][1]/nodeDict[t][0] # alpha = (i,*)/(*,j)
                 aList.append(a)
         aList.sort();aList = list(set(aList))
         alphaMEDIUM = getMedium(aList)
