@@ -14,6 +14,7 @@ def combineIDs(nodeList):
             newID = str(nodeList[i][0])
         newEdgeID += newID
     return int(newEdgeID) #int
+
 class mSketch(object):
     def __init__(self, maxIDList, hList, w, sg):  # 255255255255 255255255255255
         self.sg = sg # [(1,3),(2,5),(4)...] the parts to be combined start by 0!!!
@@ -41,7 +42,7 @@ class mSketch(object):
                 mx += str(self.maxIDList[i])
             self.PList.append(get_Prime(int(mx)))
         self.mask = [getTwoRandomNum(max(self.PList)) for _ in range(self.w)]
-    
+
     def trafEdge(self, edge):
         #
         newEdge = []
@@ -55,7 +56,7 @@ class mSketch(object):
                 eid = combineIDs(nodeList)
             newEdge.append(eid)
         return newEdge
-    
+
     def getEdge(self, edge):
         s, t = edge #sourceNode, destinationNode
         e = list(s);e.extend(list(t))

@@ -74,6 +74,7 @@ class mSketch2D(object):
         e = edge #self.getEdge(edge)
         newEdge = self.trafEdge(e) #
         for wD, p in zip(range(self.w), self.getH(newEdge)):
+            print(p)
             self.mSketch2D[wD][p] += f
 
     def query(self, edge):
