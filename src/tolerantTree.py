@@ -32,6 +32,7 @@ globalNodeID = 0
 partList = [i for i in range(N)]
 nodeDict = {}
 leafDict = {}
+betaDict = {}
 
 def getSTD(sketch):
     return np.mean([np.std(wd) for wd in sketch.mSketch2D])
@@ -106,9 +107,12 @@ def getStream(sketch,partList):
             parts = line.split(' ')
             #print('line '+line)
             # should be multi-part
-            if len(parts) > 5: # for 8 parts
-                sNode = [int(i) for i in parts[0].split('.')];
-                tNode = [int(i) for i in parts[1].split('.')];
+            if N > 4: # for 8 parts
+                try:
+                    sNode = [int(i) for i in parts[0].split('.')];
+                    tNode = [int(i) for i in parts[1].split('.')];
+                except:
+                    continue
                 fre = float(parts[2])
                 nodeList = sNode + tNode
                 #print('8 parts')
@@ -122,30 +126,27 @@ def getStream(sketch,partList):
                 edge.append(nodeList[pID])
             if random.random() > 0.5:
                 pool.append([edge,fre]) 
-            #print(type(edge[0]))
-            #print(fre)
             sketch.update(edge,fre)
+
     print('getting std')
     std = getSTD(sketch)
-    std = getSTD2(sketch,pool)
+    #std = getSTD2(sketch,pool)
     del pool
     return std
  
-def changeDict(d):
+def changeDict(partList):
     # 0,6,4,3 -> 0,3,2,1
-    partList = copy.deepcopy(d['partID'])
     partList.sort(reverse = False) # small to big
-    #num = len(partList)
     newPartList = []
-    for p in d['partID']:
+    for p in partList:
         idx = partList.index(p)
         newPartList.append(idx)
-    d['partID'] = newPartList
-    return d    
+    return newPartList    
 
 def getRatioDist(stra):
     # input ((1,2),(3,4),(5))
     stra.reverse() # ((5),(3,4),(1,2))
+    print('getting ratio stra '+str(stra))
     h1 = [0 for _ in range(len(stra))]
     for i in range(len(stra)):
         sList = stra[i]
@@ -153,13 +154,20 @@ def getRatioDist(stra):
         for j in range(i+1,len(stra)):
             for p in stra[j]:
                 tList.append(p)
-        sqrtBeta = getRatio(dataName,percent,sList,tList,samplePath)
-        h1[i] = int(np.sqrt(h**(len(sList)+len(tList))) * sqrtBeta)
-        if i == len(stra) -2:
-            # next is the last one
-            h1[i+1] = int(np.sqrt(h**(len(sList)+len(tList))) / sqrtBeta)
+        if (sList,tList) in list(betaDict.keys()):
+            sqrtBeta = betaDict[(tuple(sList),tuple(tList))]
+        else:
+            sqrtBeta = getRatio(dataName,percent,sList,tList,samplePath,N)
+            print('sprtBeta'+str(sqrtBeta))
+            betaDict[(tuple(sList),tuple(tList))] = sqrtBeta
+        if i==0:
+            lastH = h**(len(sList)+len(tList))
+        h1[i] = int(np.sqrt(lastH) * sqrtBeta)
+        lastH = int(np.sqrt(lastH) / sqrtBeta) # update
+        if i == len(stra) -2: # next is the last one
+            h1[i+1] = int(np.sqrt(lastH) / sqrtBeta)
             break
-    #h1.reverse()
+    h1.reverse()
     return h1
 
 def getMaxList(stra,maxList):
@@ -182,10 +190,11 @@ def getProfit(partID, currentPath, edgeType):
     newPath = str(partID)+edgeType+currentPath 
     d = getPathDict(newPath)
     straOrig = getStrategy(d)
-    partList = d['partID']
+    partList = copy.deepcopy(d['partID'])
     print('partList'+str(partList))
     print('straOrig'+str(straOrig))
-    d = changeDict(d) # part ID is lower!
+    #d = changeDict(d) # part ID is lower!
+    d['partID'] = changeDict(d['partID'])
     stra = getStrategy(d) #if the only one is combination
     print('stra: '+str(stra))
     if len(stra) == 1:
@@ -196,11 +205,11 @@ def getProfit(partID, currentPath, edgeType):
     
     maxIDList = getMaxList(straOrig,maxList)
     print('maxIDList: '+str(maxIDList))
-    #std = 0
     sketch = copy.deepcopy(mSketch2D.mSketch2D(maxIDList,hList,w,h,stra, len(partList)))
     sketch.buildSketch()
     std = getStream(sketch,partList)
     return 1/std
+
 
 def buildTree(node):
     global globalNodeID
