@@ -33,14 +33,14 @@ class mCSketch(object):
 
     def update(self, edge, f=1):
         #((1,2,3,4),(1,2,3,4))
-        s, t = edge #sourceNode, destinationNode
-        e = list(s);e.extend(list(t))
-        edgeID = generateEdgeID(e,self.maxID)
+        #s, t = edge #sourceNode, destinationNode
+        #e = list(s);e.extend(list(t))
+        edgeID = generateEdgeID(edge,self.maxID)
         for wD, p in zip(range(self.w), self.getH(edgeID)):
             self.mCSketch[wD][p] += f
 
     def query(self, edge):
-        s, t = edge #sourceNode, destinationNode
-        e = list(s);e.extend(list(t))
-        edgeID = generateEdgeID(e,self.maxID)
+        #s, t = edge #sourceNode, destinationNode
+        #e = list(s);e.extend(list(t))
+        edgeID = generateEdgeID(edge,self.maxID)
         return min(wDimension[p] for wDimension, p in zip(self.mCSketch, self.getH(edgeID)))
