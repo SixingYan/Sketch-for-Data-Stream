@@ -24,7 +24,7 @@ class mSketch2D(object):
         self.hList = hList # h13, h25, h4 ...  
         self.w = w
         self.h = h
-        self.mSketch2D = [[0 for _ in range(self.h**self.n)] for _ in range(self.w)]
+        
         self.mask = []
 
     def buildSketch(self):
@@ -32,6 +32,10 @@ class mSketch2D(object):
         for mx in self.maxIDList:
             self.PList.append(get_Prime(int(mx)))
         self.mask = [getTwoRandomNum(max(self.PList)) for _ in range(self.w)]
+        tH = 1
+        for hL in self.hList:
+            tH *= hL
+        self.mSketch2D = [[0 for _ in range(tH)] for _ in range(self.w)]
 
     def getH(self, edgeList):
         #
@@ -74,7 +78,7 @@ class mSketch2D(object):
         e = edge #self.getEdge(edge)
         newEdge = self.trafEdge(e) #
         for wD, p in zip(range(self.w), self.getH(newEdge)):
-            print(p)
+            #print(p)
             self.mSketch2D[wD][p] += f
 
     def query(self, edge):

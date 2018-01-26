@@ -44,7 +44,7 @@ def getMedium(valueList):
     valueList.sort()
     return (valueList[int(len(valueList)/2)] + valueList[~int(len(valueList)/2)])/ 2
 
-def getRatio(dataName,perc,sList,tList,samplePath):
+def getRatio(dataName,perc,sList,tList,samplePath,N):
     print('now get ratio:' + str([dataName,perc,sList,tList,samplePath]))
     #perc(ent) float value
     percent = [perc]
@@ -64,9 +64,12 @@ def getRatio(dataName,perc,sList,tList,samplePath):
                 #countNum += 1
                 parts = line.split(' ')
                 # should be multi-part ===== >
-                if len(parts) > 5: # for 8 parts
-                    sNode = [int(i) for i in parts[0].split('.')];
-                    tNode = [int(i) for i in parts[1].split('.')];
+                if N > 5: # for 8 parts
+                    try:
+                        sNode = [int(i) for i in parts[0].split('.')];
+                        tNode = [int(i) for i in parts[1].split('.')];
+                    except:
+                        continue
                     freq = float(parts[2])
                     nodeList = sNode + tNode
                 else:# for 4 parts
@@ -101,10 +104,13 @@ def getRatio(dataName,perc,sList,tList,samplePath):
                     continue
                 parts = line.split(' ')
                 # should be multi-part ===== >
-                if len(parts) > 5: # for 8 parts
-                    sNode = [int(i) for i in parts[0].split('.')];
-                    tNode = [int(i) for i in parts[1].split('.')];
-                    freq = float(parts[2])
+                if N > 5: # for 8 parts
+                    try:
+                        sNode = [int(i) for i in parts[0].split('.')];
+                        tNode = [int(i) for i in parts[1].split('.')];
+                    except:
+                        continue
+                    #freq = float(parts[2])
                     nodeList = sNode + tNode
                 else:# for 4 parts
                     nodeList = [int(i) for i in parts[:4]]
