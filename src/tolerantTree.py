@@ -6,25 +6,34 @@ greedyTree
 #import os;os.chdir('D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment');import experimentQ4_1
 #===================  Import ->
 # system
-import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/src")
-import sys; sys.path.append("..")
+#import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/src")
+#import sys; sys.path.append("..")
 import random
 import copy
 import numpy as np
+import time
 # DIY
-from lib.diyTool import getSTD2
-import lib
-from lib.diyTool import treenode
-import lib.mSketch2D as mSketch2D
+#from lib.diyTool import getSTD2
+#import lib
+#from lib.diyTool import treenode
+#import lib.mSketch2D as mSketch2D
 #import lib.diyTool as diyTool
-from lib.diyTool import getRatio
-dataPath = 'D:/google desk PC/sample/tr_fre_2_0.001.txt'
-samplePath = 'D:/google desk PC/sample/' 
-dataName = 'tr_fre_2'
-percent = '0.001'
+#from lib.diyTool import getRatio
+
+from diyTool import getRatio
+from diyTool import treenode
+import mSketch2D as mSketch2D
+import diyTool
+
+#dataPath = 'D:/google desk PC/sample/tr_1_0.2.txt'
+#samplePath = 'D:/google desk PC/sample/' 
+dataPath = '/data1/Sixing/expdata/tr_fre_0.2.txt'
+samplePath = '/data1/Sixing/expdata/' 
+dataName = 'tr_fre'
+percent = '0.2'
 w = 10
-h = 20
-N = 4
+h = 10
+N = 8
 globalNodeID = 0
 maxList = [255 for i in range(N)]
 hList = [h for i in range(N)]
@@ -33,6 +42,9 @@ partList = [i for i in range(N)]
 nodeDict = {}
 leafDict = {}
 betaDict = {}
+
+minCount = 2
+maxCount = 10
 
 def getSTD(sketch):
     return np.mean([np.std(wd) for wd in sketch.mSketch2D])
@@ -193,7 +205,6 @@ def getProfit(partID, currentPath, edgeType):
     partList = copy.deepcopy(d['partID'])
     print('partList'+str(partList))
     print('straOrig'+str(straOrig))
-    #d = changeDict(d) # part ID is lower!
     d['partID'] = changeDict(d['partID'])
     stra = getStrategy(d) #if the only one is combination
     print('stra: '+str(stra))
@@ -202,14 +213,12 @@ def getProfit(partID, currentPath, edgeType):
     else:
         hList = getRatioDist(straOrig)
     print('hList: '+str(hList))
-    
     maxIDList = getMaxList(straOrig,maxList)
     print('maxIDList: '+str(maxIDList))
     sketch = copy.deepcopy(mSketch2D.mSketch2D(maxIDList,hList,w,h,stra, len(partList)))
     sketch.buildSketch()
     std = getStream(sketch,partList)
     return 1/std
-
 
 def buildTree(node):
     global globalNodeID
@@ -238,19 +247,34 @@ def buildTree(node):
             optPart.append(partID)
             optProf.append(profit)
         #return 0 # end
-    for i in range(len(optEdge)):
-        random.random()
-    subnode = treenode(optPart, globalNodeID, node.nodeID, node.order+1)
-    globalNodeID += 1
-    nodeDict[subnode.nodeID] = subnode # store this node
-    node.nextNodes[subnode.nodeID] = optEdge
-    print('opt edge is '+optEdge)
-    print('next opt node is '+str(subnode.partID))
-    print()
-    #return 0;
-    if subnode.order < N:# not leaf 
-        buildTree(subnode)
-    else:
-        subnode.leaf  = True #
-        currentPath = getPath(subnode) # str-type
-        leafDict[subnode.nodeID] = [optProf, currentPath]
+    sumProf = sum(optProf)
+    while not count > minCount:
+        for i in range(len(optEdge)):
+            if count>maxCount:
+                break
+            if random.random() < optProf[i]/sumProf:
+                count += 1
+                subnode = treenode(optPart[i], globalNodeID, node.nodeID, node.order+1)
+                globalNodeID += 1
+                nodeDict[subnode.nodeID] = subnode # store this node
+                node.nextNodes[subnode.nodeID] = optEdge[i]
+                print('try next edge is '+optEdge)
+                print('try next node is '+str(subnode.partID))
+                if subnode.order < N:# not leaf 
+                    buildTree(subnode)
+                else:
+                    subnode.leaf  = True #
+                    currentPath = getPath(subnode) # str-type
+                    leafDict[subnode.nodeID] = [optProf, currentPath]
+
+stime = time.time()
+rootID = max(partList) #diyTool.getRoot()
+root = treenode(rootID, globalNodeID, -1, 1)
+nodeDict[globalNodeID] = root # store this node
+globalNodeID += 1
+buildTree(root)
+etime = time.time()
+
+with open('/data1/Sixing/expdata/toleranttree_'+dataName+'w'+str(w),'a') as f:
+    f.write(str(etime - stime)+'\n')
+    f.write(str(leafDict)+'\n')
