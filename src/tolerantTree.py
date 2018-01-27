@@ -248,6 +248,7 @@ def buildTree(node):
             optProf.append(profit)
         #return 0 # end
     sumProf = sum(optProf)
+    count = 0
     while not count > minCount:
         for i in range(len(optEdge)):
             if count>maxCount:
