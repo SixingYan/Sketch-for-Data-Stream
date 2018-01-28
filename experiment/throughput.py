@@ -64,6 +64,7 @@ for i in range(len(partNum)):
             else:
                 nodeList = [int(k) for k in parts[:2]]
 
+
             fre = float(parts[-1])
             edge = []
             #print('nodeList '+str(nodeList))
