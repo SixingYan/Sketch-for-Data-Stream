@@ -38,30 +38,20 @@ while True:
             s1 = parts[0]; s2 = parts[1];
             t1 = parts[2]; t2 = parts[3]; 
             freq = parts[5]
-            #sParts = s.strip().split('.')
-            #tParts = t.strip().split('.')
-            #for i in range(len(sParts)):
-            #    sParts[i] = int(sParts[i])
-            #for i in range(len(tParts)):
-            #    tParts[i] = int(tParts[i])
-            #allIP = []; allIP.extend(sParts); allIP.extend(tParts)
             IPkey = tuple([s1,s2,t1,t2])
-            #keyList = list(ipDict.keys())
             if IPkey in keyList:
                 ipDict[IPkey][0] += freq
             else:
                 if keySize < 10000000: #
                     keyList.add(IPkey)
                     keySize += 1
-                    ipDict[IPkey] = [freq,s,t]
+                    ipDict[IPkey] = [freq,s1,s2,t1,t2]
                 else: #
                     putinLine(line,loopPath,'')
-            #if countNum > 10000:
-                #break
         print('putin')
         # stream stop, put in refined stream
         for IPkey in keyList:
-            line = ipDict[IPkey][1] + ' ' + ipDict[IPkey][2] + ' ' + ipDict[IPkey][0]  
+            line = ipDict[IPkey][1]+' '+ipDict[IPkey][2]+' '+ipDict[IPkey][3]+' '+ipDict[IPkey][4]+' '+ipDict[IPkey][0]  
             putinLine(line, refinedPath,'\n')
     if time == 3000:
         break
