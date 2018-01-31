@@ -16,10 +16,10 @@ from os.path import isfile, join
 
 #===================  path area ->
 #homePath = ''
-sourcePath = 'D:/点击这里/Nanyang/dataIPv4/t1_warts_txt/' # use '/' as ending
-destinationPath = ''
-ds1Path = 'D:/点击这里/Nanyang/dataIPv4/t1/tr_fre'
-ds2Path = 'D:/点击这里/Nanyang/dataIPv4/t1/tr_1'
+sourcePath = 'D:/google desk PC/warts/txt/' #'D:/点击这里/Nanyang/dataIPv4/t1_warts_txt/' # use '/' as ending
+
+ds1Path = 'D:/google desk PC/sanus_fre' #'D:/点击这里/Nanyang/dataIPv4/t1/tr_fre'
+ds2Path = 'D:/google desk PC/sanus_1' #'D:/点击这里/Nanyang/dataIPv4/t1/tr_1'
 #===================  <- path area
 
 # get the file name list
