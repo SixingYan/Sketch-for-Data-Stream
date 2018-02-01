@@ -12,18 +12,6 @@ from diyTool import getTwoRandomNum as getTRN
 from diyTool import get_Prime
 import numpy as np
 
-def combineIDs(nodeList,maxVList):
-    # 
-    newEdgeID = ''
-    for i in range(len(nodeList)):
-        if len(str(nodeList[i])) < int(len(str(maxValue))/len(nodeList)):
-            num = int(len(str(maxValue))/len(nodeList))-len(str(nodeList[i]))
-            newID = '0'*num + str(nodeList[i])
-        else:
-            newID = str(nodeList[i])
-        newEdgeID += newID
-    return int(newEdgeID) #int
-
 class fMODsketch(object):
     def __init__(self, rawMaxIDList, hList, w,hw,lw, sg):  # 255255255255 255255255255255
         #

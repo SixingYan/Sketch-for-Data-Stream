@@ -17,15 +17,15 @@
 
 
         edge, freq
-
+        flag = 0
         if edge in mgCount:
-            # high
-            .update()
-        else:
-            # low
-            .update()
+            flag = 1
 
 
+        .update(flag, edge, freq)
+
+    if edge in 
+    .query(flag, edge)
 
 
 #
