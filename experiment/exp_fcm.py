@@ -8,11 +8,6 @@
     @ offset/gap/# to update the sketch 
 """
 
-
-
-'''
-
-'''
 sgStrList = [
 '3C0S2C1','3C0S2S1','3C1C0S2',
 '3C1S2C0','3C1S2S0','3C2C0S1',
@@ -25,25 +20,51 @@ from diyTool import getPathDict, getStrategy
 
 
 
-N = 4
-maxIDList = [255 for _ in range(N)]
-h = 10
-w = 13
-wh = 4
-wl = 9
+
 
 def getMODlist():
     for ss in sgStrList:
         d = getPathDict(ss)
         sg = getStrategy(d)
-
+            
         hList = []
-        for tp in sg
-         
-        
+        for tp in sg:
+            if not len(tp) > 1:
+                
+            else:
+
+                
         return 
 
+def evaluate_rad_sum(sketch,radList):
+    #
+    ObservedError = 0
+    for i in range(len(radList)):
+        totalLoss1 = 0;totalFreq1 = 0
+        for parts in radList[i]:
+            s=parts[0]; t=parts[1];freq = parts[2]
+            estiValue = sketch.edge_frequency_query((s,t))
+            totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
+        ObservedError += totalLoss1/totalFreq1
+    print('ObservedError is '+str(ObservedError/len(radList)))
+    return ObservedError/len(radList)
 
+def evaluate_top_sum(sketch,topList):
+    totalLoss1 = 0;totalFreq1 = 0
+    for parts in topList:
+        s=parts[0]; t=parts[1];freq = parts[2]
+        estiValue = sketch.edge_frequency_query((s,t))
+        totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
+    ObservedError = totalLoss1/totalFreq1
+    print('ObservedError is '+str(ObservedError))
+    return ObservedError
+
+N = 4
+maxIDList = [255 for _ in range(N)]
+h = 50
+w = 13
+wh = 4
+wl = 9
 winSize = 10000
 
 # preparing
