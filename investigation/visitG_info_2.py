@@ -14,7 +14,7 @@ with open(filename, 'r') as f:
         line = line.strip()
         if len(line)>0:
             parts = line.split(' ');
-            s = int(parts[0]); t = int(parts[1]); freq = parts[2]
+            s = int(parts[0]); t = int(parts[1]); freq = float(parts[2])
             if s in sKey:
                 sDict[s] += freq
             else:
