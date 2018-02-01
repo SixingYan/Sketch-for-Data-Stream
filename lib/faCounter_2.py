@@ -1,5 +1,6 @@
 """
-Misra-Gries Frequency Counter
+#Misra-Gries Frequency Counter
+The update part is different !
 """
 
 class faCounter(object):

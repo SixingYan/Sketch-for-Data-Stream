@@ -13,7 +13,7 @@ from diyTool import get_Prime
 import numpy as np
 
 class fMODsketch(object):
-    def __init__(self, rawMaxIDList, hList, w,hw,lw, sg):  # 255255255255 255255255255255
+    def __init__(self, rawMaxIDList, hList, w, hw, lw, sg):  # 255255255255 255255255255255
         #
         self.sg = sg # [[1,3],[2,5],[4]...] the parts to be combined start by 0!!!
         self.rawMaxIDList = rawMaxIDList # 255,255,255,255,....
