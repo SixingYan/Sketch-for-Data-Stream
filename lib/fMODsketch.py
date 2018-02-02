@@ -117,7 +117,7 @@ class fMODsketch(object):
         self.wAgg += self.wList[flag]
         self.wNum += 1
 
-    def query(self,):
+    def query(self,flag,edge):
         #
         #1. prepare
         nodeList = self.transfer(edge)

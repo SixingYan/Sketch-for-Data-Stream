@@ -18,23 +18,16 @@ sgStrList = [
 
 from diyTool import getPathDict, getStrategy
 
-
-
-
-
 def getMODlist():
+    sghList = []
     for ss in sgStrList:
         d = getPathDict(ss)
         sg = getStrategy(d)
-            
         hList = []
         for tp in sg:
-            if not len(tp) > 1:
-                
-            else:
-
-                
-        return 
+            hList.append(h**len(tp))
+        sghList.append([sg,hList])
+    return sghList
 
 def evaluate_rad_sum(sketch,radList):
     #
@@ -59,38 +52,41 @@ def evaluate_top_sum(sketch,topList):
     print('ObservedError is '+str(ObservedError))
     return ObservedError
 
+streamPath = ''
+
 N = 4
 maxIDList = [255 for _ in range(N)]
 h = 50
 w = 13
-wh = 4
-wl = 9
+hw = 4
+lw = 9
 winSize = 10000
 
 # preparing
-
+sghList = getMODlist
 MODList = []
 
-#CM = 
+for sh in sghList:
+    mod = copy.deepcopy(fMODsketch.fMODsketch(maxIDList,sh[1],w,hw,lw,sh[0]))
+    MODList.append(mod)
+
 mgCounter = faCounter.faCounter(winSize)
 
 # streaming 
 with open() as f:
-
     edge, freq
     flag = 0
     if mgCounter.query(item):
         flag = 1
-
     for i in range(len(MODList)):
         MODList[i].update(flag, edge, freq)
-    #CM.update(flag, edge, freq)
 
+
+'''
 
 
 # querying
     if edge in 
     MOD.query(flag, edge)
-
-
 #
+'''

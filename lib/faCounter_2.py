@@ -4,7 +4,7 @@ The update part is different !
 """
 
 class faCounter(object):
-    def __init__(self, l):  # 255255255255 255255255255255
+    def __init__(self, l):  
         #
         self.idx = 0 # index in the window
         self.k = 1 # no. of window
