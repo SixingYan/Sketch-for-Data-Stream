@@ -8,8 +8,9 @@ process:
     2. maxIDlist: generate new maxIDlist based on maxID of each part and the strategy 
     3. PList: follow the new maxIDList to generate the prime number set
 """
-from diyTool import getTwoRandomNum as getTRN
-from diyTool import get_Prime
+
+from lib.diyTool import getTwoRandomNum as getTRN
+from lib.diyTool import get_Prime
 import numpy as np
 
 class fMODsketch(object):
@@ -61,7 +62,7 @@ class fMODsketch(object):
         self.totalPrime = get_Prime(int(totalMax))
         #5. maskLH
         self.maskLH = [getTRN(self.totalPrime) for _ in range(2)]
-    
+        #print()
     def getH(self, wIdx, nodeList):
         #
         finalH = []
@@ -88,7 +89,8 @@ class fMODsketch(object):
     def offsetGap(self, flag, nodeList):
         # offset and gab are determined by node value
         # the front part is similar to getHash
-        a,b = self.maskLH[flag][0],self.maskLH[flag][1]
+        #print(flag)
+        a,b = self.maskLH[flag][0], self.maskLH[flag][1]
         ident = self.combineIDs(nodeList, self.maxIDList)
         offset = (ident*a + b)% self.totalPrime% self.w
         gap =  (ident*a + b)% self.totalPrime% self.wList[flag] + 1 # not 0

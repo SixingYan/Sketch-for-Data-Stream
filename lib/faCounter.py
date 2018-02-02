@@ -40,7 +40,7 @@ class faCounter(object):
     
     def query(self,item):
         #
-        if itme in self.cKey:
+        if item in self.cKey:
             return True
         else:
             return False
