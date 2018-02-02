@@ -18,18 +18,18 @@ class faCounter(object):
         else:
             if '' in self.cKey:
                 updateIdx = self.cKey.index('')
-                self.cFreq[updateIdx] = self.k
                 self.cKey[updateIdx] = item
-
+                if self.k > f:
+                    self.cFreq[updateIdx] = self.k
+                else:
+                    self.cFreq[updateIdx] = f
         self.idx += 1
-
         if self.idx == self.length:
             #clean
             if i in range(self.length):
                 if self.cFreq[i] < (self.k + 1):
                     self.cFreq[i] = 0
                     self.cKey[i] = ''
-
             self.k += 1
             self.idx = 0
     

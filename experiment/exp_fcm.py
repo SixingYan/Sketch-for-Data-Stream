@@ -52,7 +52,21 @@ def evaluate_top_sum(sketch,topList):
     print('ObservedError is '+str(ObservedError))
     return ObservedError
 
-streamPath = ''
+#samplePath = '/data1/Sixing/expdata/sample/' # train the counter
+samplePath = 
+winSize = 10000
+mgCounter = faCounter.faCounter(winSize)
+with open(samplePath,'r') as f:
+    for line in f:
+
+        if:
+            continue
+        edge = 
+        freq = 
+        faCounter.update(edge,freq)
+
+
+streamPath = '' # process stream
 
 N = 4
 maxIDList = [255 for _ in range(N)]
@@ -60,8 +74,9 @@ h = 50
 w = 13
 hw = 4
 lw = 9
-winSize = 10000
 
+
+'''
 # preparing
 sghList = getMODlist
 MODList = []
@@ -69,11 +84,11 @@ MODList = []
 for sh in sghList:
     mod = copy.deepcopy(fMODsketch.fMODsketch(maxIDList,sh[1],w,hw,lw,sh[0]))
     MODList.append(mod)
+'''
 
-mgCounter = faCounter.faCounter(winSize)
 
 # streaming 
-with open() as f:
+with open(,'r') as f:
     edge, freq
     flag = 0
     if mgCounter.query(item):
@@ -83,8 +98,6 @@ with open() as f:
 
 
 '''
-
-
 # querying
     if edge in 
     MOD.query(flag, edge)
