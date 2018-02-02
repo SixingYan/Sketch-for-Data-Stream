@@ -1,24 +1,23 @@
 """
-Misra-Gries Frequency Counter
+Misra-Gries Frequency Counter work for flat stream
 """
-
 class faCounter(object):
     def __init__(self, l):  
         #
         self.idx = 0 # index in the window
         self.k = 1 # no. of window
         self.length = l
-        self.cKey = ['' for _ in self.length]
-        self.cFreq = [0 for _ in self.length]
+        self.cKey = ['' for _ in range(self.length)]
+        self.cFreq = [0 for _ in range(self.length)]
 
     def update(self,item,f=1):
         # counter is full or not
-        key = self.cKey.find(item)
-        if key > -1:
-            self.cKey[key] += f
+        if item in self.cKey:
+            key = self.cKey.index(item)
+            self.cFreq[key] += f
         else:
-            updateIdx = self.cKey.find('') # find the first empty place
-            if updateIdx > -1:
+            if '' in self.cKey:
+                updateIdx = self.cKey.index('')
                 self.cFreq[updateIdx] = self.k
                 self.cKey[updateIdx] = item
 
@@ -36,7 +35,7 @@ class faCounter(object):
     
     def query(self,item):
         #
-        if self.cKey.find(item) > -1:
+        if itme in self.cKey:
             return True
         else:
             return False

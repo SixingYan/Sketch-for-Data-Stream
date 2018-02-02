@@ -13,7 +13,7 @@ from diyTool import get_Prime
 import numpy as np
 
 class fMODsketch(object):
-    def __init__(self, rawMaxIDList, hList, w, hw, lw, sg):  # 255255255255 255255255255255
+    def __init__(self, rawMaxIDList, hList, w, hw, lw, sg): 
         #
         self.sg = sg # [[1,3],[2,5],[4]...] the parts to be combined start by 0!!!
         self.rawMaxIDList = rawMaxIDList # 255,255,255,255,....
@@ -30,12 +30,19 @@ class fMODsketch(object):
         self.totalPrime = 0
 
     def buildSketch(self):
-        #
         #1. mSketch
         side = [self.w] # [10, 100*700, 600, 500*300] #the first is w
         for h in self.hList:
             side.append(h)
         self.mSketch = np.zeros(tuple(side))
+        
+        #0. Plist
+        for tp in self.sg:
+            mx = ''
+            for i in tp:
+                mx += str(self.rawMaxIDList[i])
+            self.PList.append(get_Prime(int(mx)))
+            
         #2. mask
         self.mask = [[getTRN(self.PList[i]) for i in range(len(self.PList))] for _ in range(self.w)]
         #3. sg
@@ -57,9 +64,9 @@ class fMODsketch(object):
     
     def getH(self, wIdx, nodeList):
         #
-        a, b = self.mask[wIdx][0], self.mask[wIdx][1]
         finalH = []
         for i in range(len(nodeList)):
+            a, b = self.mask[wIdx][i][0], self.mask[wIdx][i][1]
             node = nodeList[i]
             n = hash(node)
             hv = (a*n + b) % self.PList[i] % self.hList[i]
@@ -68,7 +75,7 @@ class fMODsketch(object):
 
     def combineIDs(self,nodeList, maxIDList):
         number = ''
-        for i in range(len):
+        for i in range(len(nodeList)):
             newNum = ''
             if len(str(nodeList[i])) < len(str(maxIDList[i])):
                 num = len(str(maxIDList[i])) - len(str(nodeList[i]))
@@ -84,7 +91,7 @@ class fMODsketch(object):
         a,b = self.maskLH[flag][0],self.maskLH[flag][1]
         ident = self.combineIDs(nodeList, self.maxIDList)
         offset = (ident*a + b)% self.totalPrime% self.w
-        gap =  (ident*a + b)% self.totalPrime% self.wList[flag] # not longger than h/3
+        gap =  (ident*a + b)% self.totalPrime% self.wList[flag] + 1 # not 0
         return offset, gap
 
     def transfer(self,edge):
@@ -118,7 +125,6 @@ class fMODsketch(object):
         self.wNum += 1
 
     def query(self,flag,edge):
-        #
         #1. prepare
         nodeList = self.transfer(edge)
         offset, gap = self.offsetGap(flag,nodeList)
