@@ -10,7 +10,7 @@ class faCounter(object):
         self.cKey = ['' for _ in range(self.length)]
         self.cFreq = [0 for _ in range(self.length)]
 
-    def update(self,item,f=1):
+    def update(self, item, f=1):
         # counter is full or not
         if item in self.cKey:
             key = self.cKey.index(item)
@@ -18,18 +18,23 @@ class faCounter(object):
         else:
             if '' in self.cKey:
                 updateIdx = self.cKey.index('')
+                self.cFreq[updateIdx] = self.k
                 self.cKey[updateIdx] = item
-                if self.k > f:
-                    self.cFreq[updateIdx] = self.k
-                else:
-                    self.cFreq[updateIdx] = f
+            else:
+                if f > min(self.cFreq):
+                    minIdx = self.cFreq.index(min(self.cFreq))
+                    self.cFreq[minIdx] = f
+                    self.cKey[minIdx] = item
+
         self.idx += 1
+
         if self.idx == self.length:
             #clean
-            if i in range(self.length):
+            for i in range(self.length):
                 if self.cFreq[i] < (self.k + 1):
                     self.cFreq[i] = 0
                     self.cKey[i] = ''
+
             self.k += 1
             self.idx = 0
     

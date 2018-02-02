@@ -139,24 +139,24 @@ for ds in dataset:
             # out degree
             for line in f:
                 line = line.strip()
-            if not len(line) > 0:
-                continue
-            parts = line.split(' ')
-            s = int(parts[0]);t = int(parts[1]);freq = float(parts[2])
-            # out degree
-            if s in dictKeyList:
-                nodeDict[s][1] += freq
-            else:
-                nodeDict[s] = [0,0]
-                nodeDict[s][1] += freq
-                dictKeyList.add(s)
-            # in degree
-            if t in dictKeyList:
-                nodeDict[t][0] += freq
-            else:
-                nodeDict[t] = [0,0]
-                nodeDict[t][0] += freq
-                dictKeyList.add(t)
+                if not len(line) > 0:
+                    continue
+                parts = line.split(' ')
+                s = int(parts[0]);t = int(parts[1]);freq = float(parts[2])
+                # out degree
+                if s in dictKeyList:
+                    nodeDict[s][1] += freq
+                else:
+                    nodeDict[s] = [0,0]
+                    nodeDict[s][1] += freq
+                    dictKeyList.add(s)
+                # in degree
+                if t in dictKeyList:
+                    nodeDict[t][0] += freq
+                else:
+                    nodeDict[t] = [0,0]
+                    nodeDict[t][0] += freq
+                    dictKeyList.add(t)
 
         aList = []
         with open(ds[0],'r') as f:

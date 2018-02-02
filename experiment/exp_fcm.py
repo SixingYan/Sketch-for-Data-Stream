@@ -17,7 +17,7 @@ sgStrList = [
 ]
 
 from diyTool import getPathDict, getStrategy
-
+'''
 def getMODlist():
     sghList = []
     for ss in sgStrList:
@@ -28,7 +28,19 @@ def getMODlist():
             hList.append(h**len(tp))
         sghList.append([sg,hList])
     return sghList
-
+'''
+def getH1H2(num1,num2,h):
+    h1h2List = []
+    for i in range(num1,num2):
+        h1 = (i+1)*increase
+        h2 = int(h**2/h1)
+        h1h2List.append((h1,h2))
+    for i in range(num1,num2):
+        h2 = (i+1)*increase
+        h1 = int(h**2/h2)
+        h1h2List.append((h1,h2))
+    return h1h2List
+    
 def evaluate_rad_sum(sketch,radList):
     #
     ObservedError = 0
@@ -51,30 +63,34 @@ def evaluate_top_sum(sketch,topList):
     ObservedError = totalLoss1/totalFreq1
     print('ObservedError is '+str(ObservedError))
     return ObservedError
-
+'''
 #samplePath = '/data1/Sixing/expdata/sample/' # train the counter
-samplePath = 
+samplePath = 'F:/sample/comp18_0.05.txt'
 winSize = 10000
 mgCounter = faCounter.faCounter(winSize)
 with open(samplePath,'r') as f:
     for line in f:
-
-        if:
+        if not len(line) > 0:
             continue
-        edge = 
-        freq = 
+        parts = line.split(' ')
+        s = int(parts[0]);t = int(parts[1]);freq = float(parts[2])
+        edge = (s,t) 
         faCounter.update(edge,freq)
+'''
+
+num1 = 0
+num2 = 100
 
 
-streamPath = '' # process stream
-
+streamPath = '/data1/Sixing/stream dataset/tweet_stream_hashed_refined' # process stream
 N = 4
-maxIDList = [255 for _ in range(N)]
-h = 50
+#maxIDList = [255 for _ in range(N)]
+maxID = 17813281
+h = 1000
+increase = 10
 w = 13
 hw = 4
 lw = 9
-
 
 '''
 # preparing
@@ -86,15 +102,19 @@ for sh in sghList:
     MODList.append(mod)
 '''
 
-
 # streaming 
-with open(,'r') as f:
-    edge, freq
-    flag = 0
-    if mgCounter.query(item):
-        flag = 1
-    for i in range(len(MODList)):
-        MODList[i].update(flag, edge, freq)
+with open(streamPath,'r') as f:
+    for line in f:
+        if not len(line) > 0:
+            continue
+        flag = 0
+        s = int(parts[0]);t = int(parts[1]);freq = float(parts[2])
+        mgCounter.update((s,t), freq)
+
+        if mgCounter.query((s,t)):
+            flag = 1
+        for i in range(len(MODList)):
+            MODList[i].update(flag, (s,t), freq)
 
 
 '''
