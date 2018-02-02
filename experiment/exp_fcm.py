@@ -102,8 +102,8 @@ with open(samplePath,'r') as f:
 '''
 num1 = 0
 num2 = 40
-dataName = 'tweet'
-maxNodeID = 17813281
+dataName = 'ipv4fre' #'tweet'
+maxNodeID = 100000000 #
 maxIDList = [maxNodeID,maxNodeID]
 h = 2000
 increase = 50
@@ -113,7 +113,8 @@ winSize = 10000
 homePath = '/data1/Sixing/expdata/'# use '/' as ending
 Q4result_Top_Path = homePath+'Q4_Top_symCG_'+str(h)+'_'
 Q4result_Rad_Path = homePath+'Q4_Rad_symCG_'+str(h)+'_'
-streamPath = '/data1/Sixing/stream dataset/tweet_stream_hashed_refined' # process stream
+streamPath = '/data1/Sixing/stream dataset/tr_fre_4ij' # process stream
+#streamPath = '/data1/Sixing/stream dataset/tweet_stream_hashed_refined' # process stream
 #streamPath = 'D:/google desk PC/graph_freq_comp18.txt' # process stream
 
 '''
@@ -145,7 +146,7 @@ mgCounter = faCounter.faCounter(winSize)
 
 # streaming 
 radPool = [];top300List = []
-print('start stream')
+print('start stream......')
 with open(streamPath,'r') as f:
     for line in f:
         if not len(line) > 0:
@@ -157,7 +158,7 @@ with open(streamPath,'r') as f:
         if mgCounter.query((s,t)):
             flag = 1
 
-        if random.random()> 0.4:
+        if random.random()> 0.5:
             continue
         if random.random()< 0.3:
             radPool.append([(s,t),freq])
@@ -176,7 +177,7 @@ with open(streamPath,'r') as f:
 rad3000List = getRadList(3000,radPool)
 del radPool # clean
 
-print('\n evaluation')
+print('\n evaluation......')
 with open(Q4result_Top_Path+dataName,'a') as f:
     for i in range(len(MODList)): #
         ObservedError = evaluate_top_sum(MODList[i],top300List,mgCounter)
