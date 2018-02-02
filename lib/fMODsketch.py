@@ -9,8 +9,10 @@ process:
     3. PList: follow the new maxIDList to generate the prime number set
 """
 
-from lib.diyTool import getTwoRandomNum as getTRN
-from lib.diyTool import get_Prime
+#from lib.diyTool import getTwoRandomNum as getTRN
+#from lib.diyTool import get_Prime
+from diyTool import getTwoRandomNum as getTRN
+from diyTool import get_Prime
 import numpy as np
 
 class fMODsketch(object):

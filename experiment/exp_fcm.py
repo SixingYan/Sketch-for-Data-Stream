@@ -1,14 +1,16 @@
 import copy
 import random
 #import numpy as np
-import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
-import sys; sys.path.append("..")
+#import os; os.chdir("D:/Alfonso Ngan/Documents/Github Project/Sketch-for-Data-Stream/experiment")
+#import sys; sys.path.append("..")
 # DIY
 #import lib
 #import diyTool
-import lib.fMODsketch as fMODsketch
-import lib.faCounter as faCounter
+#import lib.fMODsketch as fMODsketch
+#import lib.faCounter as faCounter
 #from lib.diyTool import getPathDict, getStrategy
+import fMODsketch
+import faCounter
 """
 1. filter: store high freq. edge  
     @ store
@@ -99,21 +101,20 @@ with open(samplePath,'r') as f:
         faCounter.update(edge,freq)
 '''
 num1 = 0
-num2 = 1
+num2 = 40
+dataName = 'tweet'
 maxNodeID = 17813281
 maxIDList = [maxNodeID,maxNodeID]
-h = 100
-increase = 10
+h = 2000
+increase = 50
 w = 13
-hw = 4
-lw = 9
-winSize = 1000
-
-homePath = 'D:/'# use '/' as ending
+hw = 4;lw = 9
+winSize = 10000
+homePath = '/data1/Sixing/expdata/'# use '/' as ending
 Q4result_Top_Path = homePath+'Q4_Top_symCG_'+str(h)+'_'
 Q4result_Rad_Path = homePath+'Q4_Rad_symCG_'+str(h)+'_'
-#streamPath = '/data1/Sixing/stream dataset/tweet_stream_hashed_refined' # process stream
-streamPath = 'D:/google desk PC/graph_freq_comp18.txt' # process stream
+streamPath = '/data1/Sixing/stream dataset/tweet_stream_hashed_refined' # process stream
+#streamPath = 'D:/google desk PC/graph_freq_comp18.txt' # process stream
 
 '''
 sketchList = []
@@ -176,18 +177,18 @@ rad3000List = getRadList(3000,radPool)
 del radPool # clean
 
 print('\n evaluation')
-with open(Q4result_Top_Path,'a') as f:
+with open(Q4result_Top_Path+dataName,'a') as f:
     for i in range(len(MODList)): #
         ObservedError = evaluate_top_sum(MODList[i],top300List,mgCounter)
-        f.write(str(h1h2List[i])+' : '+str(ObservedError))
+        f.write(str(h1h2List[i])+' : '+str(ObservedError)+'\n')
 
     ObservedError = evaluate_top_sum(cS,top300List,mgCounter)
-    f.write('Count-Min: '+str(ObservedError))
+    f.write('Count-Min: '+str(ObservedError)+'\n')
 
-with open(Q4result_Rad_Path,'a') as f:
+with open(Q4result_Rad_Path+dataName,'a') as f:
     for i in range(len(MODList)): #
         ObservedError = evaluate_rad_sum(MODList[i],rad3000List,mgCounter)
-        f.write(str(h1h2List[i])+' : '+str(ObservedError))
+        f.write(str(h1h2List[i])+' : '+str(ObservedError)+'\n')
 
     ObservedError = evaluate_rad_sum(cS,rad3000List,mgCounter)
-    f.write('Count-Min: '+str(ObservedError))
+    f.write('Count-Min: '+str(ObservedError)+'\n')
