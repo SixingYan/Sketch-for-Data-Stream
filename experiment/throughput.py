@@ -14,7 +14,7 @@ maxIDList = [
 [255 for _ in range(8)],
 ]
 
-hSet = [1000,100,10]
+#hSet = [1000,100,10]
 dataset = ['tr_1', '/data1/Sixing/tr_1_4ij', '/data1/Sixing/tr_1_2', '/data1/Sixing/tr_1']#  ['tr_fre', '/data1/Sixing/tr_fre_4ij', '/data1/Sixing/tr_fre_2', '/data1/Sixing/tr_fre',]
 #['tr_fre', '/tr_fre_4ij', '/tr_fre_2', '/tr_fre',],
 
@@ -30,10 +30,10 @@ for i in range(len(partNum)):
     #hListG = [hSet[i] for _ in range(partNum[i])]
     hListG = [pow(10**6*4,1/partNum[i]) for pn in range(partNum[i])]
     straG = [[j,] for j in range(partNum[i])]
-    mS = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListM[i],w,hSet[i],straM[i],partNum[i]));mS.buildSketch()
-    mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC,w,hSet[i],straC[i],partNum[i]));mC.buildSketch()
-    mG = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListG,w,hSet[i],straG,partNum[i]));mG.buildSketch()
-    BL = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],[10**4*4],w,hSet[i],straC[i],partNum[i]));mG.buildSketch()
+    mS = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListM[i],w,pow(10**6*4,1/partNum[i]),straM[i],partNum[i]));mS.buildSketch()
+    mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC,w,pow(10**6*4,1/partNum[i]),straC[i],partNum[i]));mC.buildSketch()
+    mG = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListG,w,pow(10**6*4,1/partNum[i]),straG,partNum[i]));mG.buildSketch()
+    BL = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],[10**4*4],w,pow(10**4*4,1/partNum[i]),straC[i],partNum[i]));mG.buildSketch()
     
     countNum = 0
     tC = [];tG = [];tM = []; tL = []
