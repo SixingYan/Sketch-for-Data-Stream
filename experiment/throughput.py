@@ -6,6 +6,8 @@ import time
 import mSketch2D
 #import lib.mSketch as mSketch
 import numpy as np 
+
+
 maxIDList = [
 [255255255255 for _ in range(2)],
 [255255 for _ in range(4)],
@@ -16,28 +18,24 @@ hSet = [1000,100,10]
 dataset = ['tr_1', '/data1/Sixing/tr_1_4ij', '/data1/Sixing/tr_1_2', '/data1/Sixing/tr_1']#  ['tr_fre', '/data1/Sixing/tr_fre_4ij', '/data1/Sixing/tr_fre_2', '/data1/Sixing/tr_fre',]
 #['tr_fre', '/tr_fre_4ij', '/tr_fre_2', '/tr_fre',],
 
-h = 10
+#h = 10
 partNum = [2,4,8]
-hListM = [[800,1250],[4,10000,25],[4,100,50,200,25]]
-hListC = [[10**6,],[10**8,],[10**8,]]
+hListM = [[800,int(10**6*4/800)],[33,480,250],[8,8,30,100,20]]
+hListC = [10**6*4]
 straM = [[0,],[1,]],[(0,),(1,2),(3,)],[(1,),(2,3),(4,7),(0,5),(6,)]
 straC = [[0,1,]],[(0,1,2,3)],[(0,1,2,3,4,5,6,7)],
 partList = [[0,1],[0,1,2,3],[0,1,2,3,4,5,6,7]]
 w = 10
 for i in range(len(partNum)):
-    if not i == 1: # only for 4-parts
-        continue
-    hListG = [hSet[i] for _ in range(partNum[i])]
+    #hListG = [hSet[i] for _ in range(partNum[i])]
+    hListG = [pow(10**6*4,1/partNum[i]) for pn in range(partNum[i])]
     straG = [[j,] for j in range(partNum[i])]
     mS = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListM[i],w,hSet[i],straM[i],partNum[i]));mS.buildSketch()
-    mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC[i],w,hSet[i],straC[i],partNum[i]));mC.buildSketch()
+    mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC,w,hSet[i],straC[i],partNum[i]));mC.buildSketch()
     mG = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListG,w,hSet[i],straG,partNum[i]));mG.buildSketch()
     countNum = 0
     tC = [];tG = [];tM = []
     with open(dataset[i+1],'r') as f:
-        # input structure of sketch 
-        # open a sample of stream partList, e.g., 5,6,7
-        pool = []
         print('getting stream ==========> ')
         for line in f:
             line = line.strip()
@@ -63,7 +61,6 @@ for i in range(len(partNum)):
                 #print('4 parts')
             else:
                 nodeList = [int(k) for k in parts[:2]]
-
 
             fre = float(parts[-1])
             edge = []
@@ -91,15 +88,3 @@ for i in range(len(partNum)):
         f.write('MOD is '+str(np.mean(tM))+'\n')
         f.write('GMATRIX is '+str(np.mean(tG))+'\n')
         f.write('COUNTMIN is '+str(np.mean(tC))+'\n')
-    
-
-
-
-
-
-
-
-
-
-
-

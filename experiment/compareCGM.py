@@ -28,8 +28,8 @@ def evaluate_rad_sum(sketch,radList):
     for i in range(len(radList)):
         totalLoss1 = 0;totalFreq1 = 0
         for parts in radList[i]:
-            s=parts[0]; t=parts[1];freq = parts[2]
-            estiValue = sketch.edge_frequency_query((s,t))
+            edge=parts[0]; freq = parts[1]
+            estiValue = sketch.query(edge)
             totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
         ObservedError += totalLoss1/totalFreq1
     print('ObservedError is '+str(ObservedError/len(radList)))
@@ -38,8 +38,8 @@ def evaluate_rad_sum(sketch,radList):
 def evaluate_top_sum(sketch,topList):
     totalLoss1 = 0;totalFreq1 = 0
     for parts in topList:
-        s=parts[0]; t=parts[1];freq = parts[2]
-        estiValue = sketch.edge_frequency_query((s,t))
+        edge=parts[0]; freq = parts[1]
+        estiValue = sketch.query(edge)
         totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
     ObservedError = totalLoss1/totalFreq1
     print('ObservedError is '+str(ObservedError))
@@ -106,26 +106,26 @@ w = 10
 h = 20
 edge = [60764, 32817]
 '''
-hSet = [31.7,5.7]
+#hSet = [31.7,5.7]
 #h = 10
 partNum = [4,8]
 #hListM = [[],[],[4,100,50,200,25]]
-hListC = [10**6]
+hListC = [10**6*4]
 #straM = [[0,],[1,]],[(0,),(1,2),(3,)],[(1,),(2,3),(4,7),(0,5),(6,)]
 straC = [[(0,1,2,3)],[(0,1,2,3,4,5,6,7)]]
 partList = [[0,1,2,3],[0,1,2,3,4,5,6,7]]
 w = 4
-countNum = 0
 #strList = []
-radPool = []
-top100List = []
 for i in range(len(partNum)):
+    radPool = []
+    top100List = []
+    countNum = 0
     #sketchList = []
-    hListG = [pow(1000000,1/partNum[i]) for pn in range(partNum[i])]
+    hListG = [pow(10**6*4,1/partNum[i]) for pn in range(partNum[i])]
     straG = [[j,] for j in range(partNum[i])]
     #mS = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListM[i],w,hSet[i],straM[i],partNum[i]));mS.buildSketch()
-    mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC,w,hSet[i],straC[i],partNum[i]));mC.buildSketch()
-    mG = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListG,w,hSet[i],straG,partNum[i]));mG.buildSketch()
+    mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC,w,pow(10**6*4,1/partNum[i]),straC[i],partNum[i]));mC.buildSketch()
+    mG = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListG,w,pow(10**6*4,1/partNum[i]),straG,partNum[i]));mG.buildSketch()
     '''
     for path in strList:
         d = getPathDict(path)
@@ -137,7 +137,6 @@ for i in range(len(partNum)):
     with open(dataset[i+1],'r') as f:
         # input structure of sketch 
         # open a sample of stream partList, e.g., 5,6,7
-        pool = []
         print('getting stream ==========> ')
         for line in f.readlines():
             line = line.strip()
@@ -189,13 +188,24 @@ for i in range(len(partNum)):
             mG.update(edge,fre)
 
     print('========evaluation')# evaluation
-    #topList = []; radList = []
-    #top100List.sort(key= lambda d : d[1], reverse = True)
-    #topList = top100List[:1000]
     rad1000List = getRadList(1000,radPool)
-    del radPool
     print('analysis')
     with open('/data1/Sixing/expdata/txt__'+dataset[0]+'_'+str(partNum[i]),'a') as f:
+        print('cSketch')
+        f.write('\n MC')
+        value = evaluate_top_sum(mC,top100List)
+        f.write('top: '+str(value)+'\n')
+        value = evaluate_rad_sum(mC,rad1000List)
+        f.write('rad: '+str(value)+'\n')
+        f.write('\n')
+
+        print('gMatrix')
+        f.write('\n MG')
+        value = evaluate_top_sum(mG,top100List)
+        f.write('top: '+str(value)+'\n')
+        value = evaluate_rad_sum(mG,rad1000List)
+        f.write('rad: '+str(value)+'\n')
+        f.write('\n')
         '''
         print('MOD')
         f.write('\n MG')
@@ -220,18 +230,4 @@ for i in range(len(partNum)):
         f.write('\n')
         '''
 
-        print('cSketch')
-        f.write('\n MC')
-        value = evaluate_top_sum(mC,top100List)
-        f.write('top: '+str(value))
-        value = evaluate_rad_sum(mC,rad1000List)
-        f.write('rad: '+str(value))
-        f.write('\n')
 
-        print('gMatrix')
-        f.write('\n MG')
-        value = evaluate_top_sum(mG,top100List)
-        f.write('top: '+str(value))
-        value = evaluate_rad_sum(mG,rad1000List)
-        f.write('rad: '+str(value))
-        f.write('\n')
