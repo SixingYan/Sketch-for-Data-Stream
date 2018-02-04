@@ -33,8 +33,10 @@ for i in range(len(partNum)):
     mS = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListM[i],w,hSet[i],straM[i],partNum[i]));mS.buildSketch()
     mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC,w,hSet[i],straC[i],partNum[i]));mC.buildSketch()
     mG = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListG,w,hSet[i],straG,partNum[i]));mG.buildSketch()
+    BL = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],[10**4*4],w,hSet[i],straC[i],partNum[i]));mG.buildSketch()
+    
     countNum = 0
-    tC = [];tG = [];tM = []
+    tC = [];tG = [];tM = []; tL = []
     with open(dataset[i+1],'r') as f:
         print('getting stream ==========> ')
         for line in f:
@@ -64,11 +66,8 @@ for i in range(len(partNum)):
 
             fre = float(parts[-1])
             edge = []
-            #print('nodeList '+str(nodeList))
             for pID in partList[i]:
                 edge.append(nodeList[pID])
-            #print(edge)
-            #print(fre)
             t1 = time.time()
             mS.update(edge,fre)
             tM.append(time.time()-t1)
@@ -81,10 +80,15 @@ for i in range(len(partNum)):
             mG.update(edge,fre)
             tG.append(time.time()-t1)
 
-    del mS; del mC; del mG; 
+            t1 = time.time()
+            BL.update(edge,fre)
+            tL.append(time.time()-t1)
 
-    with open('/data1/Sixing/expdata/TXT_w'+str(w)+'_'+dataset[0],'a') as f:
-        f.write('\n Part num: '+str(partNum[i])+'\n')
+    del mS; del mC; del mG; del BL
+
+    with open('/data1/Sixing/expdata/TXT_new_w'+str(w)+'_'+dataset[0],'a') as f:
+        f.write('\nPart num: '+str(partNum[i])+'\n')
         f.write('MOD is '+str(np.mean(tM))+'\n')
         f.write('GMATRIX is '+str(np.mean(tG))+'\n')
         f.write('COUNTMIN is '+str(np.mean(tC))+'\n')
+        f.write('BASELINE is '+str(np.mean(tL))+'\n')

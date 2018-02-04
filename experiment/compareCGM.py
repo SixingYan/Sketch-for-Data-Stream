@@ -86,32 +86,12 @@ def getStrategy(pathDict):
             j += 1
             strategy[j].append(pathDict['partID'][i+1])
     return strategy
-#-------------
-'''
-def getHList(stra):
-    #
-    hList = []
-    for i in range(len(stra)):
-        l = h**len(stra[i])
-        hList.append(l)
-    return hList
-'''
-dataset = ['tr_1', '/data1/Sixing/tr_1_2', '/data1/Sixing/tr_1']
 
-'''
-stra = [[0, 1]]
-hList =  [400]
-maxIDList = [255255]
-w = 10
-h = 20
-edge = [60764, 32817]
-'''
-#hSet = [31.7,5.7]
-#h = 10
-partNum = [4,8]
-#hListM = [[],[],[4,100,50,200,25]]
-hListC = [10**6*4]
-#straM = [[0,],[1,]],[(0,),(1,2),(3,)],[(1,),(2,3),(4,7),(0,5),(6,)]
+dataset = ['tr_1', '/data1/Sixing/tr_1_4ij', '/data1/Sixing/tr_1_2', '/data1/Sixing/tr_1']
+
+h = 10**7
+partNum = [2,4,8]
+hListC = [h]
 straC = [[(0,1,2,3)],[(0,1,2,3,4,5,6,7)]]
 partList = [[0,1,2,3],[0,1,2,3,4,5,6,7]]
 w = 4
@@ -121,19 +101,11 @@ for i in range(len(partNum)):
     top100List = []
     countNum = 0
     #sketchList = []
-    hListG = [pow(10**6*4,1/partNum[i]) for pn in range(partNum[i])]
+    hListG = [pow(h,1/partNum[i]) for pn in range(partNum[i])]
     straG = [[j,] for j in range(partNum[i])]
     #mS = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListM[i],w,hSet[i],straM[i],partNum[i]));mS.buildSketch()
-    mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC,w,pow(10**6*4,1/partNum[i]),straC[i],partNum[i]));mC.buildSketch()
-    mG = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListG,w,pow(10**6*4,1/partNum[i]),straG,partNum[i]));mG.buildSketch()
-    '''
-    for path in strList:
-        d = getPathDict(path)
-        stra = getStrategy(d)
-        hListM = getHList(stra)
-        mS = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListM,w,hSet[i],stra,partNum[i]));mS.buildSketch()
-        sketchList.append(mS)
-    '''
+    mC = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListC,w,pow(h,1/partNum[i]),straC[i],partNum[i]));mC.buildSketch()
+    mG = copy.deepcopy(mSketch2D.mSketch2D(maxIDList[i],hListG,w,pow(h,1/partNum[i]),straG,partNum[i]));mG.buildSketch()
     with open(dataset[i+1],'r') as f:
         # input structure of sketch 
         # open a sample of stream partList, e.g., 5,6,7
@@ -148,8 +120,7 @@ for i in range(len(partNum)):
             if countNum > 1000000:
                 break
             parts = line.split(' ')
-            #print('line '+line)
-            # should be multi-part
+
             if partNum[i]> 5: # for 8 parts
                 try:
                     sNode = [int(k) for k in parts[0].split('.')];
