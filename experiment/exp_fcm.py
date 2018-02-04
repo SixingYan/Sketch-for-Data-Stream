@@ -88,21 +88,9 @@ def evaluate_top_sum(sketch,topList,mgCounter):
     print('ObservedError is '+str(ObservedError))
     return ObservedError
 
-'''
-#samplePath = '/data1/Sixing/expdata/sample/' # train the counter
-samplePath = 'F:/sample/comp18_0.05.txt'
-with open(samplePath,'r') as f:
-    for line in f:
-        if not len(line) > 0:
-            continue
-        parts = line.split(' ')
-        s = int(parts[0]);t = int(parts[1]);freq = float(parts[2])
-        edge = (s,t) 
-        faCounter.update(edge,freq)
-'''
 num1 = 0
 num2 = 40
-dataName = 'ipv4fre' #'tweet'
+dataName = 'tr_fre_4ij' #'tweet'
 maxNodeID = 100000000 #
 maxIDList = [maxNodeID,maxNodeID]
 h = 2000
@@ -114,6 +102,7 @@ homePath = '/data1/Sixing/expdata/'# use '/' as ending
 Q4result_Top_Path = homePath+'Q4_Top_symCG_'+str(h)+'_'
 Q4result_Rad_Path = homePath+'Q4_Rad_symCG_'+str(h)+'_'
 streamPath = '/data1/Sixing/stream dataset/tr_fre_4ij' # process stream
+#streamPath
 #streamPath = '/data1/Sixing/stream dataset/tweet_stream_hashed_refined' # process stream
 #streamPath = 'D:/google desk PC/graph_freq_comp18.txt' # process stream
 
@@ -144,6 +133,7 @@ cS = copy.deepcopy(fMODsketch.fMODsketch(maxIDList,[h**2],w,hw,lw,[[0,1]]))
 cS.buildSketch()
 mgCounter = faCounter.faCounter(winSize)
 
+countNum = 0
 # streaming 
 radPool = [];top300List = []
 print('start stream......')
@@ -151,8 +141,11 @@ with open(streamPath,'r') as f:
     for line in f:
         if not len(line) > 0:
             continue
+        countNum += 1
+        if countNum > 10000000:
+            break
         flag = 0
-        parts = line.split(' ')
+        parts = line.split ('')
         s = int(parts[0]);t = int(parts[1]);freq = float(parts[2])
         mgCounter.update((s,t), freq)
         if mgCounter.query((s,t)):
