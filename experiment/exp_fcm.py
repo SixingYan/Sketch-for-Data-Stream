@@ -89,20 +89,20 @@ def evaluate_top_sum(sketch,topList,mgCounter):
     return ObservedError
 
 num1 = 0
-num2 = 40
-dataName = 'tr_fre_4ij' #'tweet'
+num2 = 10
+dataName = 'sanus_fre_4ij'#'tr_fre_4ij' #'tweet'
 maxNodeID = 100000000 #
 maxIDList = [maxNodeID,maxNodeID]
 h = 2000
-increase = 50
+increase = 200
 w = 13
 hw = 4;lw = 9
 winSize = 10000
 homePath = '/data1/Sixing/expdata/'# use '/' as ending
 Q4result_Top_Path = homePath+'Q4_Top_symCG_'+str(h)+'_'
 Q4result_Rad_Path = homePath+'Q4_Rad_symCG_'+str(h)+'_'
-streamPath = '/data1/Sixing/stream dataset/tr_fre_4ij' # process stream
-#streamPath
+#streamPath = '/data1/Sixing/stream dataset/tr_fre_4ij' # process stream
+streamPath = '/data1/Sixing/stream dataset/sanus_fre_4ij' # process stream
 #streamPath = '/data1/Sixing/stream dataset/tweet_stream_hashed_refined' # process stream
 #streamPath = 'D:/google desk PC/graph_freq_comp18.txt' # process stream
 
@@ -142,7 +142,7 @@ with open(streamPath,'r') as f:
         if not len(line) > 0:
             continue
         countNum += 1
-        if countNum > 10000000:
+        if countNum > 1000000:
             break
         flag = 0
         parts = line.split ('')
