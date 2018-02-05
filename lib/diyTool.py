@@ -228,3 +228,26 @@ def evaluate_top_sum_counter(sketch,topList,mgCounter):
     ObservedError = totalLoss1/totalFreq1
     print('ObservedError is '+str(ObservedError))
     return ObservedError
+
+def evaluate_rad_sum(sketch,radList):
+    #
+    ObservedError = 0
+    for i in range(len(radList)):
+        totalLoss1 = 0;totalFreq1 = 0
+        for parts in radList[i]:
+            edge=parts[0]; freq = parts[1]
+            estiValue = sketch.query(edge)
+            totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
+        ObservedError += totalLoss1/totalFreq1
+    print('ObservedError is '+str(ObservedError/len(radList)))
+    return ObservedError/len(radList)
+#---------------
+def evaluate_top_sum(sketch,topList):
+    totalLoss1 = 0;totalFreq1 = 0
+    for parts in topList:
+        edge=parts[0]; freq = parts[1]
+        estiValue = sketch.query(edge)
+        totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
+    ObservedError = totalLoss1/totalFreq1
+    print('ObservedError is '+str(ObservedError))
+    return ObservedError
