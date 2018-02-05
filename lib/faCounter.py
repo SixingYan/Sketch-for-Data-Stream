@@ -18,12 +18,12 @@ class faCounter(object):
         else:
             if '' in self.cKey:
                 updateIdx = self.cKey.index('')
-                self.cFreq[updateIdx] = self.k
+                self.cFreq[updateIdx] = self.k + f
                 self.cKey[updateIdx] = item
             else:
                 if f > min(self.cFreq):
                     minIdx = self.cFreq.index(min(self.cFreq))
-                    self.cFreq[minIdx] = f
+                    self.cFreq[minIdx] = self.k + f
                     self.cKey[minIdx] = item
 
         self.idx += 1
@@ -34,7 +34,6 @@ class faCounter(object):
                 if self.cFreq[i] < (self.k + 1):
                     self.cFreq[i] = 0
                     self.cKey[i] = ''
-
             self.k += 1
             self.idx = 0
     

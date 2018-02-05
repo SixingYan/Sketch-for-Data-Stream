@@ -64,7 +64,7 @@ class fMODsketch(object):
         self.totalPrime = get_Prime(int(totalMax))
         #5. maskLH
         self.maskLH = [getTRN(self.totalPrime) for _ in range(2)]
-        #print()
+
     def getH(self, wIdx, nodeList):
         #
         finalH = []

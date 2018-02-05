@@ -11,6 +11,7 @@ import random
 #from lib.diyTool import getPathDict, getStrategy
 import fMODsketch
 import faCounter
+from diyTool import evaluate_rad_sum_counter, evaluate_top_sum_counter
 """
 1. filter: store high freq. edge  
     @ store
@@ -56,37 +57,6 @@ def getH1H2(num1,num2,h):
         h1 = int(h**2/h2)
         h1h2List.append((h1,h2))
     return h1h2List
-
-def evaluate_rad_sum(sketch,radList,mgCounter):
-    #
-    ObservedError = 0
-    for i in range(len(radList)):
-        totalLoss1 = 0;totalFreq1 = 0
-        for parts in radList[i]:
-            edge=parts[0];freq = parts[1]
-            if mgCounter.query(edge):
-                flag = 1
-            else:
-                flag = 0
-            estiValue = sketch.query(flag,edge)
-            totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
-        ObservedError += totalLoss1/totalFreq1
-    print('ObservedError is '+str(ObservedError/len(radList)))
-    return ObservedError/len(radList)
-
-def evaluate_top_sum(sketch,topList,mgCounter):
-    totalLoss1 = 0;totalFreq1 = 0
-    for parts in topList:
-        edge=parts[0];freq = parts[1]
-        if mgCounter.query(edge):
-            flag = 1
-        else:
-            flag = 0
-        estiValue = sketch.query(flag,edge)
-        totalLoss1 += abs(estiValue-freq);totalFreq1 += freq
-    ObservedError = totalLoss1/totalFreq1
-    print('ObservedError is '+str(ObservedError))
-    return ObservedError
 
 num1 = 0
 num2 = 10
@@ -173,16 +143,16 @@ del radPool # clean
 print('\n evaluation......')
 with open(Q4result_Top_Path+dataName,'a') as f:
     for i in range(len(MODList)): #
-        ObservedError = evaluate_top_sum(MODList[i],top300List,mgCounter)
+        ObservedError = evaluate_top_sum_counter(MODList[i],top300List,mgCounter)
         f.write(str(h1h2List[i])+' : '+str(ObservedError)+'\n')
 
-    ObservedError = evaluate_top_sum(cS,top300List,mgCounter)
+    ObservedError = evaluate_top_sum_counter(cS,top300List,mgCounter)
     f.write('Count-Min: '+str(ObservedError)+'\n')
 
 with open(Q4result_Rad_Path+dataName,'a') as f:
     for i in range(len(MODList)): #
-        ObservedError = evaluate_rad_sum(MODList[i],rad3000List,mgCounter)
+        ObservedError = evaluate_rad_sum_counter(MODList[i],rad3000List,mgCounter)
         f.write(str(h1h2List[i])+' : '+str(ObservedError)+'\n')
 
-    ObservedError = evaluate_rad_sum(cS,rad3000List,mgCounter)
+    ObservedError = evaluate_rad_sum_counter(cS,rad3000List,mgCounter)
     f.write('Count-Min: '+str(ObservedError)+'\n')
