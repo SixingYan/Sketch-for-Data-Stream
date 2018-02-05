@@ -24,7 +24,6 @@ class mSketch2D(object):
         self.hList = hList # h13, h25, h4 ...  
         self.w = w
         self.h = h
-        
         self.mask = []
 
     def buildSketch(self):
@@ -53,9 +52,12 @@ class mSketch2D(object):
 
     def trafEdge(self, edge):
         #
+        #print(edge)
+        #print(self.sg)
         newEdge = [] # (),(),()....
         for j in range(len(self.sg)):
             tp = self.sg[j]
+            #print('tp is '+str(tp))
             if not len(tp) >1:
                 eid = edge[tp[0]]
             else:
@@ -67,6 +69,7 @@ class mSketch2D(object):
         return newEdge
     
     def getEdge(self, edge):
+        # deleted!
         # release all the parts
         s, t = edge #sourceNode, destinationNode
         e = list(s);e.extend(list(t))

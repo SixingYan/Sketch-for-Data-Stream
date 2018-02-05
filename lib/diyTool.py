@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from random import randint
+import random
 import pickle
 from math import sqrt
 import time
@@ -251,3 +252,12 @@ def evaluate_top_sum(sketch,topList):
     ObservedError = totalLoss1/totalFreq1
     print('ObservedError is '+str(ObservedError))
     return ObservedError
+
+def getRadList(num,radPool):
+    radList = [[] for i in range(5)]
+    for i in range(len(radList)):
+        while len(radList[i]) < num:
+            tem = random.choice(radPool)
+            if tem not in radList[i]:
+                radList[i].append(tem)
+    return radList
