@@ -44,7 +44,8 @@ class fMODsketch(object):
             mx = ''
             for i in tp:
                 mx += str(self.rawMaxIDList[i])
-            self.PList.append(get_Prime(int(mx)))
+            #self.PList.append(get_Prime(int(mx)))
+            self.PList.append(int(mx))
             
         #2. mask
         self.mask = [[getTRN(self.PList[i]) for i in range(len(self.PList))] for _ in range(self.w)]
@@ -57,11 +58,13 @@ class fMODsketch(object):
                 for i in tp:
                     total += str(self.rawMaxIDList[i])
                 self.maxIDList.append(int(total))
+
         #4. totalPrime
         totalMax = ''
         for mn in self.rawMaxIDList:
             totalMax += str(mn)
-        self.totalPrime = get_Prime(int(totalMax))
+        #self.totalPrime = get_Prime(int(totalMax))
+        self.totalPrime = int(totalMax)
         #5. maskLH
         self.maskLH = [getTRN(self.totalPrime) for _ in range(2)]
 
