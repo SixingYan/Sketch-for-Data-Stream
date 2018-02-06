@@ -19,8 +19,8 @@ from diyTool import evaluate_rad_sum_counter, evaluate_rad_sum,getRadList
 
 num1 = 0
 num2 = 10
-dataName = 'sanus_fre_2'#'sanus_fre_4ij'# #'tweet'
-maxNodeID = 70000 #
+dataName = 'tr_fre_2' #'sanus_fre_2'#'sanus_fre_4ij'# #'tweet'
+maxNodeID = 700000 #
 maxIDList = [maxNodeID,maxNodeID,maxNodeID,maxNodeID]
 h = 2000
 H = 2000 * 2000
