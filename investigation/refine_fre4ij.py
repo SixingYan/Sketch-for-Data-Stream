@@ -37,13 +37,6 @@ while True:
                 print('now is '+str(countNum))
             parts = line.strip().split(' ')
             s = parts[0]; t = parts[1]; freq = parts[2]
-            #sParts = s.strip().split('.')
-            #tParts = t.strip().split('.')
-            #for i in range(len(sParts)):
-            #    sParts[i] = int(sParts[i])
-            #for i in range(len(tParts)):
-            #    tParts[i] = int(tParts[i])
-            #allIP = []; allIP.extend(sParts); allIP.extend(tParts)
             IPkey = tuple([s,t])
             #keyList = list(ipDict.keys())
             if IPkey in keyList:
@@ -55,8 +48,6 @@ while True:
                     ipDict[IPkey] = [freq,s,t]
                 else: #
                     putinLine(line,loopPath,'')
-            #if countNum > 10000:
-                #break
         print('putin')
         # stream stop, put in refined stream
         for IPkey in keyList:
