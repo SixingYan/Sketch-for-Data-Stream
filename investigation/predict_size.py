@@ -7,7 +7,7 @@ tDict = {}
 samplePool = []
 #dataPath = '/data1/Sixing/stream_dataset/tweet_stream_hashed_refined'
 dataPath = '/data1/Sixing/expdata/sample/tweet_'
-size = '0.001'
+size = '0.05'
 def savePickle(varName, var):
     varName += '.pickle'
     with open(varName, 'wb') as f:
@@ -19,7 +19,7 @@ def loadPickle(varName):
     return var
 
 with open(dataPath+size+'.txt', 'r') as f:
-    for line in f:
+    for line in f.readlines():
         line = line.strip()
         if not len(line)>0:
             continue
@@ -41,8 +41,8 @@ with open(dataPath+size+'.txt', 'r') as f:
         
         if random.random() < 0.2:
             samplePool.append([edge, freq * 0.2])
-
-with open('/data1/Sixing/expdata/txt_process'+size,'a') as f:
+print('first part!')
+with open('/data1/Sixing/expdata/txt_process'+size+'.txt','a') as f:
     f.write('first part!\n')
 savePickle('/data1/Sixing/expdata/sDict.pickle'+size,sDict)
 savePickle('/data1/Sixing/expdata/tDict.pickle'+size,tDict)
@@ -51,7 +51,7 @@ savePickle('/data1/Sixing/expdata/samplePool.pickle'+size,samplePool)
 edgeAlphaDict = {}
 alphaDict = {}
 with open(dataPath+size+'.txt', 'r') as f:
-    for line in f:
+    for line in f.readlines():
         line = line.strip()
         if not len(line)>0:
             continue
@@ -70,7 +70,8 @@ with open(dataPath+size+'.txt', 'r') as f:
             edgeAlphaDict[a].append([edge, freq])
         else:
             edgeAlphaDict[a] = [[edge, freq]]
-with open('/data1/Sixing/expdata/txt_process'+size,'a') as f:
+print('2 part!')
+with open('/data1/Sixing/expdata/txt_process'+size+'.txt','a') as f:
     f.write('second part!\n')
 savePickle('/data1/Sixing/expdata/edgeAlphaDict.pickle'+size,edgeAlphaDict)
 savePickle('/data1/Sixing/expdata/alphaDict.pickle'+size,alphaDict)
@@ -90,7 +91,8 @@ for pairs in samplePool:
         tDict_sample[t] += freq
     else:
         tDict_sample[t] = freq
-with open('/data1/Sixing/expdata/txt_process'+size,'a') as f:
+print('3 part!')
+with open('/data1/Sixing/expdata/txt_process'+size+'.txt','a') as f:
     f.write('3 part!\n')
 for pairs in samplePool:
     s, t = pairs[0]
@@ -100,8 +102,8 @@ for pairs in samplePool:
         alphaDict_sample[a] += freq
     else:
         alphaDict_sample[a] = freq    
-
-with open('/data1/Sixing/expdata/txt_process'+size,'a') as f:
+print('4 part!')
+with open('/data1/Sixing/expdata/txt_process'+size+'.txt','a') as f:
     f.write('4 part\n')
 
 savePickle('/data1/Sixing/expdata/alphaDict_sample.pickle'+size,alphaDict_sample)
@@ -122,11 +124,11 @@ def getMedianA(alphaDict_sample):
             return alphaList_sample[i][0]
 
 esti_a = getMedianA(alphaDict_sample)
-
-with open('/data1/Sixing/expdata/txt_result'+size,'a') as f:
+print('5 part!')
+with open('/data1/Sixing/expdata/txt_result'+size+'.txt','a') as f:
     f.write('esti_a:'+str(esti_a)+'\n\n')
 
-epsilonList = [(i+1) * 0.01 in range(99)]
+epsilonList = [(i+1) * 0.01 for i in range(99)]
 for epsilon in epsilonList:
     totalFreq = 0
     edgeTFreq = 0
@@ -142,11 +144,11 @@ for epsilon in epsilonList:
                 sSet.add(s)
                 tSet.add(t)
 
-    with open('/data1/Sixing/expdata/txt_result'+size,'a') as f:
+    with open('/data1/Sixing/expdata/txt_result'+size+'.txt','a') as f:
         f.write('epsilon:'+str(esti_a)+' '+'ratio'+str(edgeTFreq/totalFreq)+'\n')
         f.write('s len:'+str(len(sSet))+' '+'t len'+str(len(tSet))+'\n')
         f.write('\n')
-
+print('6 part!')
 
 
 
