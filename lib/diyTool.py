@@ -261,3 +261,71 @@ def getRadList(num,radPool):
             if tem not in radList[i]:
                 radList[i].append(tem)
     return radList
+
+
+def function():
+    
+
+
+    with open as f:
+        for line in f:
+            if :
+                continue
+            edge
+            freq
+
+            if edge in .keys():
+                [edge] += freq
+            else:
+                if random.random() < 0.3:
+                    [edge] = freq
+
+            if edge in .keys():
+                [edge] += freq
+            else:
+                minEdge =
+                if [minEdge] <  
+
+def function():
+    pass
+
+def function():
+    list(.keys())
+
+
+def getRadList(num, radDict):
+    radPoolKey = list(radDict.keys())
+    while len(radListKey) < num:
+        tem = random.choice(radPoolKey)
+        if tem not in radListKey:
+            radListKey.append(tem)
+    
+    radList = []
+    for ky in radListKey:
+        radDict[]
+
+    return radList
+
+
+
+'''
+% 2
+
+128
+
+
+
+1. hash_refine these two
+. twitter_
+. ip_graph_
+
+2. run comp18 on two sketch
+
+3. run tweet & ip_graph on two sketch
+
+4. hash_refine ip_dataset
+
+5. code new improved sketch
+
+6. run comp18 on improved sketch
+'''
