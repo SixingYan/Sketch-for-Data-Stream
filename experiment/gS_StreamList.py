@@ -16,7 +16,7 @@ def getSortedStream(dataPath, n):
     # input flat stream
     nfoDict = {}
     with open(dataPath,'r') as f:
-        for line in f.readlines():
+        for line in f:
             line = line.strip()
             if not len(line)>0:
                 continue
@@ -54,7 +54,7 @@ def getSortedStream_m(dataPath, n):
         efoDict_m.append({})
 
     with open(dataPath,'r') as f:
-        for line in f.readlines():
+        for line in f:
             line = line.strip()
             if not len(line)>0:
                 continue
@@ -88,7 +88,7 @@ def getSortedStream_s(dataPath, samplePath, n):
     # input flat stream
     nfoDict = {}
     with open(dataPath,'r') as f:
-        for line in f.readlines():
+        for line in f:
             line = line.strip()
             if not len(line)>0:
                 continue
@@ -118,7 +118,7 @@ def getSortedStream_s(dataPath, samplePath, n):
 
     nfoDict_s = {}
     with open(samplePath,'r') as f:
-        for line in f.readlines():
+        for line in f:
             line = line.strip()
             if not len(line)>0:
                 continue
@@ -156,7 +156,7 @@ def getSortedStream_m_s(dataPath, samplePath, n):
         efoDict_m.append({})
 
     with open(dataPath,'r') as f:
-        for line in f.readlines():
+        for line in f:
             line = line.strip()
             if not len(line)>0:
                 continue
@@ -190,7 +190,7 @@ def getSortedStream_m_s(dataPath, samplePath, n):
     for i in range(n):
         efoDict_m_s.append({})
     with open(samplePath,'r') as f:
-        for line in f.readlines():
+        for line in f:
             line = line.strip()
             if not len(line)>0:
                 continue

@@ -6,8 +6,8 @@ import modSketch_parti
 from diyTool import savePickle #, loadPickle
 import cSketch
 import hSketch
-dataP = 'C:/Users/alfonso.yan/Documents/' # '/data1/Sixing/stream_dataset/' 
-dicPath = 'C:/Users/alfonso.yan/Documents/'# '/data1/Sixing/expdata/' #
+dataP = 'D:/google desk PC/' # '/data1/Sixing/stream_dataset/' 
+dicPath = 'D:/google desk PC/'# '/data1/Sixing/expdata/' #
 dataset = [
 #[0 dataP, 1 sampleP, 2 sampleP1, 3 sampleP2, 4 n, 5 P, 6 top2000ListPickle, 7 nfoListPicke, 8 efoList_mPickle, 9 resultPath, 10 query type],
 #[dataP+'tweet_stream_hashed_refined',dicPath+'tweet_new_0.02.txt',dicPath+'tweet_new_0.1.txt',dicPath+'tweet_new_0.05.txt',2,1391353,dicPath+'tw_top2000',dicPath+'tw_nfo.pk',dicPath+'tw_efo.pk',dicPath+'tw_result.txt','rad'],
@@ -27,7 +27,7 @@ hPar = int(h**2*0.9)
 hOut = int(h**2*0.1)
 n = dataset[0][4]
 P = dataset[0][5]
-
+top2000List = []
 hList = [1060, 3777]
 hParList = [int(n * 0.9) for n in hList]
 hOutList = [int(n * 0.1) for n in hList]

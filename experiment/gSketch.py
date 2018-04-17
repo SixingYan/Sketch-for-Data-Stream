@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from diyTool import getTwoRandomNum
+
 class gSketch(object):
     def __init__(self, w, t, h, hOut, P, nrDict):
         self.w = w
